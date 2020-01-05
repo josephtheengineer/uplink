@@ -1,0 +1,24 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://scenes/environment.tres" type="Environment" id=1]
+
+[sub_resource type="CapsuleShape" id=1]
+radius = 0.6
+height = 2.0
+
+[node name="Player" type="KinematicBody"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 20.1278, 51.7, 3.21299 )
+
+[node name="Capsule" type="CollisionShape" parent="."]
+transform = Transform( 0.5, -3.55271e-15, -1.50938e-11, -1.50938e-11, -0.000172653, -0.5, -3.55271e-15, 0.5, -0.000172653, 0, 0, 0 )
+shape = SubResource( 1 )
+
+[node name="Head" type="Spatial" parent="."]
+transform = Transform( 1, 0, -1.40908e-27, 0, 1, 0, 0, 0, 1, 0, 0.75, 0 )
+
+[node name="Camera" type="Camera" parent="Head"]
+environment = ExtResource( 1 )
+current = true
+fov = 90.0
+near = 0.01
+far = 1000.0

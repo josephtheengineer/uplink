@@ -1,0 +1,271 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://assets/fonts/label-background.tres" type="StyleBox" id=1]
+[ext_resource path="res://assets/fonts/body.tres" type="DynamicFont" id=2]
+
+[node name="DebugStats" type="VBoxContainer"]
+margin_right = 1920.0
+margin_bottom = 1080.0
+size_flags_horizontal = 9
+size_flags_vertical = 9
+
+[node name="ClientInfo" type="VBoxContainer" parent="."]
+margin_right = 1920.0
+margin_bottom = 326.0
+
+[node name="Version" type="Label" parent="ClientInfo"]
+margin_left = 1626.0
+margin_right = 1920.0
+margin_bottom = 29.0
+size_flags_horizontal = 8
+custom_styles/normal = ExtResource( 1 )
+custom_fonts/font = ExtResource( 2 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+text = "Eden Universe Builder"
+align = 2
+
+[node name="PlayerXYZ" type="Label" parent="ClientInfo"]
+margin_left = 1724.0
+margin_top = 33.0
+margin_right = 1920.0
+margin_bottom = 62.0
+size_flags_horizontal = 8
+custom_styles/normal = ExtResource( 1 )
+custom_fonts/font = ExtResource( 2 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+text = "XYZ: 0 / 0 / 0"
+align = 2
+
+[node name="LookingXYZ" type="Label" parent="ClientInfo"]
+margin_left = 1556.0
+margin_top = 66.0
+margin_right = 1920.0
+margin_bottom = 95.0
+size_flags_horizontal = 8
+custom_styles/normal = ExtResource( 1 )
+custom_fonts/font = ExtResource( 2 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+text = "Looking at: XYZ: 0 / 0 / 0"
+align = 2
+
+[node name="LookingAtChunk" type="Label" parent="ClientInfo"]
+margin_left = 1472.0
+margin_top = 99.0
+margin_right = 1920.0
+margin_bottom = 128.0
+size_flags_horizontal = 8
+custom_styles/normal = ExtResource( 1 )
+custom_fonts/font = ExtResource( 2 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+text = "Looking at chunk: XYZ: 0 / 0 / 0"
+align = 2
+
+[node name="Orentation" type="Label" parent="ClientInfo"]
+margin_left = 1682.0
+margin_top = 132.0
+margin_right = 1920.0
+margin_bottom = 161.0
+size_flags_horizontal = 8
+custom_styles/normal = ExtResource( 1 )
+custom_fonts/font = ExtResource( 2 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+text = "Orentation: North"
+align = 2
+
+[node name="Mode" type="Label" parent="ClientInfo"]
+margin_left = 1738.0
+margin_top = 165.0
+margin_right = 1920.0
+margin_bottom = 194.0
+size_flags_horizontal = 8
+custom_styles/normal = ExtResource( 1 )
+custom_fonts/font = ExtResource( 2 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+text = "Mode: nothing"
+align = 2
+
+[node name="Entities" type="Label" parent="ClientInfo"]
+margin_left = 1584.0
+margin_top = 198.0
+margin_right = 1920.0
+margin_bottom = 227.0
+size_flags_horizontal = 8
+custom_styles/normal = ExtResource( 1 )
+custom_fonts/font = ExtResource( 2 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+text = "Entities: 0 | Players: 0"
+align = 2
+
+[node name="AllBlocksLoaded" type="Label" parent="ClientInfo"]
+margin_left = 1696.0
+margin_top = 231.0
+margin_right = 1920.0
+margin_bottom = 260.0
+size_flags_horizontal = 8
+custom_styles/normal = ExtResource( 1 )
+custom_fonts/font = ExtResource( 2 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+text = "Blocks Loaded: 0"
+align = 2
+
+[node name="BlocksFound" type="Label" parent="ClientInfo"]
+margin_left = 1710.0
+margin_top = 264.0
+margin_right = 1920.0
+margin_bottom = 293.0
+size_flags_horizontal = 8
+custom_styles/normal = ExtResource( 1 )
+custom_fonts/font = ExtResource( 2 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+text = "Blocks Found: 0"
+align = 2
+
+[node name="FPS" type="Label" parent="ClientInfo"]
+margin_left = 1836.0
+margin_top = 297.0
+margin_right = 1920.0
+margin_bottom = 326.0
+size_flags_horizontal = 8
+custom_styles/normal = ExtResource( 1 )
+custom_fonts/font = ExtResource( 2 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+text = "FPS: 0"
+align = 2
+
+[node name="Separator1" type="HSeparator" parent="."]
+margin_top = 330.0
+margin_right = 1920.0
+margin_bottom = 334.0
+
+[node name="WorldStats" type="VBoxContainer" parent="."]
+margin_top = 338.0
+margin_right = 1920.0
+margin_bottom = 532.0
+
+[node name="WorldName" type="Label" parent="WorldStats"]
+margin_left = 1612.0
+margin_right = 1920.0
+margin_bottom = 29.0
+size_flags_horizontal = 8
+custom_styles/normal = ExtResource( 1 )
+custom_fonts/font = ExtResource( 2 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+text = "== JTE's Test World =="
+align = 2
+
+[node name="WorldPath" type="Label" parent="WorldStats"]
+margin_left = 1612.0
+margin_top = 33.0
+margin_right = 1920.0
+margin_bottom = 62.0
+size_flags_horizontal = 8
+custom_styles/normal = ExtResource( 1 )
+custom_fonts/font = ExtResource( 2 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+text = "/data/test_world.eden2"
+align = 2
+
+[node name="TotalChunks" type="Label" parent="WorldStats"]
+margin_left = 1710.0
+margin_top = 66.0
+margin_right = 1920.0
+margin_bottom = 95.0
+size_flags_horizontal = 8
+custom_styles/normal = ExtResource( 1 )
+custom_fonts/font = ExtResource( 2 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+text = "Total Chunks: 0"
+align = 2
+
+[node name="ChunksCache" type="Label" parent="WorldStats"]
+margin_left = 1724.0
+margin_top = 99.0
+margin_right = 1920.0
+margin_bottom = 128.0
+size_flags_horizontal = 8
+custom_styles/normal = ExtResource( 1 )
+custom_fonts/font = ExtResource( 2 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+text = "Chunk Cache: 0"
+align = 2
+
+[node name="ChunksLoaded" type="Label" parent="WorldStats"]
+margin_left = 1696.0
+margin_top = 132.0
+margin_right = 1920.0
+margin_bottom = 161.0
+size_flags_horizontal = 8
+custom_styles/normal = ExtResource( 1 )
+custom_fonts/font = ExtResource( 2 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+text = "Chunks Loaded: 0"
+align = 2
+
+[node name="Seed" type="Label" parent="WorldStats"]
+margin_left = 1822.0
+margin_top = 165.0
+margin_right = 1920.0
+margin_bottom = 194.0
+size_flags_horizontal = 8
+custom_styles/normal = ExtResource( 1 )
+custom_fonts/font = ExtResource( 2 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+text = "Seed: 0"
+align = 2
+
+[node name="Separator2" type="HSeparator" parent="."]
+margin_top = 536.0
+margin_right = 1920.0
+margin_bottom = 540.0
+
+[node name="ChunkInfo" type="VBoxContainer" parent="."]
+margin_top = 544.0
+margin_right = 1920.0
+margin_bottom = 672.0
+
+[node name="ChunkAddress" type="Label" parent="ChunkInfo"]
+margin_left = 1640.0
+margin_right = 1920.0
+margin_bottom = 29.0
+size_flags_horizontal = 8
+custom_styles/normal = ExtResource( 1 )
+custom_fonts/font = ExtResource( 2 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+text = "== Chunk: 7191367 =="
+align = 2
+
+[node name="ChunkXYZ" type="Label" parent="ChunkInfo"]
+margin_left = 1724.0
+margin_top = 33.0
+margin_right = 1920.0
+margin_bottom = 62.0
+size_flags_horizontal = 8
+custom_styles/normal = ExtResource( 1 )
+custom_fonts/font = ExtResource( 2 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+text = "XYZ: 0 / 0 / 0"
+align = 2
+
+[node name="BlocksLoaded" type="Label" parent="ChunkInfo"]
+margin_left = 1696.0
+margin_top = 66.0
+margin_right = 1920.0
+margin_bottom = 95.0
+size_flags_horizontal = 8
+custom_styles/normal = ExtResource( 1 )
+custom_fonts/font = ExtResource( 2 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+text = "Blocks Loaded: 0"
+align = 2
+
+[node name="Blocks" type="Label" parent="ChunkInfo"]
+margin_left = 1710.0
+margin_top = 99.0
+margin_right = 1920.0
+margin_bottom = 128.0
+size_flags_horizontal = 8
+custom_styles/normal = ExtResource( 1 )
+custom_fonts/font = ExtResource( 2 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+text = "Total Blocks: 0"
+align = 2
