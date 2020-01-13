@@ -1,21 +1,27 @@
 extends Node
-var Entity = load("res://scripts/features/entity.gd")
+onready var Entity = load("res://scripts/features/entity.gd")
+var log_loc = "user://logs/"
 
-func init():
+func init(client_log_loc):
+	log_loc = client_log_loc
 	var file = File.new()
 	var dir = Directory.new()
-	dir.make_dir("user://logs/")
-	file.open("user://logs/latest.txt", File.WRITE)
+	dir.make_dir(log_loc)
+	file.open(log_loc + "latest.txt", File.WRITE)
 	file.close()
+	msg("Logs stored at " + log_loc, "Info")
 
 func msg(message, level):
 	print(level + ": " + message)
 	
 	var file = File.new()
-	file.open("user://logs/latest.txt", File.READ_WRITE)
+	file.open(log_loc + "latest.txt", File.READ_WRITE)
 	file.seek_end()
 	file.store_string(level + ": " + message + '\n')
 	file.close()
+	
+	if level == "Fatal":
+		breakpoint
 	
 	#for id in Entity.get_entities_with("terminal"):
 	#	var components = Entity.objects[id].components

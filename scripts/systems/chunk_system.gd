@@ -1,12 +1,14 @@
 # manages chunk data
 # classified as a system because it gets run every frame and scans entities
 extends Node
+onready var ServerSystem = get_node("/root/World/Systems/Server")
+onready var ClientSystem = get_node("/root/World/Systems/Client")
+onready var Events = get_node("/root/Events")
 onready var Debug = preload("res://scripts/features/debug.gd").new()
 onready var EdenWorldDecoder = preload("res://scripts/features/eden_world_decoder.gd").new()
 onready var Entity = preload("res://scripts/features/entity.gd").new()
 onready var BlockData = preload("res://scripts/features/block_data.gd").new()
-onready var ServerSystem = get_node("/root/World/Systems/Server")
-onready var ClientSystem = get_node("/root/World/Systems/Client")
+onready var SystemManager = preload("res://scripts/features/system_manager.gd").new()
 
 var timer = 0
 var chunks_processed_this_frame = 0
@@ -16,7 +18,7 @@ var sur_chunk_x = 0
 var sur_chunk_z = 0
 
 func _ready():
-	Debug.msg("Chunk System ready.", "Info")
+	Events.emit_signal("system_ready", SystemManager.CHUNK)                ##### READY #####
 
 func create_chunk(position):
 	if chunks_processed_this_frame > 1:# and !Player.can_see_chunk(position):

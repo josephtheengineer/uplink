@@ -1,7 +1,7 @@
 extends Node
-var Entity = load("res://scripts/features/entity.gd")
 onready var ClientSystem = get_node("/root/World/Systems/Client")
-var Debug = load("res://scripts/features/debug.gd")
+onready var Manager = preload("res://scripts/features/manager.gd")
+onready var Debug = preload("res://scripts/features/debug.gd")
 
 var progress = 0
 var timer = Timer.new()
@@ -25,7 +25,7 @@ func run(object, method):
 	text_input.terminal = true
 	text_input.text = ""
 	var components = {"terminal": terminal, "text_input": text_input}
-	var id = Entity.create(components)
+	var id = Manager.create(components)
 	
 	timer.connect("timeout", self, "_update_terminal", [id, components])
 	timer.wait_time = 0.01
@@ -35,7 +35,7 @@ func run(object, method):
 func show_text(id, components, text):
 	components.terminal.text += text
 	components.terminal.text_rendered = false
-	Entity.edit(id, components)
+	Manager.edit(id, components)
 
 func _update_terminal(id, components):
 	#timer.wait_time = rand_range(0, 1)

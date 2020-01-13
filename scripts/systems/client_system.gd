@@ -10,16 +10,16 @@ extends Node
 #                              |___/      
 ################################################################################
 
-var Debug = load("res://scripts/features/debug.gd").new()
-var Diagnostics = load("res://scripts/features/diagnostics.gd").new()
-var Player = load("res://scripts/features/player.gd").new()
-var Entity = load("res://scripts/features/entity.gd").new()
-var Comp = load("res://scripts/features/comp.gd").new()
-var Manager = load("res://scripts/features/manager.gd").new()
-var SystemManager = load("res://scripts/features/system_manager.gd").new()
 onready var ServerSystem = get_node("/root/World/Systems/Server")
 onready var ChunkSystem = get_node("/root/World/Systems/Chunk")
 onready var Events = get_node("/root/Events")
+onready var Debug = preload("res://scripts/features/debug.gd").new()
+onready var Diagnostics = preload("res://scripts/features/diagnostics.gd").new()
+onready var Player = preload("res://scripts/features/player.gd").new()
+onready var Entity = preload("res://scripts/features/entity.gd").new()
+onready var Comp = preload("res://scripts/features/comp.gd").new()
+onready var Manager = preload("res://scripts/features/manager.gd").new()
+onready var SystemManager = preload("res://scripts/features/system_manager.gd").new()
 
 var version = "EdenUniverseBuilder v3.0.0 beta6"
 var total_players = 0
@@ -32,13 +32,30 @@ var chunk_index = []
 
 ############################# System Loaded Check ##############################
 var chunk = false
-var client = false
-var download = false
-var input = false
-var interface = false
-var server = false
-var sound = false
+const CHUNK_REQUIRED = false
 
+var client = false
+const CLIENT_REQUIRED = true
+
+var download = false
+const DOWNLOAD_REQUIRED = false
+
+var input = false
+const INPUT_REQUIRED = false
+
+var interface = false
+const INTERFACE_REQUIRED = false
+
+var server = false
+const SERVER_REQUIRED = true
+
+var sound = false
+const SOUND_REQUIRED = false
+
+const TOTAL_SYSTEMS = 7
+
+const DEFAULT_LOG_LOC = "user://logs/"
+var log_loc = "user://logs/"
 
 #var map_file = File.new()
 #var ChunkLocations = Dictionary()
@@ -82,18 +99,67 @@ var my_info = { name = "Ari", color = Color8(255, 0, 255) }
 #
 ################################################################################
 
-func _ready(): #################################################################
-	SystemManager.setup()
-	Debug.msg("Client System ready.", "Info")
-	Events.emit_signal("system_ready", "client")
-	.connect("timeout", self, "_on_Timer_timeout")
-	Debug.msg("Logs stored at user://logs/", "Info")
-	Debug.init()
-	#Diagnostics.run(self, "diagnostics_finised")
+func _ready(): ################################################################# APP ENTRY POINT
+	Debug.init(log_loc)
+	SystemManager.setup(Events, self)
+	Events.emit_signal("system_ready", SystemManager.CLIENT)                ##### READY #####
+	
+	create_chunk_system()
+	create_download_system()
+	create_input_system()
+	create_interface_system()
+	create_sound_system()
+	
+	Events.connect("app_ready", self, "_on_app_ready")
+
+
+func create_chunk_system():
+	Debug.msg("Creating chunk system...", "Debug")
+	var node = Node.new()
+	node.set_name("Chunk")
+	node.set_script(load("res://scripts/systems/chunk_system.gd"))
+	get_node("/root/World/Systems").call_deferred("add_child", node)
+
+
+func create_download_system():
+	Debug.msg("Creating download system...", "Debug")
+	var node = Node.new()
+	node.set_name("Download")
+	node.set_script(load("res://scripts/systems/download_system.gd"))
+	get_node("/root/World/Systems").call_deferred("add_child", node)
+
+func create_input_system():
+	Debug.msg("Creating input system...", "Debug")
+	var node = Node.new()
+	node.set_name("Input")
+	node.set_script(load("res://scripts/systems/input_system.gd"))
+	get_node("/root/World/Systems").call_deferred("add_child", node)
+
+func create_interface_system():
+	Debug.msg("Creating interface system...", "Debug")
+	var node = Node.new()
+	node.set_name("Interface")
+	node.set_script(load("res://scripts/systems/interface_system.gd"))
+	get_node("/root/World/Systems").call_deferred("add_child", node)
+
+
+func create_sound_system():
+	Debug.msg("Creating sound system...", "Debug")
+	var node = Node.new()
+	node.set_name("Sound")
+	node.set_script(load("res://scripts/systems/sound_system.gd"))
+	get_node("/root/World/Systems").call_deferred("add_child", node)
+
+
+func _on_app_ready():
+	SystemManager.check_systems()
+	Debug.msg("App ready!", "Info")
+	
+	Diagnostics.run(self, "_on_diagnostics_finised")
 	world_loaded()
 
 
-func diagnostics_finised(): ####################################################
+func _on_diagnostics_finised(): ####################################################
 	ServerSystem.start()
 	ServerSystem.load_world(self, "world_loaded")
 

@@ -1,11 +1,13 @@
 extends Node
-var Debug = load("res://scripts/features/debug.gd")
-var Entity = load("res://scripts/features/entity.gd")
-var DebugInfo = load("res://scripts/features/debug_info.gd")
+onready var Events = get_node("/root/Events")
+onready var Debug = preload("res://scripts/features/debug.gd")
+onready var Entity = preload("res://scripts/features/entity.gd")
+onready var DebugInfo = preload("res://scripts/features/debug_info.gd")
+onready var SystemManager = preload("res://scripts/features/system_manager.gd").new()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	Debug.msg("Interface System ready.", "Info")
+	Events.emit_signal("system_ready", SystemManager.INTERFACE)                ##### READY #####
 
 func _process(delta):
 	pass

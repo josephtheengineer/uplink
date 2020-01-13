@@ -1,17 +1,19 @@
 # just routes input signals to other systems
 extends Node
-var Debug = preload("res://scripts/features/debug.gd").new()
-var Entity = preload("res://scripts/features/entity.gd").new()
-var Player = preload("res://scripts/features/player.gd").new()
-var Manager = preload("res://scripts/features/manager.gd").new()
-var Comp = preload("res://scripts/features/comp.gd").new()
 onready var ClientSystem = get_node("/root/World/Systems/Client")
+onready var Events = get_node("/root/Events")
+onready var Debug = preload("res://scripts/features/debug.gd").new()
+onready var Entity = preload("res://scripts/features/entity.gd").new()
+onready var Player = preload("res://scripts/features/player.gd").new()
+onready var Manager = preload("res://scripts/features/manager.gd").new()
+onready var Comp = preload("res://scripts/features/comp.gd").new()
+onready var SystemManager = preload("res://scripts/features/system_manager.gd").new()
 
 var pressed = false
 var move_mode = "walk"
 
 func _ready():
-	Debug.msg("Input System ready.", "Info")
+	Events.emit_signal("system_ready", SystemManager.INPUT)                ##### READY #####
 
 #func _process(delta):
 #	var entities = Entity.get_entities_with("hud")

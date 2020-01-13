@@ -1,5 +1,7 @@
 extends Node
-var Debug = load("res://scripts/features/debug.gd")
+onready var Events = get_node("/root/Events")
+onready var Debug = preload("res://scripts/features/debug.gd").new()
+onready var SystemManager = preload("res://scripts/features/system_manager.gd").new()
 
 const EDEN2_SEARCH = "http://app.edengame.net/list2.php?search="
 const EDEN2_DOWNLOAD = "http://files.edengame.net/"
@@ -20,7 +22,7 @@ var map_path = "res://worlds/direct_city.eden2"
 var map_name = "direct_city.eden2"
 
 func _ready():
-	Debug.msg("Download System ready.", "Info")
+	Events.emit_signal("system_ready", SystemManager.DOWNLOAD)                ##### READY #####
 
 
 func _on_fetch_data_request_completed(result, response_code, headers, body):

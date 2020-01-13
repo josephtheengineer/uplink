@@ -1,6 +1,6 @@
 extends Node
-var Debug = preload("res://scripts/features/debug.gd").new()
 onready var Events = get_node("/root/Events")
+onready var Debug = preload("res://scripts/features/debug.gd").new()
 
 func get_entities_with(component: String):
 	var object = get_node("/root/World/" + component)

@@ -1,8 +1,10 @@
 extends Node
-var Debug = load("res://scripts/features/debug.gd")
-var Entity = load("res://scripts/features/entity.gd")
-var EdenWorldDecoder = load("res://scripts/features/eden_world_decoder.gd")
+onready var Events = get_node("/root/Events")
 onready var ChunkSystem = get_node("/root/World/Systems/Chunk")
+onready var Debug = preload("res://scripts/features/debug.gd").new()
+onready var Entity = preload("res://scripts/features/entity.gd").new()
+onready var EdenWorldDecoder = preload("res://scripts/features/eden_world_decoder.gd").new()
+onready var SystemManager = preload("res://scripts/features/system_manager.gd").new()
 
 var map_seed = 0
 var map_path = "user://worlds/direct_city.eden2"
@@ -16,9 +18,9 @@ var home_rotation = 0
 var chunks_cache_size = 0
 var total_chunks = 0
 
-func start():
+func _ready():
 	#create_world()
-	Debug.msg("Server System ready.", "Info")
+	Events.emit_signal("system_ready", SystemManager.SERVER)                ##### READY #####
 
 func create_world():
 	# Needs to create chunk data but not chunk render

@@ -1,12 +1,14 @@
 extends Node
-var Debug = load("res://scripts/features/debug.gd")
+onready var Events = get_node("/root/Events")
+onready var Debug = preload("res://scripts/features/debug.gd")
+onready var SystemManager = preload("res://scripts/features/system_manager.gd").new()
 
 var music_player = AudioStreamPlayer3D.new()
 var playlist_progress = 0
 var playlist = "Eden"
 
 func _ready():
-	Debug.msg("Sound System ready.", "Info")
+	Events.emit_signal("system_ready", SystemManager.SOUND)                ##### READY #####
 
 func music_player_finished():
 	if playlist == "Eden":
