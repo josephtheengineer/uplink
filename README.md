@@ -1,11 +1,11 @@
-# Eden Universe Builder
-A remake of the popular iOS game, Eden - World Builder, in the Godot Game Engine.
+# Uplink
+A sandbox made using the Godot Game Engine.
 
 ## Setup
 This project uses a [seperate repo](https://github.com/josephtheengineer/edenuniversebuilder-assets) to host the asset files. This is to ensure the project is quick and easy to clone. This seperate repo should be placed in the root of the project like so:
 
 ```
-edenuniversebuilder
+uplink
 ├── assets
 │   ├── fonts
 │   ├── models
