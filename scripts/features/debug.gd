@@ -1,5 +1,4 @@
 extends Node
-onready var Entity = load("res://scripts/features/entity.gd")
 var log_loc = "user://logs/"
 
 func init(client_log_loc):
@@ -9,9 +8,10 @@ func init(client_log_loc):
 	dir.make_dir(log_loc)
 	file.open(log_loc + "latest.txt", File.WRITE)
 	file.close()
-	msg("Logs stored at " + log_loc, "Info")
+	Core.emit_signal("msg", "Logs stored at " + log_loc, "Info")
+	Core.connect("msg", self, "_on_msg")
 
-func msg(message, level):
+func _on_msg(message, level):
 	print(level + ": " + message)
 	
 	var file = File.new()

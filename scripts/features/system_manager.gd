@@ -1,7 +1,4 @@
 extends Node
-var Debug = load("res://scripts/features/debug.gd").new()
-onready var Events
-onready var ClientSystem
 
 const CHUNK = 0
 const CLIENT = 1
@@ -11,100 +8,98 @@ const INTERFACE = 4
 const SERVER = 5
 const SOUND = 6
 
-func setup(events, client_system):
-	Events = events
-	ClientSystem = client_system
-	Events.connect("system_ready", self, "_on_system_ready")
+func setup():
+	Core.connect("system_ready", self, "_on_system_ready")
 
 func _on_system_ready(system):
 	match system:
 		CHUNK:
-			if ClientSystem.chunk:
-				Debug.msg("Chunk System ready called when already registered", "Warn")
+			if Core.Client.chunk:
+				Core.emit_signal("msg", "Chunk System ready called when already registered", "Warn")
 			else:
-				ClientSystem.chunk = true
-				Debug.msg("Chunk System ready.", "Info")
+				Core.Client.chunk = true
+				Core.emit_signal("msg", "Chunk System ready.", "Info")
 		CLIENT:
-			if ClientSystem.client:
-				Debug.msg("Client System ready called when already registered", "Warn")
+			if Core.Client.client:
+				Core.emit_signal("msg", "Client System ready called when already registered", "Warn")
 			else:
-				ClientSystem.client = true
-				Debug.msg("Client System ready.", "Info")
+				Core.Client.client = true
+				Core.emit_signal("msg", "Client System ready.", "Info")
 		DOWNLOAD:
-			if ClientSystem.download:
-				Debug.msg("Download System ready called when already registered", "Warn")
+			if Core.Client.download:
+				Core.emit_signal("msg", "Download System ready called when already registered", "Warn")
 			else:
-				ClientSystem.download = true
-				Debug.msg("Download System ready.", "Info")
+				Core.Client.download = true
+				Core.emit_signal("msg", "Download System ready.", "Info")
 		INPUT:
-			if ClientSystem.input:
-				Debug.msg("Input System ready called when already registered", "Warn")
+			if Core.Client.input:
+				Core.emit_signal("msg", "Input System ready called when already registered", "Warn")
 			else:
-				ClientSystem.input = true
-				Debug.msg("Input System ready.", "Info")
+				Core.Client.input = true
+				Core.emit_signal("msg", "Input System ready.", "Info")
 		INTERFACE:
-			if ClientSystem.interface:
-				Debug.msg("Interface System ready called when already registered", "Warn")
+			if Core.Client.interface:
+				Core.emit_signal("msg", "Interface System ready called when already registered", "Warn")
 			else:
-				ClientSystem.interface = true
-				Debug.msg("Interface System ready.", "Info")
+				Core.Client.interface = true
+				Core.emit_signal("msg", "Interface System ready.", "Info")
 		SERVER:
-			if ClientSystem.server:
-				Debug.msg("Server System ready called when already registered", "Warn")
+			if Core.Client.server:
+				Core.emit_signal("msg", "Server System ready called when already registered", "Warn")
 			else:
-				ClientSystem.server = true
-				Debug.msg("Server System ready.", "Info")
+				Core.Client.server = true
+				Core.emit_signal("msg", "Server System ready.", "Info")
 		SOUND:
-			if ClientSystem.sound:
-				Debug.msg("Sound System ready called when already registered", "Warn")
+			if Core.Client.sound:
+				Core.emit_signal("msg", "Sound System ready called when already registered", "Warn")
 			else:
-				ClientSystem.sound = true
-				Debug.msg("Sound System ready.", "Info")
+				Core.Client.sound = true
+				Core.emit_signal("msg", "Sound System ready.", "Info")
 		_:
-			Debug.msg("Unknown system bootup", "Warn")
-	Debug.msg(str(get_online_systems()) + " of " + str(ClientSystem.TOTAL_SYSTEMS) + " Systems online", "Info")
-	if get_online_systems() == ClientSystem.TOTAL_SYSTEMS:
-		Events.emit_signal("app_ready")
+			Core.emit_signal("msg", "Unknown system bootup", "Warn")
+	Core.emit_signal("msg", str(get_online_systems()) + " of " + str(Core.Client.TOTAL_SYSTEMS) + " Systems online", "Info")
+	if get_online_systems() == Core.Client.TOTAL_SYSTEMS:
+		Core.emit_signal("app_ready")
 
 func get_online_systems():
 	var online = 0
-	if ClientSystem.chunk:
+	if Core.Client.chunk:
 		online+=1
-	if ClientSystem.client:
+	if Core.Client.client:
 		online+=1
-	if ClientSystem.download:
+	if Core.Client.download:
 		online+=1
-	if ClientSystem.input:
+	if Core.Client.input:
 		online+=1
-	if ClientSystem.interface:
+	if Core.Client.interface:
 		online+=1
-	if ClientSystem.server:
+	if Core.Client.server:
 		online+=1
-	if ClientSystem.sound:
+	if Core.Client.sound:
 		online+=1
 	return online
 
 func check_systems():
 	var offline = []
-	if !ClientSystem.chunk:
-		Debug.msg("Chunk System offline", "Warn")
+	if !Core.Client.chunk:
+		Core.emit_signal("msg", "Chunk System offline", "Warn")
 		offline.append(CHUNK)
-	if !ClientSystem.client:
-		Debug.msg("Client System offline", "Warn")
+	if !Core.Client.client:
+		Core.emit_signal("msg", "Client System offline", "Warn")
 		offline.append(CLIENT)
-	if !ClientSystem.download:
-		Debug.msg("Download System offline", "Warn")
+	if !Core.Client.download:
+		Core.emit_signal("msg", "Download System offline", "Warn")
 		offline.append(DOWNLOAD)
-	if !ClientSystem.input:
-		Debug.msg("Input System offline", "Warn")
+	if !Core.Client.input:
+		Core.emit_signal("msg", "Input System offline", "Warn")
 		offline.append(INPUT)
-	if !ClientSystem.interface:
-		Debug.msg("Interface System offline", "Warn")
+	if !Core.Client.interface:
+		Core.emit_signal("msg", "Interface System offline", "Warn")
 		offline.append(INTERFACE)
-	if !ClientSystem.server:
-		Debug.msg("Server System offline", "Warn")
+	if !Core.Client.server:
+		Core.emit_signal("msg", "Server System offline", "Warn")
 		offline.append(SERVER)
-	if !ClientSystem.sound:
-		Debug.msg("Sound System offline", "Warn")
+	if !Core.Client.sound:
+		Core.emit_signal("msg", "Sound System offline", "Warn")
 		offline.append(SOUND)
 	return offline

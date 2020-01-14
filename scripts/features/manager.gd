@@ -1,6 +1,5 @@
 extends Node
-onready var Events = get_node("/root/Events")
-onready var Debug = preload("res://scripts/features/debug.gd").new()
+onready var Entity = preload("res://scripts/features/entity.gd").new()
 
 func get_entities_with(component: String):
 	var object = get_node("/root/World/" + component)
@@ -8,10 +7,25 @@ func get_entities_with(component: String):
 		return object.get_children()
 	else:
 		return false
+	
 
 func create(entity: Dictionary):
-	Debug.msg("Creating new Entity, " + entity.type, "Debug")
-	emit_signal("entity_loaded", entity)
+	Core.emit_signal("msg", "Creating new Entity, " + entity.type, "Debug")
+	if entity.type == "gui":
+		if !Core.get_parent().get_node("/root/World").has_node("GUI"):
+			var gui =  Control.new()
+			gui.set_name("GUI")
+			Core.get_parent().get_node("/root/World").add_child(gui)
+		if entity.name_id == "tty":
+			var node = Node.new()
+			node.set_name("0")
+			node.set_script(Entity)
+			Core.get_parent().get_node("/root/World/GUI").add_child(node)
+			Core.get_parent().get_node("/root/World/GUI/0").add_child(load("res://scenes/tty.tscn").instance())
+	#entity.debug = true
+	#entity.text = ""
+	
+	#emit_signal("entity_loaded", entity)
 
 #func create(components):
 #	var entity = Dictionary()
@@ -63,7 +77,7 @@ func create(entity: Dictionary):
 #
 #		get_node(path + str(id)).add_child(node)
 #	else:
-#		Debug.msg("Parent node doesn't exist yet!", "Warn")
+#		Core.emit_signal("msg", "Parent node doesn't exist yet!", "Warn")
 #		return false
 #
 #	inherit_child_rect(id, component)

@@ -1,6 +1,4 @@
 extends Node
-onready var Events = get_node("/root/Events")
-onready var Debug = preload("res://scripts/features/debug.gd").new()
 onready var SystemManager = preload("res://scripts/features/system_manager.gd").new()
 
 const EDEN2_SEARCH = "http://app.edengame.net/list2.php?search="
@@ -22,7 +20,7 @@ var map_path = "res://worlds/direct_city.eden2"
 var map_name = "direct_city.eden2"
 
 func _ready():
-	Events.emit_signal("system_ready", SystemManager.DOWNLOAD)                ##### READY #####
+	Core.emit_signal("system_ready", SystemManager.DOWNLOAD)                ##### READY #####
 
 
 func _on_fetch_data_request_completed(result, response_code, headers, body):
@@ -31,7 +29,7 @@ func _on_fetch_data_request_completed(result, response_code, headers, body):
 	var file = File.new()
 	
 	if file.open(filename, File.READ) != 0:
-		Debug.msg("Error opening file", "Error")
+		Core.emit_signal("msg", "Error opening file", "Error")
 	
 	if filename == "user://info/changelog.md":
 		get_node("UI/Home/VBoxContainer/TopContainer/News/VBoxContainer/Content2").text = file.get_as_text()
@@ -82,7 +80,7 @@ func fetch_data(): ############################################################
 func _on_search_request_completed(result, response_code, headers, body):
 	var file = File.new()
 	if file.open("user://tmp/search.list", File.READ) != 0:
-		Debug.msg("Error opening file", "Error")
+		Core.emit_signal("msg", "Error opening file", "Error")
 	
 	var text = file.get_as_text().rsplit("\n")
 	
@@ -97,16 +95,16 @@ func _on_search_request_completed(result, response_code, headers, body):
 			# even
 			name = text[i]
 	
-	Debug.msg("World list: " + str(world_data), "Debug")
+	Core.emit_signal("msg", "World list: " + str(world_data), "Debug")
 	var parent = get_node("UI/WorldSharing/TopContainer2/Search/Search/SearchResults/Content/VBoxContainer")
 	#show_world_list(parent, world_data, false)
 	
-	Debug.msg("Search complete!", "Info")
+	Core.emit_signal("msg", "Search complete!", "Info")
 	#search_client.queue_free()
 
 func _on_world_download_completed(path):
 	#downloading = false
-	Debug.msg("Loading downloaded world...", "Info")
+	Core.emit_signal("msg", "Loading downloaded world...", "Info")
 	#map_path = path
 	#map_name = "WIP"
 	#map_seed = 0
@@ -115,12 +113,12 @@ func _on_world_download_completed(path):
 
 #func _process(delta):
 	#if downloading_direct_city and OS.get_unix_time() - downloading_wait > 5:
-	#	Debug.msg("KB downloaded: " + str(direct_city_downloader.get_downloaded_bytes() * 0.001), "Info")
+	#	Core.emit_signal("msg", "KB downloaded: " + str(direct_city_downloader.get_downloaded_bytes() * 0.001), "Info")
 	#	downloading_wait = OS.get_unix_time()
 	#	
 	#if downloading:
 	#	if OS.get_unix_time() - downloading_wait > 5:
-	#		Debug.msg("KB downloaded: " + str(download_world_client.get_downloaded_bytes() * 0.001), "Info")
+	#		Core.emit_signal("msg", "KB downloaded: " + str(download_world_client.get_downloaded_bytes() * 0.001), "Info")
 	#		downloading_wait = OS.get_unix_time()
 	#		
 	#		#if last_downloaded_bytes == download_world_client.get_downloaded_bytes() and last_downloaded_bytes != 0:
@@ -129,7 +127,7 @@ func _on_world_download_completed(path):
 	#		#last_downloaded_bytes = download_world_client.get_downloaded_bytes()
 
 func search():
-	Debug.msg("Searching eden2 world database...", "Info")
+	Core.emit_signal("msg", "Searching eden2 world database...", "Info")
 	#get_node("UI/WorldSharing/TopContainer2/Search/Search/SearchResults/Content").text = "Searching..."
 	Directory.new().make_dir("user://tmp")
 	
@@ -139,7 +137,7 @@ func search():
 	http.set_download_file("user://tmp/search.list")
 	http.connect("request_completed", self, "_on_search_request_completed")
 	add_child(http)
-	Debug.msg("Search string is: " + str(EDEN2_SEARCH + text), "Debug")
+	Core.emit_signal("msg", "Search string is: " + str(EDEN2_SEARCH + text), "Debug")
 	http.request(EDEN2_SEARCH + text, Array(), false)
 	search_client = http
 
@@ -147,13 +145,13 @@ func download_direct_city():
 	if File.new().file_exists("user://worlds/direct_city.eden2") == false:
 		Directory.new().make_dir("user://worlds/")
 		
-		Debug.msg("Please wait, downloading Direct City...", "Info")
+		Core.emit_signal("msg", "Please wait, downloading Direct City...", "Info")
 		
 		var http = HTTPRequest.new()
 		http.set_download_file("user://worlds/direct_city.eden2")
 		http.connect("request_completed", self, "_on_direct_city_request_completed")
 		add_child(http)
-		Debug.msg("Connecting to http://josephtheengineer.ddns.net/eden/worlds/direct-city.eden2...", "Debug")
+		Core.emit_signal("msg", "Connecting to http://josephtheengineer.ddns.net/eden/worlds/direct-city.eden2...", "Debug")
 		http.request("http://josephtheengineer.ddns.net/eden/worlds/direct-city.eden2", Array(), false)
 		downloading_direct_city = true
 		direct_city_downloader = http
@@ -162,7 +160,7 @@ func download_direct_city():
 		#_on_direct_city_request_completed()
 
 func download_world_button(path):
-	Debug.msg("Searching eden2 world database...", "Info")
+	Core.emit_signal("msg", "Searching eden2 world database...", "Info")
 	#get_node("UI/WorldSharing/TopContainer2/Search/Search/SearchResults/Content").text = "Downloading..."
 	Directory.new().make_dir("user://worlds/")
 	
@@ -170,18 +168,18 @@ func download_world_button(path):
 	http.set_download_file("user://worlds/" + path)
 	http.connect("request_completed", self, "_on_world_download_completed", ["user://worlds/" + path])
 	add_child(http)
-	Debug.msg("Downloading world " + EDEN2_DOWNLOAD + path, "Debug")
+	Core.emit_signal("msg", "Downloading world " + EDEN2_DOWNLOAD + path, "Debug")
 	http.request(EDEN2_DOWNLOAD + path, Array(), false)
 	download_world_client = http
 	downloading = true
 	
 	downloaded_world_path = "user://worlds/" + path
 	
-	Debug.msg("Body size: " + str(http.get_body_size()), "Debug")
+	Core.emit_signal("msg", "Body size: " + str(http.get_body_size()), "Debug")
 
 func _on_direct_city_request_completed():
 	downloading_direct_city = false
-	Debug.msg("Loading direct city...", "Info")
+	Core.emit_signal("msg", "Loading direct city...", "Info")
 	map_path = "user://worlds/direct_city.eden2"
 	map_name = "Direct City"
 	map_seed = 0

@@ -3,8 +3,6 @@
 extends Node
 onready var ServerSystem = get_node("/root/World/Systems/Server")
 onready var ClientSystem = get_node("/root/World/Systems/Client")
-onready var Events = get_node("/root/Events")
-onready var Debug = preload("res://scripts/features/debug.gd").new()
 onready var EdenWorldDecoder = preload("res://scripts/features/eden_world_decoder.gd").new()
 onready var Entity = preload("res://scripts/features/entity.gd").new()
 onready var BlockData = preload("res://scripts/features/block_data.gd").new()
@@ -18,14 +16,14 @@ var sur_chunk_x = 0
 var sur_chunk_z = 0
 
 func _ready():
-	Events.emit_signal("system_ready", SystemManager.CHUNK)                ##### READY #####
+	Core.emit_signal("system_ready", SystemManager.CHUNK)                ##### READY #####
 
 func create_chunk(position):
 	if chunks_processed_this_frame > 1:# and !Player.can_see_chunk(position):
 		return false
 	chunks_processed_this_frame+=1
 	
-	Debug.msg("Creating chunk " + str(position) + "...", "Debug")
+	Core.emit_signal("msg", "Creating chunk " + str(position) + "...", "Debug")
 	
 	var chunk_data = EdenWorldDecoder.get_chunk_data(position)
 	
@@ -195,7 +193,7 @@ func create_surrounding_chunks(center_chunk, distance):
 			if Entity.get_component(id, "chunk.blocks_loaded"):
 				ClientSystem.blocks_loaded -= Entity.get_component(id, "chunk.blocks_loaded")
 				ClientSystem.blocks_found -= Entity.get_component(id, "chunk.block_data").size()
-			Debug.msg("Destroyed chunk" + str(pos), "Debug")
+			Core.emit_signal("msg", "Destroyed chunk" + str(pos), "Debug")
 			Entity.destory(id)
 
 #func init_chunk(id):
@@ -220,7 +218,7 @@ func create_surrounding_chunks(center_chunk, distance):
 
 func compile(block_data, materials, pos): # Returns blocks_loaded, mesh, vertex_data
 	var blocks_loaded = 0
-	Debug.msg("Compiling chunk...", "Info")
+	Core.emit_signal("msg", "Compiling chunk...", "Info")
 	var mesh_instance = MeshInstance.new()
 	mesh_instance.mesh = null
 	var mesh
@@ -236,7 +234,7 @@ func compile(block_data, materials, pos): # Returns blocks_loaded, mesh, vertex_
 	
 	for position in block_data.keys():
 		if Geometry.can_be_seen(position, block_data).size() != 6:# and position.y > 20:
-			#Debug.msg("Compiling block in position " + str(position), "Trace")
+			#Core.emit_signal("msg", "Compiling block in position " + str(position), "Trace")
 			var cube_data = Geometry.create_cube(position, block_data[position].id, mesh, materials, block_data) # Returns mesh, vertex_data
 			mesh = cube_data.mesh
 			vertex_data += cube_data.vertex_data
@@ -245,7 +243,7 @@ func compile(block_data, materials, pos): # Returns blocks_loaded, mesh, vertex_
 	#st.generate_normals(false)
 	#st.index()
 	#mesh = st.commit()
-	Debug.msg("Finished compiling!", "Debug")
+	Core.emit_signal("msg", "Finished compiling!", "Debug")
 	return {"blocks_loaded" : blocks_loaded, "mesh" : mesh, "vertex_data" : vertex_data}
 
 

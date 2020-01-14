@@ -22,7 +22,7 @@ boot_splash/bg_color=Color( 0, 0, 0, 1 )
 
 [autoload]
 
-Events="*res://scripts/systems/events.gd"
+Core="*res://scripts/systems/core.gd"
 
 [display]
 

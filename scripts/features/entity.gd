@@ -1,14 +1,13 @@
 # manages and stores entity data
 extends Node
 var DictonaryFunc = load("res://scripts/features/dictonary_func.gd")
-var Debug = load("res://scripts/features/debug.gd")
 
 export var components = Dictionary()
 
 func destory():
-	Events.emit_signal("object_unloaded", self)
+	Core.emit_signal("object_unloaded", self)
 	queue_free()
-	Events.emit_signal("object_unloaded", self)
+	Core.emit_signal("object_unloaded", self)
 
 func set_component(path, value):
 	DictonaryFunc.setInDict(components, path.split(".", false), value)
