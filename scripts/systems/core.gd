@@ -3,7 +3,7 @@ extends Node
 onready var Client = get_node("/root/World/Systems/Client")
 onready var Server = get_node("/root/World/Systems/Server")
 
-signal system_ready(system)
+signal system_ready(system, obj)
 signal entity_loaded(entity)
 signal request_entity_unload(entity)
 signal app_ready()

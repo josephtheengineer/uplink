@@ -10,8 +10,12 @@ extends Node
 #                              |___/      
 ################################################################################
 
-onready var ServerSystem = get_node("/root/World/Systems/Server")
-onready var ChunkSystem = get_node("/root/World/Systems/Chunk")
+onready var Chunk
+onready var Download
+onready var Input
+onready var Interface
+onready var Sound
+
 onready var Debug = preload("res://scripts/features/debug.gd").new()
 onready var Diagnostics = preload("res://scripts/features/diagnostics.gd").new()
 onready var Player = preload("res://scripts/features/player.gd").new()
@@ -101,7 +105,7 @@ var my_info = { name = "Ari", color = Color8(255, 0, 255) }
 func _ready(): ################################################################# APP ENTRY POINT
 	Debug.init(log_loc)
 	SystemManager.setup()
-	Core.emit_signal("system_ready", SystemManager.CLIENT)                ##### READY #####
+	Core.emit_signal("system_ready", SystemManager.CLIENT, self)                ##### READY #####
 	
 	create_chunk_system()
 	create_download_system()
@@ -126,6 +130,8 @@ func create_download_system():
 	node.set_name("Download")
 	node.set_script(load("res://scripts/systems/download_system.gd"))
 	get_node("/root/World/Systems").call_deferred("add_child", node)
+	Download = get_node("/root/World/Systems/Download")
+
 
 func create_input_system():
 	Core.emit_signal("msg", "Creating input system...", "Debug")
@@ -133,6 +139,8 @@ func create_input_system():
 	node.set_name("Input")
 	node.set_script(load("res://scripts/systems/input_system.gd"))
 	get_node("/root/World/Systems").call_deferred("add_child", node)
+	Input = get_node("/root/World/Systems/Input")
+
 
 func create_interface_system():
 	Core.emit_signal("msg", "Creating interface system...", "Debug")
@@ -140,6 +148,7 @@ func create_interface_system():
 	node.set_name("Interface")
 	node.set_script(load("res://scripts/systems/interface_system.gd"))
 	get_node("/root/World/Systems").call_deferred("add_child", node)
+	Interface = get_node("/root/World/Systems/Interface")
 
 
 func create_sound_system():
@@ -148,6 +157,7 @@ func create_sound_system():
 	node.set_name("Sound")
 	node.set_script(load("res://scripts/systems/sound_system.gd"))
 	get_node("/root/World/Systems").call_deferred("add_child", node)
+	Sound = get_node("/root/World/Systems/Sound")
 
 
 func _on_app_ready():
@@ -159,8 +169,8 @@ func _on_app_ready():
 
 
 func _on_diagnostics_finised(): ####################################################
-	ServerSystem.start()
-	ServerSystem.load_world(self, "world_loaded")
+	#ServerSystem.start()
+	Core.Server.load_world(self, "world_loaded")
 
 
 func world_loaded(): ###########################################################
@@ -194,7 +204,7 @@ func create_hud(): #############################################################
 
 
 func init_main_menu(): #########################################################
-	ChunkSystem.create_chunk(Vector3(0, 0, 0))
+	Chunk.create_chunk(Vector3(0, 0, 0))
 
 
 func init_world(): #############################################################

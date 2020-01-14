@@ -4,7 +4,7 @@ extends Node
 onready var ServerSystem = get_node("/root/World/Systems/Server")
 onready var ClientSystem = get_node("/root/World/Systems/Client")
 onready var EdenWorldDecoder = preload("res://scripts/features/eden_world_decoder.gd").new()
-onready var Entity = preload("res://scripts/features/entity.gd").new()
+onready var Manager = preload("res://scripts/features/manager.gd").new()
 onready var BlockData = preload("res://scripts/features/block_data.gd").new()
 onready var SystemManager = preload("res://scripts/features/system_manager.gd").new()
 
@@ -16,7 +16,7 @@ var sur_chunk_x = 0
 var sur_chunk_z = 0
 
 func _ready():
-	Core.emit_signal("system_ready", SystemManager.CHUNK)                ##### READY #####
+	Core.emit_signal("system_ready", SystemManager.CHUNK, self)                ##### READY #####
 
 func create_chunk(position):
 	if chunks_processed_this_frame > 1:# and !Player.can_see_chunk(position):
@@ -50,16 +50,17 @@ func create_chunk(position):
 	chunk.object = null
 	chunk.method = null
 	
-	Entity.create({"chunk" : chunk})
+	#Entity.create({"chunk" : chunk})
 	
 	return true
 
 func destroy_chunk(position):
+	pass
 	#var chunk = Dictionary()
-	var list = Entity.get_entities_with("chunk")
-	for entity in list.values():
-		if entity.components.chunk.position == position:
-			Entity.destory(entity.id)
+	#var list = Entity.get_entities_with("chunk")
+	#for entity in list.values():
+	#	if entity.components.chunk.position == position:
+	#		Entity.destory(entity.id)
 
 signal rendered
 var thread
@@ -83,52 +84,53 @@ var thread
 #			create_surrounding_chunks(get_chunk(get_node(player).translation), ClientSystem.render_distance)
 
 func _process_chunk(id):
-	var entities = Entity.get_entities_with("chunk")
-	var components = entities[id].components
-	var node = get_node("/root/World/" + str(id))
-	
-	var chunk = Spatial.new()
-	chunk.name = "Chunk"
-	node.add_child(chunk)
-	
-	if !components.chunk.block_data:
-		var pos = components.chunk.position
-		chunk.translation = Vector3(pos.x * 16, pos.y * 16, pos.z * 16)
-		components.chunk.rendered = true
-		ClientSystem.chunk_index.append(pos)
-		Entity.edit(id, components)
-		return
-	
-	var chunk_data = compile(components.chunk.block_data, BlockData.blocks(), components.chunk.position) # Returns blocks_loaded, mesh, vertex_data
-	
-	var mesh_instance = MeshInstance.new()
-	mesh_instance.name = "MeshInstance"
-	chunk.add_child(mesh_instance)
-	mesh_instance.mesh = chunk_data.mesh
-	
-	var body = StaticBody.new()
-	body.name = "StaticBody"
-	mesh_instance.add_child(body)
-	
-	var collision_shape = CollisionShape.new()
-	var shape = ConcavePolygonShape.new()
-	shape.set_faces(chunk_data.vertex_data)
-	collision_shape.name = "CollisionShape"
-	collision_shape.shape = shape
-	body.add_child(collision_shape)
-	
-	ClientSystem.blocks_found += components.chunk.block_data.size()
-	ClientSystem.blocks_loaded += chunk_data.blocks_loaded
-	
-	var pos = components.chunk.position
-	chunk.translation = Vector3(pos.x * 16, pos.y * 16, pos.z * 16)
-	components.chunk.rendered = true
-	ClientSystem.chunk_index.append(pos)
-	Entity.edit(id, components)
-	
-	if components.chunk.object != null or components.chunk.method != null:
-		connect("rendered", components.chunk.object, components.chunk.method)
-		emit_signal("rendered")
+	pass
+	#var entities = Entity.get_entities_with("chunk")
+#	var components = entities[id].components
+#	var node = get_node("/root/World/" + str(id))
+#
+#	var chunk = Spatial.new()
+#	chunk.name = "Chunk"
+#	node.add_child(chunk)
+#
+#	if !components.chunk.block_data:
+#		var pos = components.chunk.position
+#		chunk.translation = Vector3(pos.x * 16, pos.y * 16, pos.z * 16)
+#		components.chunk.rendered = true
+#		ClientSystem.chunk_index.append(pos)
+#		Entity.edit(id, components)
+#		return
+#
+#	var chunk_data = compile(components.chunk.block_data, BlockData.blocks(), components.chunk.position) # Returns blocks_loaded, mesh, vertex_data
+#
+#	var mesh_instance = MeshInstance.new()
+#	mesh_instance.name = "MeshInstance"
+#	chunk.add_child(mesh_instance)
+#	mesh_instance.mesh = chunk_data.mesh
+#
+#	var body = StaticBody.new()
+#	body.name = "StaticBody"
+#	mesh_instance.add_child(body)
+#
+#	var collision_shape = CollisionShape.new()
+#	var shape = ConcavePolygonShape.new()
+#	shape.set_faces(chunk_data.vertex_data)
+#	collision_shape.name = "CollisionShape"
+#	collision_shape.shape = shape
+#	body.add_child(collision_shape)
+#
+#	ClientSystem.blocks_found += components.chunk.block_data.size()
+#	ClientSystem.blocks_loaded += chunk_data.blocks_loaded
+#
+#	var pos = components.chunk.position
+#	chunk.translation = Vector3(pos.x * 16, pos.y * 16, pos.z * 16)
+#	components.chunk.rendered = true
+#	ClientSystem.chunk_index.append(pos)
+#	Entity.edit(id, components)
+#
+#	if components.chunk.object != null or components.chunk.method != null:
+#		connect("rendered", components.chunk.object, components.chunk.method)
+#		emit_signal("rendered")
 	#_exit_tree()
 
 # Thread must be disposed (or "joined"), for portability.
@@ -184,17 +186,17 @@ func create_surrounding_chunks(center_chunk, distance):
 	if cloest_chunk != Vector3(0, 0, 0):
 		create_chunk(cloest_chunk)
 	
-	# Remove chunks outside of bounds
-	var entities = Entity.get_entities_with("chunk")
-	for id in entities:
-		var pos = Entity.get_component(id, "chunk.position")
-		if !surrounding_chunks.has(pos):
-			ClientSystem.chunk_index.erase(pos)
-			if Entity.get_component(id, "chunk.blocks_loaded"):
-				ClientSystem.blocks_loaded -= Entity.get_component(id, "chunk.blocks_loaded")
-				ClientSystem.blocks_found -= Entity.get_component(id, "chunk.block_data").size()
-			Core.emit_signal("msg", "Destroyed chunk" + str(pos), "Debug")
-			Entity.destory(id)
+#	# Remove chunks outside of bounds
+#	var entities = Entity.get_entities_with("chunk")
+#	for id in entities:
+#		var pos = Entity.get_component(id, "chunk.position")
+#		if !surrounding_chunks.has(pos):
+#			ClientSystem.chunk_index.erase(pos)
+#			if Entity.get_component(id, "chunk.blocks_loaded"):
+#				ClientSystem.blocks_loaded -= Entity.get_component(id, "chunk.blocks_loaded")
+#				ClientSystem.blocks_found -= Entity.get_component(id, "chunk.block_data").size()
+#			Core.emit_signal("msg", "Destroyed chunk" + str(pos), "Debug")
+#			Entity.destory(id)
 
 #func init_chunk(id):
 #	if World.map_seed == -1 and chunk_location == Vector3(0, 0, 0):
@@ -248,20 +250,21 @@ func compile(block_data, materials, pos): # Returns blocks_loaded, mesh, vertex_
 
 
 func break_block(chunk_id, location): ####################################################
+	pass
 	#Hud.msg("Chunk translation: " + str(translation), "Debug")
 	#Hud.msg("Removing block from chunk location " + str(location - translation), "Info")
 	
-	var block_data = Entity.get_component(chunk_id, "chunk.block_data")
-	block_data.erase(location - Entity.get_component(chunk_id, "chunk.position"))
-	Entity.set_component(chunk_id, "chunk.block_data", block_data)
-
-	var chunk_data = compile(Entity.get_component(chunk_id, "chunk.block_data"), Entity.get_component(chunk_id, "chunk.materials"), Entity.get_component(chunk_id, "chunk.position")) # Returns blocks_loaded, mesh, vertex_data
-	
-	get_node("/root/World/" + str(chunk_id) + "/Chunk/MeshInstance").mesh = chunk_data.mesh
-	
-	var shape = ConcavePolygonShape.new()
-	shape.set_faces(chunk_data.vertex_data)
-	get_node("/root/World/" + str(chunk_id) + "/Chunk/MeshInstance/StaticBody/CollisionShape").shape = shape
+#	var block_data = Entity.get_component(chunk_id, "chunk.block_data")
+#	block_data.erase(location - Entity.get_component(chunk_id, "chunk.position"))
+#	Entity.set_component(chunk_id, "chunk.block_data", block_data)
+#
+#	var chunk_data = compile(Entity.get_component(chunk_id, "chunk.block_data"), Entity.get_component(chunk_id, "chunk.materials"), Entity.get_component(chunk_id, "chunk.position")) # Returns blocks_loaded, mesh, vertex_data
+#
+#	get_node("/root/World/" + str(chunk_id) + "/Chunk/MeshInstance").mesh = chunk_data.mesh
+#
+#	var shape = ConcavePolygonShape.new()
+#	shape.set_faces(chunk_data.vertex_data)
+#	get_node("/root/World/" + str(chunk_id) + "/Chunk/MeshInstance/StaticBody/CollisionShape").shape = shape
 
 func place_block(chunk_id, block_id, location): ####################################################
 	if block_id == 0:
@@ -270,17 +273,17 @@ func place_block(chunk_id, block_id, location): ################################
 	#Hud.msg("Chunk translation: " + str(translation), "Debug")
 	#Hud.msg("Removing block from chunk location " + str(location - translation), "Info")
 	
-	var block_data = Entity.get_component(chunk_id, "chunk.block_data")
-	block_data[location - Entity.get_component(chunk_id, "chunk.position")] = block_id
-	Entity.set_component(chunk_id, "chunk.block_data", block_data)
-
-	var chunk_data = compile(Entity.get_component(chunk_id, "chunk.block_data"), Entity.get_component(chunk_id, "chunk.materials"), Entity.get_component(chunk_id, "chunk.position")) # Returns blocks_loaded, mesh, vertex_data
-	
-	get_node("/root/World/" + str(chunk_id) + "/Chunk/MeshInstance").mesh = chunk_data.mesh
-	
-	var shape = ConcavePolygonShape.new()
-	shape.set_faces(chunk_data.vertex_data)
-	get_node("/root/World/" + str(chunk_id) + "/Chunk/MeshInstance/StaticBody/CollisionShape").shape = shape
+#	var block_data = Entity.get_component(chunk_id, "chunk.block_data")
+#	block_data[location - Entity.get_component(chunk_id, "chunk.position")] = block_id
+#	Entity.set_component(chunk_id, "chunk.block_data", block_data)
+#
+#	var chunk_data = compile(Entity.get_component(chunk_id, "chunk.block_data"), Entity.get_component(chunk_id, "chunk.materials"), Entity.get_component(chunk_id, "chunk.position")) # Returns blocks_loaded, mesh, vertex_data
+#
+#	get_node("/root/World/" + str(chunk_id) + "/Chunk/MeshInstance").mesh = chunk_data.mesh
+#
+#	var shape = ConcavePolygonShape.new()
+#	shape.set_faces(chunk_data.vertex_data)
+#	get_node("/root/World/" + str(chunk_id) + "/Chunk/MeshInstance/StaticBody/CollisionShape").shape = shape
 
 func get_chunk_sub(location): #################################################
 	var x = 0
@@ -303,8 +306,9 @@ func get_chunk(location): #####################################################
 	return Vector3(x, y, z)
 
 func get_chunk_id(location):
-	var entities = Entity.get_entities_with("chunk")
-	for id in entities:
-		if Entity.get_component(id, "chunk.position") == location:
-			return id
-	return false
+	pass
+#	var entities = Entity.get_entities_with("chunk")
+#	for id in entities:
+#		if Entity.get_component(id, "chunk.position") == location:
+#			return id
+#	return false

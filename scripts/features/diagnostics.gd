@@ -112,7 +112,8 @@ func _update_terminal():
 			Core.emit_signal("msg", "Is Userfs Persistent: " + str(OS.is_userfs_persistent()), "Info")
 		38:
 			Core.emit_signal("msg", "Is Window Always on Top: " + str(OS.is_window_always_on_top()), "Info")
-		#39:
+		39:
+			emit_signal("diagnostics")
 			#show_text(id, components, "Type '" + keyword +"' to continue: ")
 			#OS.show_virtual_keyboard()
 			#create_text_input()

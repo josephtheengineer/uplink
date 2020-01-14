@@ -6,7 +6,7 @@ var playlist_progress = 0
 var playlist = "Eden"
 
 func _ready():
-	Core.emit_signal("system_ready", SystemManager.SOUND)                ##### READY #####
+	Core.emit_signal("system_ready", SystemManager.SOUND, self)                ##### READY #####
 
 func music_player_finished():
 	if playlist == "Eden":

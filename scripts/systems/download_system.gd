@@ -20,7 +20,7 @@ var map_path = "res://worlds/direct_city.eden2"
 var map_name = "direct_city.eden2"
 
 func _ready():
-	Core.emit_signal("system_ready", SystemManager.DOWNLOAD)                ##### READY #####
+	Core.emit_signal("system_ready", SystemManager.DOWNLOAD, self)                ##### READY #####
 
 
 func _on_fetch_data_request_completed(result, response_code, headers, body):

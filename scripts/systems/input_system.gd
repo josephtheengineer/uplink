@@ -11,7 +11,7 @@ var pressed = false
 var move_mode = "walk"
 
 func _ready():
-	Core.emit_signal("system_ready", SystemManager.INPUT)                ##### READY #####
+	Core.emit_signal("system_ready", SystemManager.INPUT, self)                ##### READY #####
 
 #func _process(delta):
 #	var entities = Entity.get_entities_with("hud")

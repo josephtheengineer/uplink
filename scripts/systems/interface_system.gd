@@ -5,7 +5,7 @@ onready var SystemManager = preload("res://scripts/features/system_manager.gd").
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	Core.emit_signal("system_ready", SystemManager.INTERFACE)                ##### READY #####
+	Core.emit_signal("system_ready", SystemManager.INTERFACE, self)                ##### READY #####
 	Core.connect("msg", self, "_on_msg")
 
 func _process(delta):
