@@ -1,5 +1,5 @@
 extends Node
-onready var Entity = preload("res://scripts/features/entity.gd").new()
+var Entity = load("res://scenes/entity.tscn")
 
 func get_entities_with(component: String):
 	var object = get_node("/root/World/" + component)
@@ -11,17 +11,38 @@ func get_entities_with(component: String):
 
 func create(entity: Dictionary):
 	Core.emit_signal("msg", "Creating new Entity, " + entity.type, "Debug")
-	if entity.type == "gui":
-		if !Core.get_parent().get_node("/root/World").has_node("GUI"):
-			var gui =  Control.new()
-			gui.set_name("GUI")
-			Core.get_parent().get_node("/root/World").add_child(gui)
+	if entity.type == "interface":
+		if !Core.get_parent().get_node("/root/World").has_node("Interfaces"):
+			var interfaces = Control.new()
+			interfaces.set_name("Interfaces")
+			Core.get_parent().get_node("/root/World").add_child(interfaces)
 		if entity.name_id == "tty":
-			var node = Node.new()
+			var node = Entity.instance()
 			node.set_name("0")
-			node.set_script(Entity)
-			Core.get_parent().get_node("/root/World/GUI").add_child(node)
-			Core.get_parent().get_node("/root/World/GUI/0").add_child(load("res://scenes/tty.tscn").instance())
+			Core.get_parent().get_node("/root/World/Interfaces").add_child(node)
+			Core.get_parent().get_node("/root/World/Interfaces/0").components = entity
+			Core.get_parent().get_node("/root/World/Interfaces/0").add_child(load("res://scenes/tty.tscn").instance())
+	elif entity.type == "chunk":
+		if !Core.get_parent().get_node("/root/World").has_node("Chunks"):
+			var chunks = Spatial.new()
+			chunks.set_name("Chunks")
+			Core.get_parent().get_node("/root/World").add_child(chunks)
+		if entity.name_id == "chunk":
+			var node = Entity.instance()
+			node.set_name(str(entity.id))
+			Core.get_parent().get_node("/root/World/Chunks").add_child(node)
+			Core.get_parent().get_node("/root/World/Chunks/" + str(entity.id)).components = entity
+	elif entity.type == "input":
+		if !Core.get_parent().get_node("/root/World").has_node("Inputs"):
+			var inputs = Node.new()
+			inputs.set_name("Inputs")
+			Core.get_parent().get_node("/root/World").add_child(inputs)
+		if entity.name_id == "player":
+			var node = Entity.instance()
+			node.set_name(entity.id)
+			Core.get_parent().get_node("/root/World/Inputs").add_child(node)
+			Core.get_parent().get_node("/root/World/Inputs/" + entity.id).components = entity
+			Core.get_parent().get_node("/root/World/Inputs/" + entity.id).add_child(load("res://scenes/player.tscn").instance())
 	#entity.debug = true
 	#entity.text = ""
 	

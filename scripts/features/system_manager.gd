@@ -17,7 +17,7 @@ func _on_system_ready(system, obj):
 			if Core.Client.chunk:
 				Core.emit_signal("msg", "Chunk System ready called when already registered", "Warn")
 			else:
-				Core.Client.Chunk = obj
+				Core.Client.ChunkSystem = obj
 				Core.Client.chunk = true
 				Core.emit_signal("msg", "Chunk System ready.", "Info")
 		CLIENT:
@@ -30,21 +30,21 @@ func _on_system_ready(system, obj):
 			if Core.Client.download:
 				Core.emit_signal("msg", "Download System ready called when already registered", "Warn")
 			else:
-				Core.Client.Download = obj
+				Core.Client.DownloadSystem = obj
 				Core.Client.download = true
 				Core.emit_signal("msg", "Download System ready.", "Info")
 		INPUT:
 			if Core.Client.input:
 				Core.emit_signal("msg", "Input System ready called when already registered", "Warn")
 			else:
-				Core.Client.Input = obj
+				Core.Client.InputSystem = obj
 				Core.Client.input = true
 				Core.emit_signal("msg", "Input System ready.", "Info")
 		INTERFACE:
 			if Core.Client.interface:
 				Core.emit_signal("msg", "Interface System ready called when already registered", "Warn")
 			else:
-				Core.Client.Interface = obj
+				Core.Client.InterfaceSystem = obj
 				Core.Client.interface = true
 				Core.emit_signal("msg", "Interface System ready.", "Info")
 		SERVER:
@@ -57,7 +57,7 @@ func _on_system_ready(system, obj):
 			if Core.Client.sound:
 				Core.emit_signal("msg", "Sound System ready called when already registered", "Warn")
 			else:
-				Core.Client.Sound = obj
+				Core.Client.SoundSystem = obj
 				Core.Client.sound = true
 				Core.emit_signal("msg", "Sound System ready.", "Info")
 		_:

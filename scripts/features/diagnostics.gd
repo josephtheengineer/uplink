@@ -8,12 +8,12 @@ const keyword = "eden"
 signal diagnostics
 
 func run(object, method):
-	var Manager = preload("res://scripts/features/manager.gd").new()
+	var Manager = load("res://scripts/features/manager.gd").new()
 	connect("diagnostics", object, method)
 	randomize()
 	var tty = Dictionary()
 	tty.name_id = "tty"
-	tty.type = "gui"
+	tty.type = "interface"
 	tty.debug = true
 	tty.text = ""
 	

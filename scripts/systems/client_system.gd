@@ -10,11 +10,11 @@ extends Node
 #                              |___/      
 ################################################################################
 
-onready var Chunk
-onready var Download
-onready var Input
-onready var Interface
-onready var Sound
+onready var ChunkSystem
+onready var DownloadSystem
+onready var InputSystem
+onready var InterfaceSystem
+onready var SoundSystem
 
 onready var Debug = preload("res://scripts/features/debug.gd").new()
 onready var Diagnostics = preload("res://scripts/features/diagnostics.gd").new()
@@ -130,7 +130,6 @@ func create_download_system():
 	node.set_name("Download")
 	node.set_script(load("res://scripts/systems/download_system.gd"))
 	get_node("/root/World/Systems").call_deferred("add_child", node)
-	Download = get_node("/root/World/Systems/Download")
 
 
 func create_input_system():
@@ -139,7 +138,6 @@ func create_input_system():
 	node.set_name("Input")
 	node.set_script(load("res://scripts/systems/input_system.gd"))
 	get_node("/root/World/Systems").call_deferred("add_child", node)
-	Input = get_node("/root/World/Systems/Input")
 
 
 func create_interface_system():
@@ -148,7 +146,6 @@ func create_interface_system():
 	node.set_name("Interface")
 	node.set_script(load("res://scripts/systems/interface_system.gd"))
 	get_node("/root/World/Systems").call_deferred("add_child", node)
-	Interface = get_node("/root/World/Systems/Interface")
 
 
 func create_sound_system():
@@ -157,7 +154,6 @@ func create_sound_system():
 	node.set_name("Sound")
 	node.set_script(load("res://scripts/systems/sound_system.gd"))
 	get_node("/root/World/Systems").call_deferred("add_child", node)
-	Sound = get_node("/root/World/Systems/Sound")
 
 
 func _on_app_ready():
@@ -176,14 +172,16 @@ func _on_diagnostics_finised(): ################################################
 func world_loaded(): ###########################################################
 	Core.emit_signal("msg", "World loaded!", "Info")
 	
-	var entity = Dictionary()
-	entity.type = "player"
-	entity.position = Vector3(0, 100, 0) #Vector3(9*16, 100, 130*16) 
+	var player = Dictionary()
+	player.name_id = "player"
+	player.type = "input"
+	player.id = "JosephTheEngineer"
+	player.position = Vector3(0, 100, 0) #Vector3(9*16, 100, 130*16) 
 	#ServerSystem.last_location * 16
-	entity.username = "JosephTheEngineer"
+	player.username = "JosephTheEngineer"
 	
-#	Manager.create(entity)
-#	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	Manager.create(player)
+	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	
 	#create_hud()
 
@@ -204,7 +202,7 @@ func create_hud(): #############################################################
 
 
 func init_main_menu(): #########################################################
-	Chunk.create_chunk(Vector3(0, 0, 0))
+	ChunkSystem.create_chunk(Vector3(0, 0, 0))
 
 
 func init_world(): #############################################################

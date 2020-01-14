@@ -36,6 +36,9 @@ func create_chunk(position):
 			#chunk_data = TerrainGenerator.generate_flat_terrain()
 	
 	var chunk = Dictionary()
+	chunk.name_id = "chunk"
+	chunk.type = "chunk"
+	chunk.id = position
 	chunk.rendered = false
 	chunk.position = position
 	chunk.address = 0
@@ -50,7 +53,7 @@ func create_chunk(position):
 	chunk.object = null
 	chunk.method = null
 	
-	#Entity.create({"chunk" : chunk})
+	Manager.create(chunk)
 	
 	return true
 

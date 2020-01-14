@@ -56,10 +56,10 @@ func load_world(object, method):
 	
 	EdenWorldDecoder.load_world()
 	Core.emit_signal("msg", "Spawning player at last known location: " + str(last_location), "Debug")
-	var chunk_position = Core.Client.Chunk.get_chunk(last_location)
+	var chunk_position = Core.Client.ChunkSystem.get_chunk(last_location)
 	chunk_position.y = 0
 	Core.emit_signal("msg", "Chunk: " + str(chunk_position), "Debug")
 	
 	Core.emit_signal("msg", str(EdenWorldDecoder.get_chunk_data(chunk_position)), "Trace")
-	Core.Client.Chunk.create_chunk(Vector3(0, 0, 0))
+	Core.Client.ChunkSystem.create_chunk(Vector3(0, 0, 0))
 	emit_signal("world_loaded")
