@@ -2,12 +2,11 @@ extends Node
 var Entity = load("res://scenes/entity.tscn")
 
 func get_entities_with(component: String):
-	var object = get_node("/root/World/" + component)
-	if object:
+	if Core.get_parent().has_node("/root/World/" + component):
+		var object = Core.get_parent().get_node("/root/World/" + component)
 		return object.get_children()
 	else:
 		return false
-	
 
 func create(entity: Dictionary):
 	Core.emit_signal("msg", "Creating new Entity, " + entity.type, "Debug")

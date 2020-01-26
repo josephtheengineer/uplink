@@ -74,7 +74,7 @@ var log_loc = "user://logs/"
 var render_distance = 2
 var player_move_forward = false
 var action_mode = "nothing"
-
+var username = "JosephTheEngineer"
 
 #var local_data = {}
 const DEFAULT_HOST = "josephtheengineer.ddns.net"
@@ -161,7 +161,7 @@ func _on_app_ready():
 	Core.emit_signal("msg", "App ready!", "Info")
 	
 	Diagnostics.run(self, "_on_diagnostics_finised")
-	world_loaded()
+	#world_loaded()
 
 
 func _on_diagnostics_finised(): ####################################################
@@ -178,7 +178,7 @@ func world_loaded(): ###########################################################
 	player.id = "JosephTheEngineer"
 	player.position = Vector3(0, 100, 0) #Vector3(9*16, 100, 130*16) 
 	#ServerSystem.last_location * 16
-	player.username = "JosephTheEngineer"
+	player.username = username
 	
 	Manager.create(player)
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)

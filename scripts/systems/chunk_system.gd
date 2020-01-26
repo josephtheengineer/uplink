@@ -7,6 +7,8 @@ onready var EdenWorldDecoder = preload("res://scripts/features/eden_world_decode
 onready var Manager = preload("res://scripts/features/manager.gd").new()
 onready var BlockData = preload("res://scripts/features/block_data.gd").new()
 onready var SystemManager = preload("res://scripts/features/system_manager.gd").new()
+onready var TerrainGenerator = preload("res://scripts/features/terrain_generator.gd").new()
+onready var Geometry = preload("res://scripts/features/geometry.gd").new()
 
 var timer = 0
 var chunks_processed_this_frame = 0
@@ -29,11 +31,11 @@ func create_chunk(position):
 	
 	if !chunk_data:
 		if ServerSystem.map_seed == 0:
-			#chunk_data = TerrainGenerator.generate_natural_terrain()
+			chunk_data = TerrainGenerator.generate_natural_terrain()
 			pass
 		else:
 			pass
-			#chunk_data = TerrainGenerator.generate_flat_terrain()
+			chunk_data = TerrainGenerator.generate_flat_terrain()
 	
 	var chunk = Dictionary()
 	chunk.name_id = "chunk"
@@ -62,78 +64,69 @@ func destroy_chunk(position):
 	#var chunk = Dictionary()
 	#var list = Entity.get_entities_with("chunk")
 	#for entity in list.values():
-	#	if entity.components.chunk.position == position:
+	#	if entity.components.position == position:
 	#		Entity.destory(entity.id)
 
 signal rendered
 var thread
 
-#func _process(delta):
-#	chunks_processed_this_frame = 0
-#	var entities = Entity.get_entities_with("chunk")
-#	for id in entities:
-#		var components = entities[id].components
-#		if components.chunk.rendered == false and chunk_wait_time > 60:
-#			chunk_wait_time=0
-#			
-#			_process_chunk(id)
-#		else:
-#			chunk_wait_time+=1
-	
-#	entities = Entity.get_entities_with("player")
-#	for id in entities:
-#		var player = "/root/World/" + str(id) + "/Player"
-#		if has_node(player):
-#			create_surrounding_chunks(get_chunk(get_node(player).translation), ClientSystem.render_distance)
+func _process(delta):
+	chunks_processed_this_frame = 0
+	var entities = Manager.get_entities_with("Chunks")
+	if entities:
+		for node in entities:
+			if node.components.rendered == false and chunk_wait_time > 60:
+				chunk_wait_time=0
+				_process_chunk(node)
+			else:
+				chunk_wait_time+=1
 
-func _process_chunk(id):
-	pass
-	#var entities = Entity.get_entities_with("chunk")
-#	var components = entities[id].components
-#	var node = get_node("/root/World/" + str(id))
-#
-#	var chunk = Spatial.new()
-#	chunk.name = "Chunk"
-#	node.add_child(chunk)
-#
-#	if !components.chunk.block_data:
-#		var pos = components.chunk.position
-#		chunk.translation = Vector3(pos.x * 16, pos.y * 16, pos.z * 16)
-#		components.chunk.rendered = true
-#		ClientSystem.chunk_index.append(pos)
-#		Entity.edit(id, components)
-#		return
-#
-#	var chunk_data = compile(components.chunk.block_data, BlockData.blocks(), components.chunk.position) # Returns blocks_loaded, mesh, vertex_data
-#
-#	var mesh_instance = MeshInstance.new()
-#	mesh_instance.name = "MeshInstance"
-#	chunk.add_child(mesh_instance)
-#	mesh_instance.mesh = chunk_data.mesh
-#
-#	var body = StaticBody.new()
-#	body.name = "StaticBody"
-#	mesh_instance.add_child(body)
-#
-#	var collision_shape = CollisionShape.new()
-#	var shape = ConcavePolygonShape.new()
-#	shape.set_faces(chunk_data.vertex_data)
-#	collision_shape.name = "CollisionShape"
-#	collision_shape.shape = shape
-#	body.add_child(collision_shape)
-#
-#	ClientSystem.blocks_found += components.chunk.block_data.size()
-#	ClientSystem.blocks_loaded += chunk_data.blocks_loaded
-#
-#	var pos = components.chunk.position
-#	chunk.translation = Vector3(pos.x * 16, pos.y * 16, pos.z * 16)
-#	components.chunk.rendered = true
-#	ClientSystem.chunk_index.append(pos)
-#	Entity.edit(id, components)
-#
-#	if components.chunk.object != null or components.chunk.method != null:
-#		connect("rendered", components.chunk.object, components.chunk.method)
-#		emit_signal("rendered")
+	entities = Manager.get_entities_with("Input")
+	if entities:
+		for node in entities:
+			create_surrounding_chunks(get_chunk(node.translation), ClientSystem.render_distance)
+
+func _process_chunk(node):
+	var chunk = Spatial.new()
+	chunk.name = "Chunk"
+	node.add_child(chunk)
+
+	if !node.components.block_data:
+		var pos = node.components.position
+		chunk.translation = Vector3(pos.x * 16, pos.y * 16, pos.z * 16)
+		node.components.rendered = true
+		ClientSystem.chunk_index.append(pos)
+		return
+
+	var chunk_data = compile(node.components.block_data, BlockData.blocks(), node.components.position) # Returns blocks_loaded, mesh, vertex_data
+
+	var mesh_instance = MeshInstance.new()
+	mesh_instance.name = "MeshInstance"
+	chunk.add_child(mesh_instance)
+	mesh_instance.mesh = chunk_data.mesh
+
+	var body = StaticBody.new()
+	body.name = "StaticBody"
+	mesh_instance.add_child(body)
+
+	var collision_shape = CollisionShape.new()
+	var shape = ConcavePolygonShape.new()
+	shape.set_faces(chunk_data.vertex_data)
+	collision_shape.name = "CollisionShape"
+	collision_shape.shape = shape
+	body.add_child(collision_shape)
+
+	ClientSystem.blocks_found += node.components.block_data.size()
+	ClientSystem.blocks_loaded += chunk_data.blocks_loaded
+
+	var pos = node.components.position
+	chunk.translation = Vector3(pos.x * 16, pos.y * 16, pos.z * 16)
+	node.components.rendered = true
+	ClientSystem.chunk_index.append(pos)
+
+	if node.components.object != null or node.components.method != null:
+		connect("rendered", node.components.object, node.components.method)
+		emit_signal("rendered")
 	#_exit_tree()
 
 # Thread must be disposed (or "joined"), for portability.
