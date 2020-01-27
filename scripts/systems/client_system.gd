@@ -24,7 +24,7 @@ onready var Comp = preload("res://scripts/features/comp.gd").new()
 onready var Manager = preload("res://scripts/features/manager.gd").new()
 onready var SystemManager = preload("res://scripts/features/system_manager.gd").new()
 
-var version = "Uplink v0.0.0 beta0 r2"
+var version = "Uplink v0.0.0 beta0 r8"
 var total_players = 0
 var players = Array()
 var total_entities = 0

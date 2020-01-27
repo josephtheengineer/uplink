@@ -31,11 +31,11 @@ func create_chunk(position):
 	
 	if !chunk_data:
 		if ServerSystem.map_seed == 0:
-			chunk_data = TerrainGenerator.generate_natural_terrain()
-			pass
+			if position.y == 0:
+				chunk_data = TerrainGenerator.generate_natural_terrain()
 		else:
-			pass
-			chunk_data = TerrainGenerator.generate_flat_terrain()
+			if position.y == 0:
+				chunk_data = TerrainGenerator.generate_flat_terrain()
 	
 	var chunk = Dictionary()
 	chunk.name_id = "chunk"
@@ -75,16 +75,17 @@ func _process(delta):
 	var entities = Manager.get_entities_with("Chunks")
 	if entities:
 		for node in entities:
-			if node.components.rendered == false and chunk_wait_time > 60:
-				chunk_wait_time=0
-				_process_chunk(node)
-			else:
-				chunk_wait_time+=1
+			if node.components.size() != 0:
+				if node.components.rendered == false and chunk_wait_time > 60:
+					chunk_wait_time=0
+					_process_chunk(node)
+				else:
+					chunk_wait_time+=1
 
-	entities = Manager.get_entities_with("Input")
+	entities = Manager.get_entities_with("Inputs")
 	if entities:
 		for node in entities:
-			create_surrounding_chunks(get_chunk(node.translation), ClientSystem.render_distance)
+			create_surrounding_chunks(get_chunk(node.get_node("Player").translation), ClientSystem.render_distance)
 
 func _process_chunk(node):
 	var chunk = Spatial.new()

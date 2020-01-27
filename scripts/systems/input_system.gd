@@ -55,25 +55,26 @@ func _joystick_pressed(down, id):
 	#camera_width_center = OS.get_window_size().x / 2
 	#camera_height_center = OS.get_window_size().y / 2
 
-#func _physics_process(delta): #################################################
-#	for id in Manager.get_entities_with(Comp.PLAYER):
-#		if Entity.objects.has(id):
-#			var components = Entity.objects[id].components
-#			if components.has("player"):
-#				#connect("submit", components.text_input.object, components.text_input.method, [id])
-#				var player_path = Entity.get_node_path({"id":id, "component":"player"})
-#				if get_tree().get_root().has_node(player_path + "Capsule"):
-#					if move_mode == "walk":
-#						Player.walk(delta, id)
-#						get_node(player_path + "Capsule").disabled = false
-#					else:
-#						Player.fly(delta, id)
-#						get_node(player_path + "Capsule").disabled = true
-				
-				#if event is InputEventKey and event.pressed:
-					#if event.scancode == KEY_ENTER:
-						#emit_signal("submit")
-					#components.text_input.text += event.as_text()
+func _physics_process(delta): #################################################
+#	for node in Manager.get_entities_with("Input"):
+		#var components = node.components
+		#if components.has("player"):
+			#connect("submit", components.text_input.object, components.text_input.method, [id])
+	var node = get_node("/root/World/Inputs/JosephTheEngineer")
+	
+	if node:
+		var player_path = "/root/World/Inputs/JosephTheEngineer/Player/"
+		if move_mode == "walk":
+			Player.walk(delta, node)
+			get_node(player_path + "Capsule").disabled = false
+		else:
+			Player.fly(delta, node)
+			get_node(player_path + "Capsule").disabled = true
+		
+		#if event is InputEventKey and event.pressed:
+			#if event.scancode == KEY_ENTER:
+				#emit_signal("submit")
+			#components.text_input.text += event.as_text()
 
 signal submit
 
@@ -128,16 +129,26 @@ func _input(event): ###########################################################
 		Core.Client.action_mode = "paint"
 		#Debug.switch_mode("paint")
 
+var camera_angle = 0
+
 func player_move_head(event, player):
-	#if Hud.analog_is_pressed == false:
-	#head.rotate_y(deg2rad(-event.relative.x * Player.mouse_sensitivity))
-	
 	var head = player.get_node("Player/Head")
 	
+	head.rotation_degrees.y += -event.relative.x * Player.mouse_sensitivity
+	
 	var change = -event.relative.y * Player.mouse_sensitivity
-	#if change + Player.camera_angle < 90 and change + Player.camera_angle > -90:
-	head.rotate_x(deg2rad(change))
-		#Player.camera_angle += change
+	#if change + camera_angle < 90 and change + camera_angle > -90:
+	head.rotation_degrees.x += change
+	camera_angle += change
+	#Core.emit_signal("msg", "Camera Angle: " + str(camera_angle), "Trace")
+	#Core.emit_signal("msg", "Angle: " + str(head.rotation_degrees), "Trace")
+	
+	# Fix z value #BUG#
+	#head.rotation_degrees.z = 0
+	
+	#var camera_rot = head.rotation_degrees
+	#camera_rot.x = clamp(camera_rot.x, -70, 70)
+	#head.rotation_degrees = camera_rot
 
 func player_move(event, player):
 	var entities = Manager.get_entities_with("player")

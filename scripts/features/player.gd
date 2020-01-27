@@ -253,9 +253,9 @@ func can_see_chunk(id, chunk): ################################################
 				#return Vector3(0, 0, 0)
 
 
-func walk(delta, id): #############################################################
-	if !get_tree().get_root().has_node("/root/World/" + str(id) + "/Player/Head/Camera"):
-		return false
+func walk(delta, node): #############################################################
+	#if !get_tree().get_root().has_node("/root/World/" + str(id) + "/Player/Head/Camera"):
+		#return false
 	# reset the direction of the player
 	direction = Vector3()
 	
@@ -264,7 +264,7 @@ func walk(delta, id): ##########################################################
 	#	direction += Vector3(move_direction.x / 2, 0,  move_direction.y / 2)
 	#else:
 	# get the rotation of the camera
-	var aim = get_node("/root/World/" + str(id) + "/Player/Head/Camera").get_global_transform().basis
+	var aim = node.get_node("Player/Head/Camera").get_global_transform().basis
 	if Input.is_action_pressed("move_forward"): # or World.player_move_forward:
 		direction -= aim.z
 	if Input.is_action_pressed("move_backward"):
@@ -304,18 +304,18 @@ func walk(delta, id): ##########################################################
 	velocity.z = temp_velocity.z
 	
 	# move
-	get_node("/root/World/" + str(id) + "/Player").move_and_slide(velocity, Vector3(0, 1, 0))
+	node.get_node("Player").move_and_slide(velocity, Vector3(0, 1, 0))
 	
 	if Input.is_action_just_pressed("jump"):
 		velocity.y = jump_height
 
 
-func fly(delta, id): ##############################################################
+func fly(delta, node): ##############################################################
 	# reset the direction of  the player
 	direction = Vector3()
 	
 	# get the rotation of the camera
-	var aim = get_node("/root/World/" + str(id) + "/Player/Head/Camera").get_global_transform().basis
+	var aim = node.get_node("Player/Head/Camera").get_global_transform().basis
 	if Input.is_action_pressed("move_forward"):
 		direction -= aim.z
 	if Input.is_action_pressed("move_backward"):
@@ -335,4 +335,4 @@ func fly(delta, id): ###########################################################
 	velocity = velocity.linear_interpolate(target, FLY_ACCEL * delta)
 	
 	# move
-	get_node("/root/World/" + str(id) + "/Player").move_and_slide(velocity)
+	node.get_node("Player").move_and_slide(velocity)
