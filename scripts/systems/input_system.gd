@@ -194,7 +194,7 @@ func player_action(event, player):
 #			pass
 #			#_joystick_pressed(true, 0)
 #
-#	Player.action(id, OS.get_window_size() / 2)
+	Player.action(player, OS.get_window_size() / 2)
 #	if pressed:
 #		Core.emit_signal("msg", "Woah", "Info")
 #player.translation = components.player.position

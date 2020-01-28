@@ -2,6 +2,7 @@ extends Node
 onready var Entity = preload("res://scripts/features/entity.gd")
 onready var DebugInfo = preload("res://scripts/features/debug_info.gd")
 onready var SystemManager = preload("res://scripts/features/system_manager.gd").new()
+onready var Hud = preload("res://scripts/features/hud.gd").new()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -9,7 +10,6 @@ func _ready():
 	Core.connect("msg", self, "_on_msg")
 
 func _process(delta):
-	pass
 #	for id in Entity.get_entities_with("terminal"):
 #		if get_node("/root/World/" + str(id)):
 #			if Entity.get_component(id, "terminal.rendered") == false:
@@ -22,10 +22,10 @@ func _process(delta):
 #						get_node(path + str(id) + "/Terminal/Text").text = Entity.get_component(id, "terminal.text")
 #					Entity.set_component(id, "terminal.text_rendered", true)
 #	
-#	for id in Entity.get_entities_with("hud"):
+#	for id in Entity.get_entities_with("Interfaces"):
 #		if get_node("/root/World/" + str(id)):
 #			if Entity.get_component(id, "hud.rendered"):
-#				process_hud(id)
+	Hud.process_hud(Core.get_parent().get_node("World/Interfaces/Hud"))
 #			else:
 #				Core.emit_signal("msg", "Creating HUD...", "Info")
 #				create_hud(id)
@@ -42,22 +42,6 @@ func _on_msg(message, level):
 	#Core.emit_signal("msg", "Rec message", "Debug")
 	if get_tree().get_root().has_node("/root/World/Interfaces/0/TTY/RichTextLabel"):
 		get_tree().get_root().get_node("/root/World/Interfaces/0/TTY/RichTextLabel").add_text(message + '\n')
-
-func create_hud(id):
-	var node = get_node("/root/World/" + str(id))
-	
-	var hud = load("res://scenes/hud.tscn").instance()
-	node.add_child(hud)
-	node.rect_size = OS.window_size
-	
-	Entity.set_component(id, "hud.rendered", true)
-
-func process_hud(id):
-	DebugInfo.player_move_update(id)
-	DebugInfo.action_mode_update(id)
-	DebugInfo.frame_update(id)
-	DebugInfo.world_stats_update(id)
-	
 
 func process_horizontal_container(id):
 	pass

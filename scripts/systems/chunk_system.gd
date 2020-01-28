@@ -246,22 +246,19 @@ func compile(block_data, materials, pos): # Returns blocks_loaded, mesh, vertex_
 	return {"blocks_loaded" : blocks_loaded, "mesh" : mesh, "vertex_data" : vertex_data}
 
 
-func break_block(chunk_id, location): ####################################################
-	pass
-	#Hud.msg("Chunk translation: " + str(translation), "Debug")
-	#Hud.msg("Removing block from chunk location " + str(location - translation), "Info")
+func break_block(chunk, location): ####################################################
+	Core.emit_signal("msg", "Chunk position: " + str(chunk.components.position), "Debug")
+	Core.emit_signal("msg", "Removing block from chunk location " + str(location - chunk.components.position), "Info")
 	
-#	var block_data = Entity.get_component(chunk_id, "chunk.block_data")
-#	block_data.erase(location - Entity.get_component(chunk_id, "chunk.position"))
-#	Entity.set_component(chunk_id, "chunk.block_data", block_data)
-#
-#	var chunk_data = compile(Entity.get_component(chunk_id, "chunk.block_data"), Entity.get_component(chunk_id, "chunk.materials"), Entity.get_component(chunk_id, "chunk.position")) # Returns blocks_loaded, mesh, vertex_data
-#
-#	get_node("/root/World/" + str(chunk_id) + "/Chunk/MeshInstance").mesh = chunk_data.mesh
-#
-#	var shape = ConcavePolygonShape.new()
-#	shape.set_faces(chunk_data.vertex_data)
-#	get_node("/root/World/" + str(chunk_id) + "/Chunk/MeshInstance/StaticBody/CollisionShape").shape = shape
+	chunk.components.block_data.erase(location - chunk.components.position)
+
+	var chunk_data = compile(chunk.components.block_data, chunk.components.materials, chunk.components.position) # Returns blocks_loaded, mesh, vertex_data
+
+	chunk.get_node("Chunk/MeshInstance").mesh = chunk_data.mesh
+
+	var shape = ConcavePolygonShape.new()
+	shape.set_faces(chunk_data.vertex_data)
+	chunk.get_node("Chunk/MeshInstance/StaticBody/CollisionShape").shape = shape
 
 func place_block(chunk_id, block_id, location): ####################################################
 	if block_id == 0:

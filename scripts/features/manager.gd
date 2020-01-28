@@ -21,6 +21,13 @@ func create(entity: Dictionary):
 			Core.get_parent().get_node("/root/World/Interfaces").add_child(node)
 			Core.get_parent().get_node("/root/World/Interfaces/0").components = entity
 			Core.get_parent().get_node("/root/World/Interfaces/0").add_child(load("res://scenes/tty.tscn").instance())
+		if entity.name_id == "hud":
+			var node = Entity.instance()
+			node.set_name(entity.id)
+			Core.get_parent().get_node("/root/World/Interfaces").add_child(node)
+			Core.get_parent().get_node("/root/World/Interfaces/"  + str(entity.id)).components = entity
+			Core.get_parent().get_node("/root/World/Interfaces/"  + str(entity.id)).add_child(load("res://scenes/hud.tscn").instance())
+			
 	elif entity.type == "chunk":
 		if !Core.get_parent().get_node("/root/World").has_node("Chunks"):
 			var chunks = Spatial.new()
@@ -31,6 +38,7 @@ func create(entity: Dictionary):
 			node.set_name(str(entity.id))
 			Core.get_parent().get_node("/root/World/Chunks").add_child(node)
 			Core.get_parent().get_node("/root/World/Chunks/" + str(entity.id)).components = entity
+			
 	elif entity.type == "input":
 		if !Core.get_parent().get_node("/root/World").has_node("Inputs"):
 			var inputs = Node.new()

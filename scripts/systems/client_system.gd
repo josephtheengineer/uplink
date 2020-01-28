@@ -23,6 +23,7 @@ onready var Entity = preload("res://scripts/features/entity.gd").new()
 onready var Comp = preload("res://scripts/features/comp.gd").new()
 onready var Manager = preload("res://scripts/features/manager.gd").new()
 onready var SystemManager = preload("res://scripts/features/system_manager.gd").new()
+onready var Hud = preload("res://scripts/features/hud.gd").new()
 
 var version = "Uplink v0.0.0 beta0 r8"
 var total_players = 0
@@ -167,6 +168,8 @@ func _on_app_ready():
 func _on_diagnostics_finised(): ####################################################
 	#ServerSystem.start()
 	Core.Server.load_world(self, "world_loaded")
+	Core.get_parent().get_node("World/Interfaces/0").free()
+	Hud.create()
 
 
 func world_loaded(): ###########################################################

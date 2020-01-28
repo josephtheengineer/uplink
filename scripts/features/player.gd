@@ -51,11 +51,11 @@ func _input(event): ###########################################################
 #
 #	if event.is_action_pressed("fly"):
 #		if move_mode == "walk":
-#			Debug.msg("Changing move_mode to fly...", "Info")
+#			Core.emit_signal("msg", "Changing move_mode to fly...", "Info")
 #			move_mode = "fly"
 #			get_node("Capsule").disabled = true
 #		else:
-#			Debug.msg("Changing move_mode to walk...", "Info")
+#			Core.emit_signal("msg", "Changing move_mode to walk...", "Info")
 #			move_mode = "walk"
 #			get_node("Capsule").disabled = false
 #
@@ -66,22 +66,22 @@ func _input(event): ###########################################################
 #		action(event.position)
 #
 #	if event.is_action_pressed("burn"):
-#		Debug.msg("Changing action_mode to burn...", "Info")
+#		Core.emit_signal("msg", "Changing action_mode to burn...", "Info")
 #		action_mode = "burn"
 #		#Hud.switch_mode("burn")
 #
 #	if event.is_action_pressed("mine"):
-#		Debug.msg("Changing action_mode to mine...", "Info")
+#		Core.emit_signal("msg", "Changing action_mode to mine...", "Info")
 #		action_mode = "mine"
 #		#Hud.switch_mode("mine")
 #
 #	if event.is_action_pressed("build"):
-#		Debug.msg("Changing action_mode to build...", "Info")
+#		Core.emit_signal("msg", "Changing action_mode to build...", "Info")
 #		action_mode = "build"
 #		#Hud.switch_mode("build")
 #
 #	if event.is_action_pressed("paint"):
-#		Debug.msg("Changing action_mode to paint...", "Info")
+#		Core.emit_signal("msg", "Changing action_mode to paint...", "Info")
 #		action_mode = "paint"
 #		#Hud.switch_mode("paint")
 
@@ -94,7 +94,7 @@ func _input(event): ###########################################################
 func move(position):
 	move_direction = position
 
-func action(id, position): ########################################################
+func action(player, position): ########################################################
 	#Hud.msg("Modifing block in position: " + position, "Debug")
 	
 	action_mode = "build"
@@ -102,8 +102,8 @@ func action(id, position): #####################################################
 	if action_mode == "burn":
 		pass
 	elif action_mode == "mine":
-		var normal = get_looking_at_normal(id, position)
-		var block_location = get_looking_at(id, position)# - normal
+		var normal = get_looking_at_normal(player, position)
+		var block_location = get_looking_at(player, position)# - normal
 		var location = ChunkSystem.get_chunk(block_location)
 		
 		if normal == Vector3(0, 0, -1):
@@ -117,10 +117,9 @@ func action(id, position): #####################################################
 		elif normal == Vector3(0, -1, 0):
 			block_location += Vector3(0, 1, 0)
 		
-		var chunk_id = ChunkSystem.get_chunk_id(location)
 		
-		if chunk_id:
-			Debug.msg("Breaking block: " + str(Vector3(floor(block_location.x), floor(block_location.y), floor(block_location.z))), "Info")
+		if Core.get_parent().has_node("World/Chunks/" + str(location)):
+			Core.emit_signal("msg", "Breaking block: " + str(Vector3(floor(block_location.x), floor(block_location.y), floor(block_location.z))), "Info")
 			
 			var music_player = AudioStreamPlayer3D.new()
 			var audio = load("res://sounds/game/block_break_generic_1_v2.ogg")
@@ -130,14 +129,14 @@ func action(id, position): #####################################################
 			add_child(music_player)
 			music_player.play()
 			
-			ChunkSystem.break_block(id, Vector3(floor(block_location.x), floor(block_location.y), floor(block_location.z)))
+			ChunkSystem.break_block(Core.get_parent().get_node("World/Chunks/" + str(location)), Vector3(floor(block_location.x), floor(block_location.y), floor(block_location.z)))
 			#ChunkSystem.compile()
 		else:
-			Debug.msg("Invalid chunk!", "Error")
+			Core.emit_signal("msg", "Invalid chunk!", "Error")
 	elif action_mode == "build":
-		var normal = get_looking_at_normal(id, position)
-		var block_location = get_looking_at(id, position) + normal
-		Debug.msg("Normal is " + str(get_looking_at_normal(id, position)), "Debug")
+		var normal = get_looking_at_normal(player, position)
+		var block_location = get_looking_at(player, position) + normal
+		Core.emit_signal("msg", "Normal is " + str(get_looking_at_normal(player, position)), "Debug")
 		var location = ChunkSystem.get_chunk(block_location)
 		
 		if normal == Vector3(0, 0, -1):
@@ -151,10 +150,8 @@ func action(id, position): #####################################################
 		elif normal == Vector3(0, -1, 0):
 			block_location += Vector3(0, 1, 0)
 		
-		var chunk_id = ChunkSystem.get_chunk_id(location)
-		
-		if chunk_id:
-			Debug.msg("Placing block: " + str(Vector3(floor(block_location.x), floor(block_location.y), floor(block_location.z))), "Info")
+		if Core.get_parent().has_node("World/Chunks/" + str(location)):
+			Core.emit_signal("msg", "Placing block: " + str(Vector3(floor(block_location.x), floor(block_location.y), floor(block_location.z))), "Info")
 			
 			var music_player = AudioStreamPlayer3D.new()
 			var audio = load("res://sounds/game/block_build_generic_1.ogg")
@@ -164,10 +161,10 @@ func action(id, position): #####################################################
 			add_child(music_player)
 			music_player.play()
 			
-			ChunkSystem.place_block(chunk_id, 6, Vector3(floor(block_location.x), floor(block_location.y), floor(block_location.z)))
+			ChunkSystem.place_block(Core.get_parent().get_node("World/Chunks/" + str(location)), 6, Vector3(floor(block_location.x), floor(block_location.y), floor(block_location.z)))
 			#Chunk.compile()
 		else:
-			Debug.msg("Invalid chunk!", "Error")
+			Core.emit_signal("msg", "Invalid chunk!", "Error")
 	elif action_mode == "paint":
 		pass
 
@@ -177,8 +174,8 @@ func _stop_player(player):
 	player.queue_free()
 
 
-func get_orientation(id): #######################################################
-	var camera = get_node("/root/World/" + str(id) + "/Player/Head/Camera")
+func get_orientation(player): #######################################################
+	var camera = player.get_node("Player/Head/Camera")
 	var looking_at = camera.project_ray_normal(OS.get_window_size() / 2)
 	#Hud.msg(str(looking_at), "Trace")
 	if looking_at.x > 0.5:
@@ -197,30 +194,30 @@ func get_orientation(id): ######################################################
 		return "invaild"
 
 
-func get_looking_at_normal(id, position): #########################################
+func get_looking_at_normal(player, position): #########################################
 	#var camera = $Head/Camera
 	#var from = camera.project_ray_origin(event.position)
 	#var to = from + camera.project_ray_normal(event.position) * 1000
 	
-	var camera = get_node("/root/World/" + str(id) + "/Player/Head/Camera")
+	var camera = player.get_node("Player/Head/Camera")
 	var space_state = camera.get_world().direct_space_state
 	var build_origin = camera.project_ray_origin(position)
 	var build_normal = camera.project_ray_normal(position) * 10000
 	
 	var result = space_state.intersect_ray(build_origin, build_normal, [self], 1)
 	if result:
-		#Debug.msg(str(result.position), "Debug")
+		#Core.emit_signal("msg", str(result.position), "Debug")
 		return result.normal
 	else:
 		return Vector3(0, 0, 0)
 
 
-func get_looking_at(id, position): ################################################
+func get_looking_at(player, position): ################################################
 	#var camera = $Head/Camera
 	#var from = camera.project_ray_origin(event.position)
 	#var to = from + camera.project_ray_normal(event.position) * 1000
 	
-	var camera = get_node("/root/World/" + str(id) + "/Player/Head/Camera")
+	var camera = player.get_node("Player/Head/Camera")
 	var space_state = camera.get_world().direct_space_state
 	var build_origin = camera.project_ray_origin(position)
 	var build_normal = camera.project_ray_normal(position) * 10000
@@ -232,12 +229,12 @@ func get_looking_at(id, position): #############################################
 	else:
 		return Vector3(0, 0, 0)
 
-func can_see_chunk(id, chunk): ################################################
+func can_see_chunk(player, chunk): ################################################
 	#var camera = $Head/Camera
 	#var from = camera.project_ray_origin(event.position)
 	#var to = from + camera.project_ray_normal(event.position) * 1000
 	
-	var camera = get_node("/root/World/" + str(id) + "/Player/Head/Camera")
+	var camera = player.get_node("Player/Head/Camera")
 	var space_state = camera.get_world().direct_space_state
 	
 	for x in range(OS.get_window_size().x):
