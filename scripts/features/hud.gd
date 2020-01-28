@@ -14,6 +14,6 @@ func create():
 func process_hud(hud):
 	if hud:
 		DebugInfo.player_move_update(hud)
-	#DebugInfo.action_mode_update(hud)
-	#DebugInfo.frame_update(hud)
-	#DebugInfo.world_stats_update(hud)
+		DebugInfo.action_mode_update(hud)
+		DebugInfo.frame_update(hud)
+		DebugInfo.world_stats_update(hud)

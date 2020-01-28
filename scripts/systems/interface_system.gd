@@ -42,6 +42,9 @@ func _on_msg(message, level):
 	#Core.emit_signal("msg", "Rec message", "Debug")
 	if get_tree().get_root().has_node("/root/World/Interfaces/0/TTY/RichTextLabel"):
 		get_tree().get_root().get_node("/root/World/Interfaces/0/TTY/RichTextLabel").add_text(message + '\n')
+	
+	if get_tree().get_root().has_node("/root/World/Interfaces/Hud/Hud/HorizontalMain/VerticalMain/VerticalCenterContent/Chat/Content/Text/RichTextLabel"):
+		get_tree().get_root().get_node("/root/World/Interfaces/Hud/Hud/HorizontalMain/VerticalMain/VerticalCenterContent/Chat/Content/Text/RichTextLabel").add_text(message + '\n')
 
 func process_horizontal_container(id):
 	pass

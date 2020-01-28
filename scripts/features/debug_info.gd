@@ -37,43 +37,41 @@ func player_move_update(hud):
 		var orentation = Player.get_orientation(player)
 		Core.get_parent().get_node(stats + "Orentation").text = "Orentation: " + str(orentation)
 		
-		#chunk_info_update(hud, player_pos)
+		chunk_info_update(hud, player_pos)
 
-func action_mode_update(id):
-	var stats = "World/" + str(id) + "/Hud/HorizontalMain/VerticalMain/VerticalCenterContent/DebugStats/ClientInfo/"
+func action_mode_update(hud):
+	var stats = "World/Interfaces/" + str(hud.components.id) + "/Hud/HorizontalMain/VerticalMain/VerticalCenterContent/DebugStats/ClientInfo/"
 	Core.get_parent().get_node(stats + "Mode").text = "Mode: " + Core.Client.action_mode
 
-func frame_update(id):
-	var stats = "/root/World/" + str(id) + "/Hud/HorizontalMain/VerticalMain/VerticalCenterContent/DebugStats/ClientInfo/"
+func frame_update(hud):
+	var stats = "World/Interfaces/" + str(hud.components.id) + "/Hud/HorizontalMain/VerticalMain/VerticalCenterContent/DebugStats/ClientInfo/"
 	
 	Core.get_parent().get_node(stats + "Entities").text = "Entities: " + str(Core.Client.total_entities) + " | Players: " + str(Core.Client.total_players)
 	Core.get_parent().get_node(stats + "AllBlocksLoaded").text = "Blocks Loaded: " + str(Core.Client.blocks_loaded)
 	Core.get_parent().get_node(stats + "BlocksFound").text = "Blocks Found: " + str(Core.Client.blocks_found)
 	Core.get_parent().get_node(stats + "FPS").text = "FPS: " + str(Performance.get_monitor(Performance.TIME_FPS))
 
-func world_stats_update(id):
-	var stats = "/root/World/" + str(id) + "/Hud/HorizontalMain/VerticalMain/VerticalCenterContent/DebugStats/WorldStats/"
+func world_stats_update(hud):
+	var stats = "World/Interfaces/" + str(hud.components.id) + "/Hud/HorizontalMain/VerticalMain/VerticalCenterContent/DebugStats/WorldStats/"
 	
 	Core.get_parent().get_node(stats + "WorldName").text = "== " + Core.Server.map_name + " =="
 	Core.get_parent().get_node(stats + "WorldPath").text = Core.Server.map_path
 	
 	Core.get_parent().get_node(stats + "TotalChunks").text = "Total Chunks: " + str(Core.Server.total_chunks)
 	Core.get_parent().get_node(stats + "ChunksCache").text = "Chunk Cache: " + str(Core.Server.chunks_cache_size)
-	Core.get_parent().get_node(stats + "ChunksLoaded").text = "Chunks Loaded: " + str(Core.Client.ChunkSystem_index.size())
+	Core.get_parent().get_node(stats + "ChunksLoaded").text = "Chunks Loaded: " + str(Core.get_parent().get_node("World/Chunks").get_child_count())
 	Core.get_parent().get_node(stats + "Seed").text = "Seed: " + str(Core.Server.map_seed)
 	
 
-func chunk_info_update(id, player_pos):
-	var stats = "/root/World/" + str(id) + "/Hud/HorizontalMain/VerticalMain/VerticalCenterContent/DebugStats/ChunkInfo/"
+func chunk_info_update(hud, player_pos):
+	var stats = "World/Interfaces/" + str(hud.components.id) + "/Hud/HorizontalMain/VerticalMain/VerticalCenterContent/DebugStats/ChunkInfo/"
 	
-	var chunk = Core.Client.ChunkSystem.get_chunk(player_pos)
+	var chunk_loc = Core.Client.ChunkSystem.get_chunk(player_pos)
+	var chunk = Core.get_parent().get_node("World/Chunks/" + str(chunk_loc))
 	
-	var chunk_id = Core.Chunk.get_chunk_id(chunk)
+	Core.get_parent().get_node(stats + "ChunkXYZ").text = "XYZ: " + str(chunk.components.position)
 	
-	Core.get_parent().get_node(stats + "ChunkXYZ").text = "XYZ: " + str(chunk)
-	
-	if chunk_id:
-		pass
-		#Core.get_parent().get_node(stats + "ChunkAddress").text = "== Chunk: " + str(Entity.get_component(chunk_id, "chunk.address")) + " =="
-		#Core.get_parent().get_node(stats + "BlocksLoaded").text = "Blocks Loaded: " + str(Entity.get_component(chunk_id, "chunk.blocks_loaded"))
-		#Core.get_parent().get_node(stats + "Blocks").text = "Mode: " + Core.Client.action_mode
+	if chunk:
+		Core.get_parent().get_node(stats + "ChunkAddress").text = "== Chunk: " + str(chunk.components.address) + " =="
+		Core.get_parent().get_node(stats + "BlocksLoaded").text = "Blocks Loaded: " + str(chunk.components.blocks_loaded)
+		#Core.get_parent().get_node(stats + "Blocks").text = "Blocks: " + Core.Client.action_mode

@@ -224,14 +224,14 @@ margin_right = 1920.0
 margin_bottom = 672.0
 
 [node name="ChunkAddress" type="Label" parent="ChunkInfo"]
-margin_left = 1640.0
+margin_left = 1724.0
 margin_right = 1920.0
 margin_bottom = 29.0
 size_flags_horizontal = 8
 custom_styles/normal = ExtResource( 1 )
 custom_fonts/font = ExtResource( 2 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-text = "== Chunk: 7191367 =="
+text = "== Chunk: 0 =="
 align = 2
 
 [node name="ChunkXYZ" type="Label" parent="ChunkInfo"]

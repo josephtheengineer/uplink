@@ -104,7 +104,7 @@ func action(player, position): #################################################
 	elif action_mode == "mine":
 		var normal = get_looking_at_normal(player, position)
 		var block_location = get_looking_at(player, position)# - normal
-		var location = ChunkSystem.get_chunk(block_location)
+		var location = Core.Client.ChunkSystem.get_chunk(block_location)
 		
 		if normal == Vector3(0, 0, -1):
 			block_location += Vector3(0, 1, 0)
@@ -122,22 +122,22 @@ func action(player, position): #################################################
 			Core.emit_signal("msg", "Breaking block: " + str(Vector3(floor(block_location.x), floor(block_location.y), floor(block_location.z))), "Info")
 			
 			var music_player = AudioStreamPlayer3D.new()
-			var audio = load("res://sounds/game/block_break_generic_1_v2.ogg")
+			var audio = load("res://assets/sounds/game/block_break_generic_1_v2.ogg")
 			audio.loop = false
 			music_player.stream = audio
 			music_player.connect("finished", self, "_stop_player", [music_player])
 			add_child(music_player)
 			music_player.play()
 			
-			ChunkSystem.break_block(Core.get_parent().get_node("World/Chunks/" + str(location)), Vector3(floor(block_location.x), floor(block_location.y), floor(block_location.z)))
-			#ChunkSystem.compile()
+			Core.Client.ChunkSystem.break_block(Core.get_parent().get_node("World/Chunks/" + str(location)), Vector3(floor(block_location.x), floor(block_location.y), floor(block_location.z)))
+			#Core.Client.ChunkSystem.compile()
 		else:
 			Core.emit_signal("msg", "Invalid chunk!", "Error")
 	elif action_mode == "build":
 		var normal = get_looking_at_normal(player, position)
 		var block_location = get_looking_at(player, position) + normal
 		Core.emit_signal("msg", "Normal is " + str(get_looking_at_normal(player, position)), "Debug")
-		var location = ChunkSystem.get_chunk(block_location)
+		var location = Core.Client.ChunkSystem.get_chunk(block_location)
 		
 		if normal == Vector3(0, 0, -1):
 			block_location += Vector3(0, 1, 0)
@@ -154,14 +154,14 @@ func action(player, position): #################################################
 			Core.emit_signal("msg", "Placing block: " + str(Vector3(floor(block_location.x), floor(block_location.y), floor(block_location.z))), "Info")
 			
 			var music_player = AudioStreamPlayer3D.new()
-			var audio = load("res://sounds/game/block_build_generic_1.ogg")
+			var audio = load("res://assets/sounds/game/block_build_generic_1.ogg")
 			audio.loop = false
 			music_player.stream = audio
 			music_player.connect("finished", self, "_stop_player", [music_player])
 			add_child(music_player)
 			music_player.play()
 			
-			ChunkSystem.place_block(Core.get_parent().get_node("World/Chunks/" + str(location)), 6, Vector3(floor(block_location.x), floor(block_location.y), floor(block_location.z)))
+			Core.Client.ChunkSystem.place_block(Core.get_parent().get_node("World/Chunks/" + str(location)), 6, Vector3(floor(block_location.x), floor(block_location.y), floor(block_location.z)))
 			#Chunk.compile()
 		else:
 			Core.emit_signal("msg", "Invalid chunk!", "Error")
