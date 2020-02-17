@@ -185,6 +185,7 @@ func world_loaded(): ###########################################################
 	
 	Manager.create(player)
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	#Core.get_parent().get_node("World/Inputs/JosephTheEngineer/Player").translation = Core.Server.last_location
 	
 	#create_hud()
 

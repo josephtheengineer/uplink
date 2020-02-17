@@ -16,6 +16,15 @@ var home_rotation = 0
 var chunks_cache_size = 0
 var total_chunks = 0
 
+
+var map_file = File.new()
+var chunk_metadata = Dictionary()
+
+var worldAreaX = 0
+var worldAreaY = 0
+var world_width = 0
+var world_height = 0
+
 func _ready():
 	#create_world()
 	Core.emit_signal("system_ready", SystemManager.SERVER, self)                ##### READY #####

@@ -1,0 +1,7 @@
+[gd_scene format=2]
+
+[node name="Test" type="Spatial"]
+
+[node name="StaticBody" type="StaticBody" parent="."]
+
+[node name="MeshInstance" type="MeshInstance" parent="StaticBody"]
