@@ -53,6 +53,22 @@ func load_world(): ############################################################
 	return get_metadata()
 
 
+func open_urw_file():
+	pass
+
+
+func open_eden2_gzip_file():
+	pass
+
+func open_eden2_file():
+	pass
+
+func open_eden1_gzip_file():
+	pass
+
+func open_eden1_file():
+	pass
+
 func read_int(position): ######################################################
 	Core.Server.map_file.seek(position)
 	var buffer = Core.Server.map_file.get_buffer(1)
