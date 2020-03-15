@@ -1,6 +1,5 @@
 extends Node
 
-var Manager = preload("res://scripts/features/manager.gd").new()
 var Player = preload("res://scripts/features/player.gd").new()
 
 func player_move_update(hud):

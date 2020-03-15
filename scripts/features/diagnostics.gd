@@ -9,7 +9,10 @@ signal diagnostics
 
 func run(object, method):
 	var Manager = load("res://scripts/features/manager.gd").new()
-	connect("diagnostics", object, method)
+	var error = connect("diagnostics", object, method)
+	if error:
+		Core.emit_signal("msg", "Event diagnostics failed to bind", "Warn")
+	
 	randomize()
 	var tty = Dictionary()
 	tty.name_id = "tty"
@@ -18,17 +21,13 @@ func run(object, method):
 	tty.text = ""
 	
 	var id = Manager.create(tty)
+	Core.emit_signal("msg", "Staring tty on id " + str(id), "Info")
 	
 	timer.connect("timeout", self, "_update_terminal")
 	timer.set_name("TimerTTY")
 	timer.wait_time = 0.01
 	Core.add_child(timer)
 	Core.get_node("TimerTTY").start()
-
-func show_text(id, components, text):
-	components.terminal.text += text
-	components.terminal.text_rendered = false
-	#Manager.edit(id, components)
 
 func _update_terminal():
 	#Core.emit_signal("msg", "Update called!", "Debug")

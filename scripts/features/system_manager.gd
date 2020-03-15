@@ -9,7 +9,9 @@ const SERVER = 5
 const SOUND = 6
 
 func setup():
-	Core.connect("system_ready", self, "_on_system_ready")
+	var error = Core.connect("system_ready", self, "_on_system_ready")
+	if error:
+		emit_signal("msg", "Error on binding to system_ready: " + str(error), "Warn")
 
 func _on_system_ready(system, obj):
 	match system:

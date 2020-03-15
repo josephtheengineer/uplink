@@ -10,6 +10,7 @@ func _ready():
 	Core.connect("msg", self, "_on_msg")
 
 func _process(delta):
+	pass
 #	for id in Entity.get_entities_with("terminal"):
 #		if get_node("/root/World/" + str(id)):
 #			if Entity.get_component(id, "terminal.rendered") == false:
@@ -25,7 +26,7 @@ func _process(delta):
 #	for id in Entity.get_entities_with("Interfaces"):
 #		if get_node("/root/World/" + str(id)):
 #			if Entity.get_component(id, "hud.rendered"):
-	Hud.process_hud(Core.get_parent().get_node("World/Interfaces/Hud"))
+#	Hud.process_hud(Core.get_parent().get_node("World/Interfaces/Hud"))
 #			else:
 #				Core.emit_signal("msg", "Creating HUD...", "Info")
 #				create_hud(id)

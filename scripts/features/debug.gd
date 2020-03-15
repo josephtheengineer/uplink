@@ -9,7 +9,10 @@ func init(client_log_loc):
 	file.open(log_loc + "latest.txt", File.WRITE)
 	file.close()
 	Core.emit_signal("msg", "Logs stored at " + log_loc, "Info")
-	Core.connect("msg", self, "_on_msg")
+	var error = Core.connect("msg", self, "_on_msg")
+	if error:
+		Core.emit_signal("msg", "Event msg failed to bind", "Warn")
+		print("Warn: Event msg failed to bind")
 
 func _on_msg(message, level):
 	print(level + ": " + message)

@@ -60,9 +60,9 @@ func _physics_process(delta): #################################################
 		#var components = node.components
 		#if components.has("player"):
 			#connect("submit", components.text_input.object, components.text_input.method, [id])
-	var node = get_node("/root/World/Inputs/JosephTheEngineer")
 	
-	if node:
+	if Core.get_parent().has_node("World/Inputs/JosephTheEngineer"):
+		var node = get_node("/root/World/Inputs/JosephTheEngineer")
 		var player_path = "/root/World/Inputs/JosephTheEngineer/Player/"
 		if move_mode == "walk":
 			Player.walk(delta, node)
@@ -84,9 +84,8 @@ func _input(event): ###########################################################
 #		for id in entities:
 #			var player = entities[id]
 #			if player.rendered == true:
-	var player = get_node("/root/World/Inputs/JosephTheEngineer")
-	
-	if player:
+	if Core.get_parent().has_node("World/Inputs/JosephTheEngineer"):
+		var player = get_node("/root/World/Inputs/JosephTheEngineer")
 		if event is InputEventMouseMotion:
 			player_move_head(event, player)
 		

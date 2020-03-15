@@ -1,11 +1,9 @@
 extends Node #KinematicBody
-onready var ChunkSystem = get_node("/root/World/Systems/Chunk")
-var Debug = load("res://scripts/features/debug.gd")
 
 ############################## public variables ###############################
 
-var camera_angle = 0
-var mouse_sensitivity = 0.3
+#var camera_angle = 0
+#var mouse_sensitivity = 0.3
 
 
 var velocity = Vector3()
@@ -13,11 +11,11 @@ var direction = Vector3()
 var move_direction
 
 
-var build_range = 1000
+#var build_range = 1000
 #var building = 0
-var highlighted_block = Vector3(0, 0, 0)
-var highlighted_block_id = 8
-var move_mode = "walk"
+#var highlighted_block = Vector3(0, 0, 0)
+#var highlighted_block_id = 8
+#var move_mode = "walk"
 var action_mode = "nothing"
 
 
@@ -43,8 +41,8 @@ var jump_height = 15
 ################################### signals ###################################
 
 
-func _input(event): ###########################################################
-	pass
+#func _input(event): ###########################################################
+#	pass
 #
 #	if event.is_action_pressed("detach"):
 #		Input.set_mouse_mode(Input.MOUSE_MODE_CONFINED)

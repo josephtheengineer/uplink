@@ -13,8 +13,8 @@ func set_component(path, value):
 	DictonaryFunc.setInDict(components, path.split(".", false), value)
 	components = components
 
-func get_node_path():
-	var parent = get_parent()
+#func get_node_path():
+#	var parent = get_parent()
 #	var parents = Array()
 #	var root = false
 #	while root == false:

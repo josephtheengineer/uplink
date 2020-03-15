@@ -10,49 +10,66 @@ extends Node
 #                              |___/      
 ################################################################################
 
+#warning-ignore:unused_class_variable
 onready var ChunkSystem
+#warning-ignore:unused_class_variable
 onready var DownloadSystem
+#warning-ignore:unused_class_variable
 onready var InputSystem
+#warning-ignore:unused_class_variable
 onready var InterfaceSystem
+#warning-ignore:unused_class_variable
 onready var SoundSystem
 
 onready var Debug = preload("res://scripts/features/debug.gd").new()
 onready var Diagnostics = preload("res://scripts/features/diagnostics.gd").new()
 onready var Player = preload("res://scripts/features/player.gd").new()
-onready var Entity = preload("res://scripts/features/entity.gd").new()
-onready var Comp = preload("res://scripts/features/comp.gd").new()
 onready var Manager = preload("res://scripts/features/manager.gd").new()
 onready var SystemManager = preload("res://scripts/features/system_manager.gd").new()
 onready var Hud = preload("res://scripts/features/hud.gd").new()
 
+#warning-ignore:unused_class_variable
 var version = "Uplink v0.0.0 beta0 r8"
+#warning-ignore:unused_class_variable
 var total_players = 0
+#warning-ignore:unused_class_variable
 var players = Array()
+#warning-ignore:unused_class_variable
 var total_entities = 0
+#warning-ignore:unused_class_variable
 var blocks_loaded = 0
+#warning-ignore:unused_class_variable
 var blocks_found = 0
+#warning-ignore:unused_class_variable
 var chunk_index = []
 
 
 ############################# System Loaded Check ##############################
+#warning-ignore:unused_class_variable
 var chunk = false
 const CHUNK_REQUIRED = false
 
+#warning-ignore:unused_class_variable
 var client = false
 const CLIENT_REQUIRED = true
 
+#warning-ignore:unused_class_variable
 var download = false
 const DOWNLOAD_REQUIRED = false
 
+#warning-ignore:unused_class_variable
 var input = false
 const INPUT_REQUIRED = false
 
+#warning-ignore:unused_class_variable
 var interface = false
 const INTERFACE_REQUIRED = false
 
+#warning-ignore:unused_class_variable
 var server = false
 const SERVER_REQUIRED = true
 
+#warning-ignore:unused_class_variable
 var sound = false
 const SOUND_REQUIRED = false
 
