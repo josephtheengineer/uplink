@@ -82,7 +82,7 @@ func read_float(position): ####################################################
 func get_metadata(): ##########################################################
 	var chunk_pointer = read_int(35) * 256 * 256 * 256 + read_int(34) * 256 * 256 + read_int(33) * 256 + read_int(32)
 	Core.emit_signal("msg", "Chunk Pointer: " + str(chunk_pointer), "Debug")
-	
+	Core.emit_signal("msg", "Float:" + str(read_float(4)), "Debug")
 	Core.Server.last_location = Vector3(read_float(4), read_float(8), read_float(12))
 	Core.Server.home_location = Vector3(read_float(16), read_float(20), read_float(24))
 	Core.Server.home_rotation = read_float(28)
@@ -95,9 +95,9 @@ func get_metadata(): ##########################################################
 		# Find chunk address
 		var address = read_int(chunk_pointer + 11) * 256 * 256 * 256 + read_int(chunk_pointer + 10) * 256 * 256 + read_int(chunk_pointer + 9) * 256 + read_int(chunk_pointer + 8)
 		# Find the position of the chunk
-		var x = (read_int(chunk_pointer + 1) * 256 + read_int(chunk_pointer)) - 4000     # Minus 4000 to center the world around 0, 0
+		var x = (read_int(chunk_pointer + 1) * 256 + read_int(chunk_pointer))
 		
-		var y = (read_int(chunk_pointer + 5) * 256 + read_int(chunk_pointer + 4)) - 4000 # This shouldn't brake anything
+		var y = (read_int(chunk_pointer + 5) * 256 + read_int(chunk_pointer + 4))
 		
 		if Core.Server.worldAreaX > x:
 			Core.Server.worldAreaX = x
@@ -129,9 +129,11 @@ func get_metadata(): ##########################################################
 	
 	# Get the total world width | max - min + 1
 	Core.Server.world_width = Core.Server.world_width - Core.Server.worldAreaX + 1;
+	Core.emit_signal("msg", "World width: " + str(Core.Server.world_width), "Info")
 	
 	# Get the total world height | max - min + 1
 	Core.Server.world_height = Core.Server.world_height - Core.Server.worldAreaY + 1;
+	Core.emit_signal("msg", "World height: " + str(Core.Server.world_height), "Info")
 	
 	if Core.Server.chunk_metadata.size() < 1:
 		Core.emit_signal("msg", "GetWorldMetadata: ChunkLocations was null!", "Error");
@@ -145,7 +147,6 @@ func get_chunk_data(location): ################################################
 		return false
 	if !Core.Server.chunk_metadata.has(location):
 		#var chunks_map = Core.Server.chunk_metadata
-		#breakpoint
 		Core.emit_signal("msg", "Chunk data does not exist! " + str(location), "Warn");
 		return false
 	

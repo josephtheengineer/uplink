@@ -67,6 +67,7 @@ func load_world(object, method):
 	Core.emit_signal("msg", "Spawning player at last known location: " + str(last_location), "Debug")
 	var chunk_position = Core.Client.ChunkSystem.get_chunk(last_location)
 	chunk_position.y = 0
+	Core.Client.spawn_player(last_location)
 	Core.emit_signal("msg", "Chunk: " + str(chunk_position), "Debug")
 	
 	Core.emit_signal("msg", str(EdenWorldDecoder.get_chunk_data(chunk_position)), "Trace")

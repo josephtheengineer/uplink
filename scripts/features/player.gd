@@ -3,7 +3,7 @@ extends Node #KinematicBody
 ############################## public variables ###############################
 
 #var camera_angle = 0
-#var mouse_sensitivity = 0.3
+var mouse_sensitivity = 0.3
 
 
 var velocity = Vector3()

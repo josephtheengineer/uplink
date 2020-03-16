@@ -192,20 +192,21 @@ func _on_diagnostics_finised(): ################################################
 func world_loaded(): ###########################################################
 	Core.emit_signal("msg", "World loaded!", "Info")
 	
+	#Core.get_parent().get_node("World/Inputs/JosephTheEngineer/Player").translation = Core.Server.last_location
+	
+	#create_hud()
+
+func spawn_player(location):
 	var player = Dictionary()
 	player.name_id = "player"
 	player.type = "input"
 	player.id = "JosephTheEngineer"
-	player.position = Vector3(0, 100, 0) #Vector3(9*16, 100, 130*16) 
+	player.position = Vector3(location.x, 100, location.z) #Vector3(9*16, 100, 130*16) 
 	#ServerSystem.last_location * 16
 	player.username = username
 	
 	Manager.create(player)
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-	#Core.get_parent().get_node("World/Inputs/JosephTheEngineer/Player").translation = Core.Server.last_location
-	
-	#create_hud()
-
 
 func create_hud(): #############################################################
 	var hud = Dictionary()

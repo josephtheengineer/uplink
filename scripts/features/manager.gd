@@ -50,6 +50,7 @@ func create(entity: Dictionary):
 			Core.get_parent().get_node("/root/World/Inputs").add_child(node)
 			Core.get_parent().get_node("/root/World/Inputs/" + entity.id).components = entity
 			Core.get_parent().get_node("/root/World/Inputs/" + entity.id).add_child(load("res://scenes/player.tscn").instance())
+			Core.get_parent().get_node("/root/World/Inputs/" + entity.id + "/Player").translation = entity.position
 	#entity.debug = true
 	#entity.text = ""
 	
