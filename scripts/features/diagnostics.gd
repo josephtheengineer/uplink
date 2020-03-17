@@ -1,3 +1,4 @@
+#warning-ignore:unused_class_variable
 var script_name = "diagnostics"
 var Debug = preload("res://scripts/features/debug.gd").new()
 

@@ -173,17 +173,17 @@ func create_surrounding_chunks(center_chunk, distance):
 			chunks_to_create.append(chunk)
 	
 	var min_distance = ClientSystem.render_distance + 500
-	var cloest_chunk = Vector3()
+	var closest_chunk = Vector3()
 	
 	var woah = center_chunk.distance_to(Vector3(0, 0, 0))
 	
 	for chunk in chunks_to_create:
 		if center_chunk.distance_to(chunk) < min_distance:
 			min_distance = center_chunk.distance_to(chunk)
-			cloest_chunk = chunk
+			closest_chunk = chunk
 	
-	if cloest_chunk != Vector3(0, 0, 0):
-		create_chunk(cloest_chunk)
+	if closest_chunk != Vector3(0, 0, 0):
+		create_chunk(closest_chunk)
 	
 #	# Remove chunks outside of bounds
 #	var entities = Entity.get_entities_with("chunk")
@@ -247,6 +247,21 @@ func compile(block_data, materials, pos): # Returns blocks_loaded, mesh, vertex_
 	Core.emit_signal("msg", "Finished compiling!", Debug.DEBUG, self)
 	return {"blocks_loaded" : blocks_loaded, "mesh" : mesh, "vertex_data" : vertex_data}
 
+signal chunks_loaded
+func load_player_spawn_chunks(object, method):
+	connect("chunks_loaded", object, method)
+	var player_chunk = get_chunk(Core.get_parent().get_node("World/Inputs/JosephTheEngineer/Player").translation)
+	for i in range(10):
+		create_chunk(Vector3(player_chunk.x, player_chunk.y-i, player_chunk.z))
+	
+	timer = Timer.new()
+	timer.connect("timeout", self, "_on_timer_timeout")
+	timer.wait_time = 5
+	Core.add_child(timer)
+	timer.start()
+
+func _on_timer_timeout():
+	emit_signal("chunks_loaded")
 
 func break_block(chunk, location): ####################################################
 	Core.emit_signal("msg", "Chunk position: " + str(chunk.components.position), Debug.DEBUG, self)

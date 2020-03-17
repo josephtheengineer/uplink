@@ -133,7 +133,10 @@ func _ready(): #################################################################
 	create_interface_system()
 	create_sound_system()
 	
-	Core.connect("app_ready", self, "_on_app_ready")
+	var error = Core.connect("app_ready", self, "_on_app_ready")
+	if error:
+		emit_signal("msg", "Error on binding to app_ready: " + str(error), Debug.WARN, self)
+	
 
 
 func create_chunk_system():
@@ -186,17 +189,23 @@ func _on_app_ready():
 
 func _on_diagnostics_finised(): ####################################################
 	#ServerSystem.start()
-	Core.Server.load_world(self, "world_loaded")
+	Core.Server.load_world(self, "_on_world_loaded")
 	Core.get_parent().get_node("World/Interfaces/0").free()
 	Hud.create()
 
 
-func world_loaded(): ###########################################################
+func _on_world_loaded(): ###########################################################
 	Core.emit_signal("msg", "World loaded!", Debug.INFO, self)
+	
+	ChunkSystem.load_player_spawn_chunks(self, "_on_chunks_loaded")
 	
 	#Core.get_parent().get_node("World/Inputs/JosephTheEngineer/Player").translation = Core.Server.last_location
 	
 	#create_hud()
+
+func _on_chunks_loaded():
+	Core.emit_signal("msg", "Player spawn chunks loaded!", Debug.INFO, self)
+	InputSystem.move_mode = "walk"
 
 func spawn_player(location):
 	var player = Dictionary()
@@ -208,6 +217,7 @@ func spawn_player(location):
 	player.username = username
 	
 	Manager.create(player)
+	InputSystem.move_mode = "fly"
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 
 func create_hud(): #############################################################

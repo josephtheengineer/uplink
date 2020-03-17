@@ -10,7 +10,7 @@ func get_entities_with(component: String):
 		return false
 
 func create(entity: Dictionary):
-	Core.emit_signal("msg", "Creating new Entity, " + entity.type, Debug.DEBUG, self)
+	Core.emit_signal("msg", "Creating new Entity, " + entity.type, Debug.TRACE, self)
 	if entity.type == "interface":
 		if !Core.get_parent().get_node("/root/World").has_node("Interfaces"):
 			var interfaces = Control.new()
