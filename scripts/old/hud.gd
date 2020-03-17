@@ -28,7 +28,7 @@ func _process(delta): #########################################################
 		var World = get_node("/root/World")
 		var XYZ = find_node("Player XYZ")
 		XYZ.set_text("XYZ: " + str(Player.translation))
-		#msg(str(round_vector3(Player.translation, 2.0)), "Trace")
+		#msg(str(round_vector3(Player.translation, 2.0)), Debug.TRACE, self)
 		
 		var chunk_address = find_node("Chunk Address")
 		chunk_address.set_text(" == " + str(World.get_chunk(Player.translation)) + " == ")
@@ -72,31 +72,31 @@ func _on_AnalogTop_button_up():
 func _input(event): ###########################################################
 	if event is InputEventScreenDrag:
 		if analog_is_pressed:
-			msg("Touching the Analog stick", "Debug")
-			msg(str(event.position), "Debug")
+			msg("Touching the Analog stick", Debug.DEBUG, self)
+			msg(str(event.position), Debug.DEBUG, self)
 			var analog_center = Vector2(200, 870)
 			var analog_bounds = Vector2(100, 100)
 			
 			var distance_from_center =  Vector2(abs(abs(analog_center.x) - abs(event.position.x)), abs(abs(analog_center.y) - abs(event.position.y)))
 			
-			msg("Distance from center: " + str(abs(abs(analog_center.x) - abs(event.position.x))), "Debug")
+			msg("Distance from center: " + str(abs(abs(analog_center.x) - abs(event.position.x))), Debug.DEBUG, self)
 			if distance_from_center.x < analog_bounds.x:
 				if distance_from_center.y < analog_bounds.y:
-					msg("In bounds!", "Debug")
+					msg("In bounds!", Debug.DEBUG, self)
 					get_node("HorizontalMain/VerticalMain/Navbox/TextureRect/AnalogTop").rect_position = Vector2(event.position.x - 150, event.position.y - 870)
 					var Player = get_node("/root/World/Player")
 					Player.move(distance_from_center)
 	#if event is InputEventScreenTouch:
-		#msg("Touched the screen at: " + str(event.position), "Debug")
+		#msg("Touched the screen at: " + str(event.position), Debug.DEBUG, self)
 
 func _on_BurnButton_toggled(button_pressed): ##################################
-	msg("Current workspace: " + workspace, "Info")
+	msg("Current workspace: " + workspace, Debug.INFO, self)
 	if button_pressed:
-		msg("Changing action_mode to burn...", "Info")
+		msg("Changing action_mode to burn...", Debug.INFO, self)
 		get_node("/root/World/Player").action_mode = "burn"
 		switch_mode("burn")
 	else:
-		msg("Changing action_mode to nothing...", "Info")
+		msg("Changing action_mode to nothing...", Debug.INFO, self)
 		get_node("/root/World/Player").action_mode = "nothing"
 		switch_mode("nothing")
 	
@@ -104,13 +104,13 @@ func _on_BurnButton_toggled(button_pressed): ##################################
 
 
 func _on_MineButton_toggled(button_pressed): ##################################
-	msg("Current workspace: " + workspace, "Info")
+	msg("Current workspace: " + workspace, Debug.INFO, self)
 	if button_pressed:
-		msg("Changing action_mode to mine...", "Info")
+		msg("Changing action_mode to mine...", Debug.INFO, self)
 		get_node("/root/World/Player").action_mode = "mine"
 		switch_mode("mine")
 	else:
-		msg("Changing action_mode to nothing...", "Info")
+		msg("Changing action_mode to nothing...", Debug.INFO, self)
 		get_node("/root/World/Player").action_mode = "nothing"
 		switch_mode("nothing")
 	
@@ -118,9 +118,9 @@ func _on_MineButton_toggled(button_pressed): ##################################
 
 
 func _on_BuildButton_toggled(button_pressed): #################################
-	msg("Current workspace: " + workspace, "Info")
+	msg("Current workspace: " + workspace, Debug.INFO, self)
 	if button_pressed:
-		msg("Changing action_mode to build...", "Info")
+		msg("Changing action_mode to build...", Debug.INFO, self)
 		get_node("/root/World/Player").action_mode = "build"
 		switch_mode("build")
 		switch_workspace("build")
@@ -129,9 +129,9 @@ func _on_BuildButton_toggled(button_pressed): #################################
 
 
 func _on_PaintButton_toggled(button_pressed): #################################
-	msg("Current workspace: " + workspace, "Info")
+	msg("Current workspace: " + workspace, Debug.INFO, self)
 	if button_pressed:
-		msg("Changing action_mode to paint...", "Info")
+		msg("Changing action_mode to paint...", Debug.INFO, self)
 		get_node("/root/World/Player").action_mode = "paint"
 		switch_mode("paint")
 		switch_workspace("paint")
@@ -140,15 +140,15 @@ func _on_PaintButton_toggled(button_pressed): #################################
 
 
 func _on_OptionsButton_toggled(button_pressed): ###############################
-	msg("Current workspace: " + workspace, "Info")
-	msg("Opening pause workspace...", "Info")
+	msg("Current workspace: " + workspace, Debug.INFO, self)
+	msg("Opening pause workspace...", Debug.INFO, self)
 	if button_pressed:
 		switch_workspace("pause")
 	else:
 		switch_workspace("game")
 
 func _on_ExitButton_pressed():
-	msg("Loading main menu...", "Info")
+	msg("Loading main menu...", Debug.INFO, self)
 	get_tree().change_scene("res://scene/main_menu.tscn")
 
 
@@ -161,36 +161,36 @@ func _on_JumpButton_pressed():
 ################################## functions ##################################
 
 func switch_workspace(new_workspace):
-	msg("Changing mode to " + new_workspace + " from " + workspace, "Debug")
+	msg("Changing mode to " + new_workspace + " from " + workspace, Debug.DEBUG, self)
 	
 	if new_workspace == "pause":
-		msg("Opening the pause menu...", "Info")
+		msg("Opening the pause menu...", Debug.INFO, self)
 		Input.set_mouse_mode(Input.MOUSE_MODE_CONFINED)
 		get_node("HorizontalMain/VerticalMain/VerticalCenterContent/PauseWindow").visible = true
 		get_node("HorizontalMain/VerticalMain/VerticalCenterContent/Chat").visible = true
 		get_node("HorizontalMain/VerticalMain/Navbox").visible = false
 	if new_workspace == "build":
 		Input.set_mouse_mode(Input.MOUSE_MODE_CONFINED)
-		msg("Opening the build menu...", "Info")
+		msg("Opening the build menu...", Debug.INFO, self)
 		get_node("HorizontalMain/VerticalMain/VerticalCenterContent/BuildWindow").visible = true
 		get_node("HorizontalMain/VerticalMain/VerticalCenterContent/Chat").visible = false
 		get_node("HorizontalMain/VerticalMain/Navbox").visible = false
 	if new_workspace == "paint":
 		Input.set_mouse_mode(Input.MOUSE_MODE_CONFINED)
-		msg("Opening the paint menu...", "Info")
+		msg("Opening the paint menu...", Debug.INFO, self)
 		get_node("HorizontalMain/VerticalMain/VerticalCenterContent/PaintWindow").visible = true
 		get_node("HorizontalMain/VerticalMain/VerticalCenterContent/Chat").visible = false
 		get_node("HorizontalMain/VerticalMain/Navbox").visible = false
 	if new_workspace == "game":
 		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-		msg("Closing all windows...", "Info")
+		msg("Closing all windows...", Debug.INFO, self)
 		get_node("HorizontalMain/VerticalMain/VerticalCenterContent/PauseWindow").visible = false
 		get_node("HorizontalMain/VerticalMain/VerticalCenterContent/BuildWindow").visible = false
 		get_node("HorizontalMain/VerticalMain/VerticalCenterContent/PaintWindow").visible = false
 		get_node("HorizontalMain/VerticalMain/VerticalCenterContent/Chat").visible = true
 		get_node("HorizontalMain/VerticalMain/Navbox").visible = true
 	
-	msg("HWIIUUIWUIWEYURYUWEY", "Info")
+	msg("HWIIUUIWUIWEYURYUWEY", Debug.INFO, self)
 	workspace = new_workspace
 
 func switch_mode(mode):
@@ -276,7 +276,7 @@ func load_debug_screen(): ####################################################
 func fetch_client_version(): ##################################################
 	#var file = File.new()
 	#if file.open("res://version.txt", File.READ) != 0:
-	#	msg("Error reading client version.", "Error")
+	#	msg("Error reading client version.", Debug.ERROR, self)
 	
 	#return file.get_as_text()
 	var World = get_node("/root/World")

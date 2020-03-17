@@ -1,3 +1,4 @@
+var script_name = "debug_camera"
 # Generic debug camera controller. Use anywhere.
 # Nothing game-related, no reference from and to outside.
 

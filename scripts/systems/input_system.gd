@@ -1,5 +1,7 @@
 # just routes input signals to other systems
 extends Node
+var script_name = "input_system"
+onready var Debug = preload("res://scripts/features/debug.gd").new()
 onready var Player = preload("res://scripts/features/player.gd").new()
 onready var Manager = preload("res://scripts/features/manager.gd").new()
 onready var Comp = preload("res://scripts/features/comp.gd").new()
@@ -42,7 +44,7 @@ func _ready():
 #		get_tree().reload_current_scene()
 
 func _joystick_pressed(down, id):
-	Core.emit_signal("msg", "Joystick pressed!", "Debug")
+	Core.emit_signal("msg", "Joystick pressed!", Debug.DEBUG, self)
 #	Entity.set_component(id, "joystick.pressed", down)
 	
 	pressed = true
@@ -94,37 +96,37 @@ func _input(event): ###########################################################
 	
 	if event.is_action_pressed("fly"):
 		if move_mode == "walk":
-			Core.emit_signal("msg", "Changing move_mode to fly...", "Info")
+			Core.emit_signal("msg", "Changing move_mode to fly...", Debug.INFO, self)
 			move_mode = "fly"
 		else:
-			Core.emit_signal("msg", "Changing move_mode to walk...", "Info")
+			Core.emit_signal("msg", "Changing move_mode to walk...", Debug.INFO, self)
 			move_mode = "walk"
 	
 	if event.is_action_pressed("break"):
 		#action(OS.get_window_size() / 2)
-		Core.emit_signal("msg", "Break pressed!", "Debug")
+		Core.emit_signal("msg", "Break pressed!", Debug.DEBUG, self)
 	
 	if event is InputEventScreenTouch:
 		pass
 		#action(event.position)
 	
 	if event.is_action_pressed("burn"):
-		Core.emit_signal("msg", "Changing action_mode to burn...", "Info")
+		Core.emit_signal("msg", "Changing action_mode to burn...", Debug.INFO, self)
 		Core.Client.action_mode = "burn"
 		#Debug.switch_mode("burn")
 	
 	if event.is_action_pressed("mine"):
-		Core.emit_signal("msg", "Changing action_mode to mine...", "Info")
+		Core.emit_signal("msg", "Changing action_mode to mine...", Debug.INFO, self)
 		Core.Client.action_mode = "mine"
 		#Debug.switch_mode("mine")
 	
 	if event.is_action_pressed("build"):
-		Core.emit_signal("msg", "Changing action_mode to build...", "Info")
+		Core.emit_signal("msg", "Changing action_mode to build...", Debug.INFO, self)
 		Core.Client.action_mode = "build"
 		#Debug.switch_mode("build")
 	
 	if event.is_action_pressed("paint"):
-		Core.emit_signal("msg", "Changing action_mode to paint...", "Info")
+		Core.emit_signal("msg", "Changing action_mode to paint...", Debug.INFO, self)
 		Core.Client.action_mode = "paint"
 		#Debug.switch_mode("paint")
 
@@ -139,8 +141,8 @@ func player_move_head(event, player):
 	#if change + camera_angle < 90 and change + camera_angle > -90:
 	head.rotation_degrees.x += change
 	camera_angle += change
-	#Core.emit_signal("msg", "Camera Angle: " + str(camera_angle), "Trace")
-	#Core.emit_signal("msg", "Angle: " + str(head.rotation_degrees), "Trace")
+	#Core.emit_signal("msg", "Camera Angle: " + str(camera_angle), Debug.TRACE, self)
+	#Core.emit_signal("msg", "Angle: " + str(head.rotation_degrees), Debug.TRACE, self)
 	
 	# Fix z value #BUG#
 	#head.rotation_degrees.z = 0
@@ -167,35 +169,35 @@ func player_move(event, player):
 #					Player.camera_angle += change
 #
 #			elif event.is_action_pressed("action"):
-#				Core.emit_signal("msg", "Action pressed!", "Debug")
+#				Core.emit_signal("msg", "Action pressed!", Debug.DEBUG, self)
 #
 #				for id in Entity.get_entities_with("joystick"):
-#					Core.emit_signal("msg", "Mouse Position: " + str(event.position), "Debug")
+#					Core.emit_signal("msg", "Mouse Position: " + str(event.position), Debug.DEBUG, self)
 #					if event.position.x > 31 and event.position.x < 385 and event.position.y > 505 and event.position.y < 864:
-#						Core.emit_signal("msg", "Joystick pressed!", "Debug")
+#						Core.emit_signal("msg", "Joystick pressed!", Debug.DEBUG, self)
 #						pass
 #						#_joystick_pressed(true, 0)
 #
 #				Player.action(id, OS.get_window_size() / 2)
 #				if pressed:
-#					Core.emit_signal("msg", "Woah", "Info")
+#					Core.emit_signal("msg", "Woah", Debug.INFO, self)
 #			#player.translation = components.player.position
 #			#components.player.rendered = true
 #			#Entity.edit(id, components)
 
 func player_action(event, player):
-	Core.emit_signal("msg", "Action pressed!", "Debug")
+	Core.emit_signal("msg", "Action pressed!", Debug.DEBUG, self)
 	
 #	for id in Entity.get_entities_with("joystick"):
-#		Core.emit_signal("msg", "Mouse Position: " + str(event.position), "Debug")
+#		Core.emit_signal("msg", "Mouse Position: " + str(event.position), Debug.DEBUG, self)
 #		if event.position.x > 31 and event.position.x < 385 and event.position.y > 505 and event.position.y < 864:
-#			Core.emit_signal("msg", "Joystick pressed!", "Debug")
+#			Core.emit_signal("msg", "Joystick pressed!", Debug.DEBUG, self)
 #			pass
 #			#_joystick_pressed(true, 0)
 #
 	Player.action(player, OS.get_window_size() / 2)
 #	if pressed:
-#		Core.emit_signal("msg", "Woah", "Info")
+#		Core.emit_signal("msg", "Woah", Debug.INFO, self)
 #player.translation = components.player.position
 #components.player.rendered = true
 #Entity.edit(id, components)

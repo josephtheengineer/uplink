@@ -1,4 +1,4 @@
-extends Node
+var script_name = "block_data"
 
 var block_materials = Dictionary()
 

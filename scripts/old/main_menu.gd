@@ -91,7 +91,7 @@ func _ready(): ################################################################
 	World.map_seed = -1
 	add_child(World)
 	draw_dots()
-	msg("Starting logs...", "Info")
+	msg("Starting logs...", Debug.INFO, self)
 	
 	# fetch data from the website for the main menu
 	fetch_data()
@@ -116,7 +116,7 @@ func _process(delta): #########################################################
 	
 	
 	if downloading_direct_city and OS.get_unix_time() - downloading_wait > 5:
-		msg("KB downloaded: " + str(direct_city_downloader.get_downloaded_bytes() * 0.001), "Info")
+		msg("KB downloaded: " + str(direct_city_downloader.get_downloaded_bytes() * 0.001), Debug.INFO, self)
 		downloading_wait = OS.get_unix_time()
 	
 	if ui_snaped == false:
@@ -131,7 +131,7 @@ func _process(delta): #########################################################
 	if get_node("UI").rect_position != snaped_position and ui_snaped and background_pressed == false:
 		distance_to_move.x = abs(get_node("UI").rect_position.x - snaped_position.x)
 		distance_to_move.y = abs(get_node("UI").rect_position.y - snaped_position.y)
-		#msg("Position is now " + str(get_node("UI").rect_position), "Debug")
+		#msg("Position is now " + str(get_node("UI").rect_position), Debug.DEBUG, self)
 		distance_moved = Vector2(0, 0)
 	
 	if distance_moved < distance_to_move:
@@ -141,7 +141,7 @@ func _process(delta): #########################################################
 		if distance_to_move_sub < Vector2(1, 1):
 			distance_to_move_sub = Vector2(1, 1)
 		
-		#msg("Music player position is " + str(music_player.translation), "Debug")
+		#msg("Music player position is " + str(music_player.translation), Debug.DEBUG, self)
 		
 		if get_node("UI").rect_position.x < snaped_position.x:
 			get_node("UI").rect_position.x += distance_to_move_sub.x
@@ -163,7 +163,7 @@ func _process(delta): #########################################################
 	
 	if downloading:
 		if OS.get_unix_time() - downloading_wait > 5:
-			msg("KB downloaded: " + str(download_world_client.get_downloaded_bytes() * 0.001), "Info")
+			msg("KB downloaded: " + str(download_world_client.get_downloaded_bytes() * 0.001), Debug.INFO, self)
 			downloading_wait = OS.get_unix_time()
 			
 			if last_downloaded_bytes == download_world_client.get_downloaded_bytes() and last_downloaded_bytes != 0:
@@ -173,7 +173,7 @@ func _process(delta): #########################################################
 	
 	if process:
 		if loader == null:
-			msg("Loader was null!", "Debug")
+			msg("Loader was null!", Debug.DEBUG, self)
 			# no need to process anymore
 			process = false
 			return
@@ -191,16 +191,16 @@ func _process(delta): #########################################################
 			if err == ERR_FILE_EOF: # Finished loading.
 				var resource = loader.get_resource()
 				loader = null
-				msg("Removing old scene...", "Debug")
+				msg("Removing old scene...", Debug.DEBUG, self)
 				get_node("UI/LoadingContainer").visible = false
 				current_scene.queue_free() # get rid of the old scene
-				msg("Setting new scene...", "Debug")
+				msg("Setting new scene...", Debug.DEBUG, self)
 				set_new_scene(resource)
 				break
 			elif err == OK:
 				update_progress()
 			else: # error during loading
-				msg("Error during loading", "Error")
+				msg("Error during loading", Debug.ERROR, self)
 				loader = null
 			break
 
@@ -248,12 +248,12 @@ func _on_JoinServerButton_pressed(): ##########################################
 
 
 func _on_SendButton_pressed(): ################################################
-	msg("Sending message...", "Info")
+	msg("Sending message...", Debug.INFO, self)
 	World.send_message("Hello!")
 
 
 func _on_SharedWorlds_released(): #############################################
-	msg("Shared worlds are not implemented yet!", "Warn")
+	msg("Shared worlds are not implemented yet!", Debug.WARN, self)
 	
 
 
@@ -310,7 +310,7 @@ func _input(event): ###########################################################
 			get_node("UI").visible = true
 	if event.is_action_pressed("ui_accept"):
 		if search_is_focused:
-			msg("Searching eden2 world database...", "Info")
+			msg("Searching eden2 world database...", Debug.INFO, self)
 			#get_node("UI/WorldSharing/TopContainer2/Search/Search/SearchResults/Content").text = "Searching..."
 			Directory.new().make_dir("user://tmp")
 			
@@ -320,7 +320,7 @@ func _input(event): ###########################################################
 			http.set_download_file("user://tmp/search.list")
 			http.connect("request_completed", self, "_on_search_request_completed")
 			add_child(http)
-			msg("Search string is: " + str(EDEN2_SEARCH + text), "Debug")
+			msg("Search string is: " + str(EDEN2_SEARCH + text), Debug.DEBUG, self)
 			http.request(EDEN2_SEARCH + text, Array(), false)
 			search_client = http
 
@@ -331,12 +331,12 @@ func _stop_player(player):
 
 
 func _on_fetch_data_request_completed(result, response_code, headers, body):
-	#msg("Result: " + str(result), "Debug")
+	#msg("Result: " + str(result), Debug.DEBUG, self)
 	var filename = fetch_data_request.get_download_file()
 	var file = File.new()
 	
 	if file.open(filename, File.READ) != 0:
-		msg("Error opening file", "Error")
+		msg("Error opening file", Debug.ERROR, self)
 	
 	if filename == "user://info/changelog.md":
 		get_node("UI/Home/VBoxContainer/TopContainer/News/VBoxContainer/Content2").text = file.get_as_text()
@@ -363,7 +363,7 @@ func _on_fetch_data_request_completed(result, response_code, headers, body):
 		get_node("UI/Leaderboard/TopContainer/Users/VBoxContainer/Content2").text = file.get_as_text()
 	
 	if file.get_as_text() != null:
-		msg("Data fetch " + str(file_progress) + " of " + str(info.size()) + " successful", "Debug")
+		msg("Data fetch " + str(file_progress) + " of " + str(info.size()) + " successful", Debug.DEBUG, self)
 	
 	if file_progress < info.size():
 		fetch_data_request.set_download_file("user://info/" + info[file_progress])
@@ -425,9 +425,9 @@ func show_world_list(parent, world_data, is_downloaded):
 
 func world_button(world):
 	if world == 1:
-		msg("Opening world creation menu...", "Info")
+		msg("Opening world creation menu...", Debug.INFO, self)
 		create_new_world()
-		#msg("Loading a new flat terrain world...", "Info")
+		#msg("Loading a new flat terrain world...", Debug.INFO, self)
 		#map_path = ""
 		#map_name = "New Flat Terrain World"
 		#map_seed = 0
@@ -436,20 +436,20 @@ func world_button(world):
 		if File.new().file_exists("user://worlds/direct_city.eden2") == false:
 			Directory.new().make_dir("user://worlds/")
 			
-			msg("Please wait, downloading Direct City...", "Info")
+			msg("Please wait, downloading Direct City...", Debug.INFO, self)
 			
 			var http = HTTPRequest.new()
 			http.set_download_file("user://worlds/direct_city.eden2")
 			http.connect("request_completed", self, "_on_direct_city_request_completed")
 			add_child(http)
-			msg("Connecting to http://josephtheengineer.ddns.net/eden/worlds/direct-city.eden2...", "Debug")
+			msg("Connecting to http://josephtheengineer.ddns.net/eden/worlds/direct-city.eden2...", Debug.DEBUG, self)
 			http.request("http://josephtheengineer.ddns.net/eden/worlds/direct-city.eden2", Array(), false)
 			downloading_direct_city = true
 			direct_city_downloader = http
 		else:
 			_on_direct_city_request_completed()
 	else:
-		msg("Loading a new natural terrain world...", "Info")
+		msg("Loading a new natural terrain world...", Debug.INFO, self)
 		map_path = ""
 		map_name = "New Natural Terrain World"
 		map_seed = floor(rand_range(0, 9999999))
@@ -457,14 +457,14 @@ func world_button(world):
 
 func _on_direct_city_request_completed():
 	downloading_direct_city = false
-	msg("Loading direct city...", "Info")
+	msg("Loading direct city...", Debug.INFO, self)
 	map_path = "user://worlds/direct_city.eden2"
 	map_name = "Direct City"
 	map_seed = 0
 	load_world()
 
 func create_new_world():
-	msg("World creation menu", "Debug")
+	msg("World creation menu", Debug.DEBUG, self)
 	add_child(load("res://scenes/new_world_panel.tscn").instance())
 
 func draw_dots(): #############################################################
@@ -476,7 +476,7 @@ func draw_dots(): #############################################################
 
 
 func update_progress(): #######################################################
-	msg("Updating progress...", "Debug")
+	msg("Updating progress...", Debug.DEBUG, self)
 	var progress = float(loader.get_stage()) / loader.get_stage_count()
 	# Update your progress bar?
 	#get_node("progress").set_progress(progress)
@@ -497,19 +497,19 @@ func set_new_scene(scene_resource): ###########################################
 
 
 func load_world(): ############################################################
-	msg("Changing scene to world.tscn...", "Info")
+	msg("Changing scene to world.tscn...", Debug.INFO, self)
 	var path = "res://scenes/world.tscn"
 	
 	loader = ResourceLoader.load_interactive(path)
 	if loader == null: # check for errors
-		msg("Loader was null!", "Error")
+		msg("Loader was null!", Debug.ERROR, self)
 		return
 	process = true
 	
 	get_node("UI/LoadingContainer").visible = true
 	
 	# start your "loading..." animation
-	msg("Starting animation...", "Debug")
+	msg("Starting animation...", Debug.DEBUG, self)
 	get_node("AnimationPlayer").play("Loading")
 	
 	wait_frames = 10
@@ -531,13 +531,13 @@ func msg(message, tag): #######################################################
 
 
 func _on_SwipeDetector_swiped(direction): #####################################
-	msg("Swipe signal received!", "Info")
+	msg("Swipe signal received!", Debug.INFO, self)
 
 
 func _on_search_request_completed(result, response_code, headers, body):
 	var file = File.new()
 	if file.open("user://tmp/search.list", File.READ) != 0:
-		msg("Error opening file", "Error")
+		msg("Error opening file", Debug.ERROR, self)
 	
 	var text = file.get_as_text().rsplit("\n")
 	
@@ -552,11 +552,11 @@ func _on_search_request_completed(result, response_code, headers, body):
 			# even
 			name = text[i]
 	
-	msg("World list: " + str(world_data), "Debug")
+	msg("World list: " + str(world_data), Debug.DEBUG, self)
 	var parent = get_node("UI/WorldSharing/TopContainer2/Search/Search/SearchResults/Content/VBoxContainer")
 	show_world_list(parent, world_data, false)
 	
-	msg("Search complete!", "Info")
+	msg("Search complete!", Debug.INFO, self)
 	search_client.queue_free()
 
 func _on_search_focus_entered():
@@ -567,7 +567,7 @@ func _on_search_focus_exited():
 	search_is_focused = false
 
 func download_world_button(path):
-	msg("Searching eden2 world database...", "Info")
+	msg("Searching eden2 world database...", Debug.INFO, self)
 	#get_node("UI/WorldSharing/TopContainer2/Search/Search/SearchResults/Content").text = "Downloading..."
 	Directory.new().make_dir("user://worlds/")
 	
@@ -575,18 +575,18 @@ func download_world_button(path):
 	http.set_download_file("user://worlds/" + path)
 	http.connect("request_completed", self, "_on_world_download_completed", ["user://worlds/" + path])
 	add_child(http)
-	msg("Downloading world " + EDEN2_DOWNLOAD + path, "Debug")
+	msg("Downloading world " + EDEN2_DOWNLOAD + path, Debug.DEBUG, self)
 	http.request(EDEN2_DOWNLOAD + path, Array(), false)
 	download_world_client = http
 	downloading = true
 	
 	downloaded_world_path = "user://worlds/" + path
 	
-	msg("Body size: " + str(http.get_body_size()), "Debug")
+	msg("Body size: " + str(http.get_body_size()), Debug.DEBUG, self)
 
 func _on_world_download_completed(path):
 	downloading = false
-	msg("Loading downloaded world...", "Info")
+	msg("Loading downloaded world...", Debug.INFO, self)
 	map_path = path
 	map_name = "WIP"
 	map_seed = 0

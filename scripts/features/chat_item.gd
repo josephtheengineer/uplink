@@ -1,4 +1,5 @@
 extends Control
+var script_name = "chat_item"
 
 func add_text(text):
 	get_node("Content").add_text(text)

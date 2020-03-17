@@ -1,46 +1,22 @@
 extends Node
+var script_name = "interface_system"
+onready var Debug = preload("res://scripts/features/debug.gd").new()
 onready var Entity = preload("res://scripts/features/entity.gd")
 onready var DebugInfo = preload("res://scripts/features/debug_info.gd")
 onready var SystemManager = preload("res://scripts/features/system_manager.gd").new()
 onready var Hud = preload("res://scripts/features/hud.gd").new()
 
-# Called when the node enters the scene tree for the first time.
 func _ready():
 	Core.emit_signal("system_ready", SystemManager.INTERFACE, self)                ##### READY #####
 	Core.connect("msg", self, "_on_msg")
 
 func _process(delta):
-	pass
-#	for id in Entity.get_entities_with("terminal"):
-#		if get_node("/root/World/" + str(id)):
-#			if Entity.get_component(id, "terminal.rendered") == false:
-#				Core.emit_signal("msg", "Creating Terminal...", "Info")
-#				create_terminal(id)
-#			if Entity.get_component(id, "terminal.text_rendered") == false:
-#				var path = Entity.get_node_path(Entity.get_component(id, "terminal.parent"))
-#				if get_tree().get_root().has_node(path + str(id)):
-#					if Entity.get_component(id, "terminal.text"):
-#						get_node(path + str(id) + "/Terminal/Text").text = Entity.get_component(id, "terminal.text")
-#					Entity.set_component(id, "terminal.text_rendered", true)
-#	
-#	for id in Entity.get_entities_with("Interfaces"):
-#		if get_node("/root/World/" + str(id)):
-#			if Entity.get_component(id, "hud.rendered"):
-#	Hud.process_hud(Core.get_parent().get_node("World/Interfaces/Hud"))
-#			else:
-#				Core.emit_signal("msg", "Creating HUD...", "Info")
-#				create_hud(id)
-#	
-#	for id in Entity.get_entities_with("toolbox"):
-#		if get_node("/root/World/" + str(id)):
-#			if Entity.get_component(id, "toolbox.rendered"):
-#				process_toolbox(id)
-#			else:
-#				Core.emit_signal("msg", "Creating Toolbox...", "Info")
-#				create_toolbox(id)
+	for entity in Core.get_parent().get_node("World/Interfaces/").get_children():
+		if entity.components.name_id == 'hud':
+			Hud.process_hud(entity)
 
-func _on_msg(message, level):
-	#Core.emit_signal("msg", "Rec message", "Debug")
+func _on_msg(message, level, obj):
+	#Core.emit_signal("msg", "Rec message", Debug.DEBUG, self)
 	if get_tree().get_root().has_node("/root/World/Interfaces/0/TTY/RichTextLabel"):
 		get_tree().get_root().get_node("/root/World/Interfaces/0/TTY/RichTextLabel").add_text(message + '\n')
 	
@@ -157,7 +133,7 @@ func process_interface(): ######################################################
 	#World.map_seed = -1
 	#add_child(World)
 	#draw_dots()
-	Core.emit_signal("msg", "Starting logs...", "Info")
+	Core.emit_signal("msg", "Starting logs...", Debug.INFO, self)
 	
 	# fetch data from the website for the main menu
 	#fetch_data()
@@ -199,7 +175,7 @@ func process(delta): #########################################################
 	
 	if process:
 		if loader == null:
-			Core.emit_signal("msg", "Loader was null!", "Debug")
+			Core.emit_signal("msg", "Loader was null!", Debug.DEBUG, self)
 			# no need to process anymore
 			process = false
 			return
@@ -217,16 +193,16 @@ func process(delta): #########################################################
 			if err == ERR_FILE_EOF: # Finished loading.
 				var resource = loader.get_resource()
 				loader = null
-				Core.emit_signal("msg", "Removing old scene...", "Debug")
+				Core.emit_signal("msg", "Removing old scene...", Debug.DEBUG, self)
 				get_node("UI/LoadingContainer").visible = false
 				current_scene.queue_free() # get rid of the old scene
-				Core.emit_signal("msg", "Setting new scene...", "Debug")
+				Core.emit_signal("msg", "Setting new scene...", Debug.DEBUG, self)
 				set_new_scene(resource)
 				break
 			elif err == OK:
 				update_progress()
 			else: # error during loading
-				Core.emit_signal("msg", "Error during loading", "Error")
+				Core.emit_signal("msg", "Error during loading", Debug.ERROR, self)
 				loader = null
 			break
 
@@ -250,12 +226,12 @@ func _on_JoinServerButton_pressed(): ##########################################
 
 
 func _on_SendButton_pressed(): ################################################
-	Core.emit_signal("msg", "Sending message...", "Info")
+	Core.emit_signal("msg", "Sending message...", Debug.INFO, self)
 	World.send_message("Hello!")
 
 
 func _on_SharedWorlds_released(): #############################################
-	Core.emit_signal("msg", "Shared worlds are not implemented yet!", "Warn")
+	Core.emit_signal("msg", "Shared worlds are not implemented yet!", Debug.WARN, self)
 	
 
 
@@ -357,7 +333,7 @@ func show_world_list(parent, world_data, is_downloaded):
 		content.add_child(label)
 
 func create_new_world():
-	Core.emit_signal("msg", "World creation menu", "Debug")
+	Core.emit_signal("msg", "World creation menu", Debug.DEBUG, self)
 	add_child(load("res://scenes/new_world_panel.tscn").instance())
 
 func draw_dots(): #############################################################
@@ -369,7 +345,7 @@ func draw_dots(): #############################################################
 
 
 func update_progress(): #######################################################
-	Core.emit_signal("msg", "Updating progress...", "Debug")
+	Core.emit_signal("msg", "Updating progress...", Debug.DEBUG, self)
 	var progress = float(loader.get_stage()) / loader.get_stage_count()
 	# Update your progress bar?
 	#get_node("progress").set_progress(progress)
@@ -390,25 +366,25 @@ func set_new_scene(scene_resource): ###########################################
 
 
 func load_world(): ############################################################
-	Core.emit_signal("msg", "Changing scene to world.tscn...", "Info")
+	Core.emit_signal("msg", "Changing scene to world.tscn...", Debug.INFO, self)
 	var path = "res://scenes/world.tscn"
 	
 	loader = ResourceLoader.load_interactive(path)
 	if loader == null: # check for errors
-		Core.emit_signal("msg", "Loader was null!", "Error")
+		Core.emit_signal("msg", "Loader was null!", Debug.ERROR, self)
 		return
 	process = true
 	
 	get_node("UI/LoadingContainer").visible = true
 	
 	# start your "loading..." animation
-	Core.emit_signal("msg", "Starting animation...", "Debug")
+	Core.emit_signal("msg", "Starting animation...", Debug.DEBUG, self)
 	get_node("AnimationPlayer").play("Loading")
 	
 	wait_frames = 10
 
 func _on_SwipeDetector_swiped(direction): #####################################
-	Core.emit_signal("msg", "Swipe signal received!", "Info")
+	Core.emit_signal("msg", "Swipe signal received!", Debug.INFO, self)
 
 
 func _on_search_focus_entered():

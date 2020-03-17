@@ -163,7 +163,7 @@ func _ready(): ################################################################
 
 func load_terrain(): ##########################################################
 	# Get the chunk data from the WORLD FILE.
-	#Hud.msg("Running GetChunkData on chunk ", ChunkMetadata[i].Address, "...", "Debug")
+	#Hud.msg("Running GetChunkData on chunk ", ChunkMetadata[i].Address, "...", Debug.DEBUG, self)
 	var EdenWorldDecoder = load("res://scripts/eden_world_decoder.gd").new()
 	EdenWorldDecoder.World = World
 	EdenWorldDecoder.set_vars()
@@ -179,12 +179,12 @@ func load_terrain(): ##########################################################
 		compile()
 		return false
 	
-	Hud.msg("Creating the chunk mesh... ", "Debug")
+	Hud.msg("Creating the chunk mesh... ", Debug.DEBUG, self)
 	#CreateChunk(ChunkMetadata[i].Address, x, y, z)
 	
 	# ==============================================================================
-	Hud.msg(["Chunk data contains ", ChunkData.size(), " blocks"], "Debug")
-	Hud.msg("Placing blocks... ", "Debug")
+	Hud.msg(["Chunk data contains ", ChunkData.size(), " blocks"], Debug.DEBUG, self)
+	Hud.msg("Placing blocks... ", Debug.DEBUG, self)
 	# Place all the blocks contained in the chunk data.
 	for Blocks in range(ChunkData.size()):
 		var position = ChunkData[Blocks].position
@@ -222,21 +222,21 @@ func two_sided_block(side_tex, top_bot_tex): ##################################
 
 
 func break_block(location): ####################################################
-	#Hud.msg("Chunk translation: " + str(translation), "Debug")
-	#Hud.msg("Removing block from chunk location " + str(location - translation), "Info")
+	#Hud.msg("Chunk translation: " + str(translation), Debug.DEBUG, self)
+	#Hud.msg("Removing block from chunk location " + str(location - translation), Debug.INFO, self)
 	block_data.erase(location - translation)
 
 
 func place_block(id, location): ################################################
-	#Hud.msg("Chunk translation: " + str(translation), "Debug")
-	#Hud.msg("Placing block from chunk location " + str(location - translation), "Info")
+	#Hud.msg("Chunk translation: " + str(translation), Debug.DEBUG, self)
+	#Hud.msg("Placing block from chunk location " + str(location - translation), Debug.INFO, self)
 	if id != 0:
 		block_data[location - translation] = id
 	
 	#set_surface_material(0, "texture")
 
 func compile():
-	Hud.msg("Compiling chunk...", "Info")
+	Hud.msg("Compiling chunk...", Debug.INFO, self)
 	mesh = null
 	mesh_data = Array()
 	

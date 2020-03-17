@@ -1,4 +1,5 @@
 extends Node
+var script_name = "sound_system"
 onready var SystemManager = preload("res://scripts/features/system_manager.gd").new()
 
 var music_player = AudioStreamPlayer3D.new()

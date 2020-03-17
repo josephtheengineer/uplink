@@ -102,7 +102,7 @@ func _ready(): #################################################################
 		Player.World = World
 		add_child(Player)
 		
-		Hud.msg("Init took " + str(OS.get_unix_time()-t), "Info")
+		Hud.msg("Init took " + str(OS.get_unix_time()-t), Debug.INFO, self)
 		
 		#VoxelTerrain = load("res://scripts/voxel_terrain.gd").new()
 		#VoxelTerrain.World = World
@@ -137,7 +137,7 @@ func _ready(): #################################################################
 	get_tree().connect("server_disconnected", self, "_server_disconnected")
 	
 	
-	Hud.msg("Staring...", "Debug")
+	Hud.msg("Staring...", Debug.DEBUG, self)
 
 
 func _process(delta): #########################################################
@@ -170,15 +170,15 @@ func _process(delta): #########################################################
 
 
 func _player_connected(id): ###################################################
-	Hud.msg("User " + str(id) + " connected", "Info")
-	Hud.msg("Total users: " + str(get_tree().get_network_connected_peers().size()), "Info")
+	Hud.msg("User " + str(id) + " connected", Debug.INFO, self)
+	Hud.msg("Total users: " + str(get_tree().get_network_connected_peers().size()), Debug.INFO, self)
 
 
 func _player_disconnected(id): ################################################
 	player_info.erase(id) # Erase player from info
 	
-	Hud.msg("User " + str(id) + " connected", "Info")
-	Hud.msg("Total users: " + str(get_tree().get_network_connected_peers().size()), "Info")
+	Hud.msg("User " + str(id) + " connected", Debug.INFO, self)
+	Hud.msg("Total users: " + str(get_tree().get_network_connected_peers().size()), Debug.INFO, self)
 
 
 func _connected_ok(): #########################################################
@@ -186,21 +186,21 @@ func _connected_ok(): #########################################################
 	rpc("register_player", get_tree().get_network_unique_id(), my_info)
 
 func _server_disconnected(): ##################################################
-	Hud.msg("Kicked from server!", "Info")
+	Hud.msg("Kicked from server!", Debug.INFO, self)
 
 
 func _connected_fail(): #######################################################
-	Hud.msg("Error connecting to server! ", "Error")
+	Hud.msg("Error connecting to server! ", Debug.ERROR, self)
 
 
 func _peer_connected(id): #####################################################
-	Hud.msg("User " + str(id) + " connected", "Info")
-	Hud.msg("Total users: " + str(get_tree().get_network_connected_peers().size()), "Info")
+	Hud.msg("User " + str(id) + " connected", Debug.INFO, self)
+	Hud.msg("Total users: " + str(get_tree().get_network_connected_peers().size()), Debug.INFO, self)
 
 
 func _peer_disconnected(id): ##################################################
-	Hud.msg("User " + str(id) + " disconnected", "Info")
-	Hud.msg("Total users: " + str(get_tree().get_network_connected_peers().size()), "Info")
+	Hud.msg("User " + str(id) + " disconnected", Debug.INFO, self)
+	Hud.msg("Total users: " + str(get_tree().get_network_connected_peers().size()), Debug.INFO, self)
 
 
 func _on_packet_received(id, packet): #########################################
@@ -288,7 +288,7 @@ func create_surrounding_chunks(center_chunk): #################################
 ############################ networking functions #############################
 
 func create_server(username): #################################################
-	Hud.msg("Creating server...", "Info")
+	Hud.msg("Creating server...", Debug.INFO, self)
 	var network = NetworkedMultiplayerENet.new()
 	network.create_server(8888, 100)
 	get_tree().set_network_peer(network)
@@ -299,7 +299,7 @@ func create_server(username): #################################################
 
 
 func join_server(username, address): ###################################################
-	Hud.msg("Joining server...", "Info")
+	Hud.msg("Joining server...", Debug.INFO, self)
 	var host = address.rsplit(":")[0]
 	var port = null
 	if address.rsplit(":").size() > 1:
@@ -311,8 +311,8 @@ func join_server(username, address): ###########################################
 		port = DEFAULT_PORT
 	
 	var network = NetworkedMultiplayerENet.new()
-	Hud.msg("Connecting to host " + str(host) + ":" + str(port), "Info")
-	Hud.msg("Client status: " + str(network.create_client(host, port)), "Debug")
+	Hud.msg("Connecting to host " + str(host) + ":" + str(port), Debug.INFO, self)
+	Hud.msg("Client status: " + str(network.create_client(host, port)), Debug.DEBUG, self)
 	
 	get_tree().set_network_peer(network)
 	network.connect("connection_failed", self, "_on_connection_failed")
@@ -326,7 +326,7 @@ func leave_server(): ##########################################################
 
 
 func _on_connection_failed(error):
-	Hud.msg("Error connecting to server: " + error, "Error")
+	Hud.msg("Error connecting to server: " + error, Debug.ERROR, self)
 
 
 func send_message(msg): #######################################################
@@ -342,7 +342,7 @@ remote func send_data(data): ##################################################
 
 
 remote func register_player(id, info): ########################################
-	Hud.msg("Player info: " + str(info), "Info")
+	Hud.msg("Player info: " + str(info), Debug.INFO, self)
 	# Store the info
 	player_info[id] = info
 	# If I'm the server, let the new guy know about existing players

@@ -1,4 +1,4 @@
-extends Node
+var script_name = "dictonary_func"
 
 # Get a given data from a dictionary with position provided as a list
 func getFromDict(dataDict, mapList):    

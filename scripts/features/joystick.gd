@@ -1,4 +1,4 @@
-extends Node
+var script_name = "joystick"
 
 func _ready():
 	pass

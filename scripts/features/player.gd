@@ -1,4 +1,5 @@
-extends Node #KinematicBody
+var script_name = "player" #KinematicBody
+var Debug = preload("res://scripts/features/debug.gd").new()
 
 ############################## public variables ###############################
 
@@ -49,11 +50,11 @@ var jump_height = 15
 #
 #	if event.is_action_pressed("fly"):
 #		if move_mode == "walk":
-#			Core.emit_signal("msg", "Changing move_mode to fly...", "Info")
+#			Core.emit_signal("msg", "Changing move_mode to fly...", Debug.INFO, self)
 #			move_mode = "fly"
 #			get_node("Capsule").disabled = true
 #		else:
-#			Core.emit_signal("msg", "Changing move_mode to walk...", "Info")
+#			Core.emit_signal("msg", "Changing move_mode to walk...", Debug.INFO, self)
 #			move_mode = "walk"
 #			get_node("Capsule").disabled = false
 #
@@ -64,22 +65,22 @@ var jump_height = 15
 #		action(event.position)
 #
 #	if event.is_action_pressed("burn"):
-#		Core.emit_signal("msg", "Changing action_mode to burn...", "Info")
+#		Core.emit_signal("msg", "Changing action_mode to burn...", Debug.INFO, self)
 #		action_mode = "burn"
 #		#Hud.switch_mode("burn")
 #
 #	if event.is_action_pressed("mine"):
-#		Core.emit_signal("msg", "Changing action_mode to mine...", "Info")
+#		Core.emit_signal("msg", "Changing action_mode to mine...", Debug.INFO, self)
 #		action_mode = "mine"
 #		#Hud.switch_mode("mine")
 #
 #	if event.is_action_pressed("build"):
-#		Core.emit_signal("msg", "Changing action_mode to build...", "Info")
+#		Core.emit_signal("msg", "Changing action_mode to build...", Debug.INFO, self)
 #		action_mode = "build"
 #		#Hud.switch_mode("build")
 #
 #	if event.is_action_pressed("paint"):
-#		Core.emit_signal("msg", "Changing action_mode to paint...", "Info")
+#		Core.emit_signal("msg", "Changing action_mode to paint...", Debug.INFO, self)
 #		action_mode = "paint"
 #		#Hud.switch_mode("paint")
 
@@ -93,7 +94,7 @@ func move(position):
 	move_direction = position
 
 func action(player, position): ########################################################
-	#Hud.msg("Modifing block in position: " + position, "Debug")
+	#Hud.msg("Modifing block in position: " + position, Debug.DEBUG, self)
 	
 	action_mode = "build"
 	
@@ -117,24 +118,24 @@ func action(player, position): #################################################
 		
 		
 		if Core.get_parent().has_node("World/Chunks/" + str(location)):
-			Core.emit_signal("msg", "Breaking block: " + str(Vector3(floor(block_location.x), floor(block_location.y), floor(block_location.z))), "Info")
+			Core.emit_signal("msg", "Breaking block: " + str(Vector3(floor(block_location.x), floor(block_location.y), floor(block_location.z))), Debug.INFO, self)
 			
 			var music_player = AudioStreamPlayer3D.new()
 			var audio = load("res://assets/sounds/game/block_break_generic_1_v2.ogg")
 			audio.loop = false
 			music_player.stream = audio
 			music_player.connect("finished", self, "_stop_player", [music_player])
-			add_child(music_player)
-			music_player.play()
+			#add_child(music_player)
+			#music_player.play()
 			
 			Core.Client.ChunkSystem.break_block(Core.get_parent().get_node("World/Chunks/" + str(location)), Vector3(floor(block_location.x), floor(block_location.y), floor(block_location.z)))
 			#Core.Client.ChunkSystem.compile()
 		else:
-			Core.emit_signal("msg", "Invalid chunk!", "Error")
+			Core.emit_signal("msg", "Invalid chunk!", Debug.ERROR, self)
 	elif action_mode == "build":
 		var normal = get_looking_at_normal(player, position)
 		var block_location = get_looking_at(player, position) + normal
-		Core.emit_signal("msg", "Normal is " + str(get_looking_at_normal(player, position)), "Debug")
+		Core.emit_signal("msg", "Normal is " + str(get_looking_at_normal(player, position)), Debug.DEBUG, self)
 		var location = Core.Client.ChunkSystem.get_chunk(block_location)
 		
 		if normal == Vector3(0, 0, -1):
@@ -149,20 +150,20 @@ func action(player, position): #################################################
 			block_location += Vector3(0, 1, 0)
 		
 		if Core.get_parent().has_node("World/Chunks/" + str(location)):
-			Core.emit_signal("msg", "Placing block: " + str(Vector3(floor(block_location.x), floor(block_location.y), floor(block_location.z))), "Info")
+			Core.emit_signal("msg", "Placing block: " + str(Vector3(floor(block_location.x), floor(block_location.y), floor(block_location.z))), Debug.INFO, self)
 			
 			var music_player = AudioStreamPlayer3D.new()
 			var audio = load("res://assets/sounds/game/block_build_generic_1.ogg")
 			audio.loop = false
 			music_player.stream = audio
 			music_player.connect("finished", self, "_stop_player", [music_player])
-			add_child(music_player)
-			music_player.play()
+			#add_child(music_player)
+			#music_player.play()
 			
 			Core.Client.ChunkSystem.place_block(Core.get_parent().get_node("World/Chunks/" + str(location)), 6, Vector3(floor(block_location.x), floor(block_location.y), floor(block_location.z)))
 			#Chunk.compile()
 		else:
-			Core.emit_signal("msg", "Invalid chunk!", "Error")
+			Core.emit_signal("msg", "Invalid chunk!", Debug.ERROR, self)
 	elif action_mode == "paint":
 		pass
 
@@ -175,7 +176,7 @@ func _stop_player(player):
 func get_orientation(player): #######################################################
 	var camera = player.get_node("Player/Head/Camera")
 	var looking_at = camera.project_ray_normal(OS.get_window_size() / 2)
-	#Hud.msg(str(looking_at), "Trace")
+	#Hud.msg(str(looking_at), Debug.TRACE, self)
 	if looking_at.x > 0.5:
 		return "north"
 	elif looking_at.x < -0.5:
@@ -204,7 +205,7 @@ func get_looking_at_normal(player, position): ##################################
 	
 	var result = space_state.intersect_ray(build_origin, build_normal, [self], 1)
 	if result:
-		#Core.emit_signal("msg", str(result.position), "Debug")
+		#Core.emit_signal("msg", str(result.position), Debug.DEBUG, self)
 		return result.normal
 	else:
 		return Vector3(0, 0, 0)
@@ -222,7 +223,7 @@ func get_looking_at(player, position): #########################################
 	
 	var result = space_state.intersect_ray(build_origin, build_normal, [self], 1)
 	if result:
-		#Hud.msg(str(result.position), "Debug")
+		#Hud.msg(str(result.position), Debug.DEBUG, self)
 		return result.position
 	else:
 		return Vector3(0, 0, 0)
@@ -242,7 +243,7 @@ func can_see_chunk(player, chunk): #############################################
 			
 			var result = space_state.intersect_ray(build_origin, build_normal, [self], 1)
 			#if result:
-				#Hud.msg(str(result.position), "Debug")
+				#Hud.msg(str(result.position), Debug.DEBUG, self)
 				#return result.position
 			#else:
 				#return Vector3(0, 0, 0)

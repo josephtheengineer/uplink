@@ -1,4 +1,6 @@
 extends Node
+var script_name = "download_system"
+onready var Debug = preload("res://scripts/features/debug.gd").new()
 onready var SystemManager = preload("res://scripts/features/system_manager.gd").new()
 
 const EDEN2_SEARCH = "http://app.edengame.net/list2.php?search="
@@ -24,12 +26,12 @@ func _ready():
 
 
 func _on_fetch_data_request_completed(result, response_code, headers, body):
-	#msg("Result: " + str(result), "Debug")
+	#msg("Result: " + str(result), Debug.DEBUG, self)
 	var filename = null #fetch_data_request.get_download_file()
 	var file = File.new()
 	
 	if file.open(filename, File.READ) != 0:
-		Core.emit_signal("msg", "Error opening file", "Error")
+		Core.emit_signal("msg", "Error opening file", Debug.ERROR, self)
 	
 	if filename == "user://info/changelog.md":
 		get_node("UI/Home/VBoxContainer/TopContainer/News/VBoxContainer/Content2").text = file.get_as_text()
@@ -56,7 +58,7 @@ func _on_fetch_data_request_completed(result, response_code, headers, body):
 		get_node("UI/Leaderboard/TopContainer/Users/VBoxContainer/Content2").text = file.get_as_text()
 	
 	#if file.get_as_text() != null:
-		#msg("Data fetch " + str(file_progress) + " of " + str(info.size()) + " successful", "Debug")
+		#msg("Data fetch " + str(file_progress) + " of " + str(info.size()) + " successful", Debug.DEBUG, self)
 	
 	#if file_progress < info.size():
 		#fetch_data_request.set_download_file("user://info/" + info[file_progress])
@@ -80,7 +82,7 @@ func fetch_data(): ############################################################
 func _on_search_request_completed(result, response_code, headers, body):
 	var file = File.new()
 	if file.open("user://tmp/search.list", File.READ) != 0:
-		Core.emit_signal("msg", "Error opening file", "Error")
+		Core.emit_signal("msg", "Error opening file", Debug.ERROR, self)
 	
 	var text = file.get_as_text().rsplit("\n")
 	
@@ -95,16 +97,16 @@ func _on_search_request_completed(result, response_code, headers, body):
 			# even
 			name = text[i]
 	
-	Core.emit_signal("msg", "World list: " + str(world_data), "Debug")
+	Core.emit_signal("msg", "World list: " + str(world_data), Debug.DEBUG, self)
 	var parent = get_node("UI/WorldSharing/TopContainer2/Search/Search/SearchResults/Content/VBoxContainer")
 	#show_world_list(parent, world_data, false)
 	
-	Core.emit_signal("msg", "Search complete!", "Info")
+	Core.emit_signal("msg", "Search complete!", Debug.INFO, self)
 	#search_client.queue_free()
 
 func _on_world_download_completed(path):
 	#downloading = false
-	Core.emit_signal("msg", "Loading downloaded world...", "Info")
+	Core.emit_signal("msg", "Loading downloaded world...", Debug.INFO, self)
 	#map_path = path
 	#map_name = "WIP"
 	#map_seed = 0
@@ -113,12 +115,12 @@ func _on_world_download_completed(path):
 
 #func _process(delta):
 	#if downloading_direct_city and OS.get_unix_time() - downloading_wait > 5:
-	#	Core.emit_signal("msg", "KB downloaded: " + str(direct_city_downloader.get_downloaded_bytes() * 0.001), "Info")
+	#	Core.emit_signal("msg", "KB downloaded: " + str(direct_city_downloader.get_downloaded_bytes() * 0.001), Debug.INFO, self)
 	#	downloading_wait = OS.get_unix_time()
 	#	
 	#if downloading:
 	#	if OS.get_unix_time() - downloading_wait > 5:
-	#		Core.emit_signal("msg", "KB downloaded: " + str(download_world_client.get_downloaded_bytes() * 0.001), "Info")
+	#		Core.emit_signal("msg", "KB downloaded: " + str(download_world_client.get_downloaded_bytes() * 0.001), Debug.INFO, self)
 	#		downloading_wait = OS.get_unix_time()
 	#		
 	#		#if last_downloaded_bytes == download_world_client.get_downloaded_bytes() and last_downloaded_bytes != 0:
@@ -127,7 +129,7 @@ func _on_world_download_completed(path):
 	#		#last_downloaded_bytes = download_world_client.get_downloaded_bytes()
 
 func search():
-	Core.emit_signal("msg", "Searching eden2 world database...", "Info")
+	Core.emit_signal("msg", "Searching eden2 world database...", Debug.INFO, self)
 	#get_node("UI/WorldSharing/TopContainer2/Search/Search/SearchResults/Content").text = "Searching..."
 	Directory.new().make_dir("user://tmp")
 	
@@ -137,7 +139,7 @@ func search():
 	http.set_download_file("user://tmp/search.list")
 	http.connect("request_completed", self, "_on_search_request_completed")
 	add_child(http)
-	Core.emit_signal("msg", "Search string is: " + str(EDEN2_SEARCH + text), "Debug")
+	Core.emit_signal("msg", "Search string is: " + str(EDEN2_SEARCH + text), Debug.DEBUG, self)
 	http.request(EDEN2_SEARCH + text, Array(), false)
 	search_client = http
 
@@ -145,13 +147,13 @@ func download_direct_city():
 	if File.new().file_exists("user://worlds/direct_city.eden2") == false:
 		Directory.new().make_dir("user://worlds/")
 		
-		Core.emit_signal("msg", "Please wait, downloading Direct City...", "Info")
+		Core.emit_signal("msg", "Please wait, downloading Direct City...", Debug.INFO, self)
 		
 		var http = HTTPRequest.new()
 		http.set_download_file("user://worlds/direct_city.eden2")
 		http.connect("request_completed", self, "_on_direct_city_request_completed")
 		add_child(http)
-		Core.emit_signal("msg", "Connecting to http://josephtheengineer.ddns.net/eden/worlds/direct-city.eden2...", "Debug")
+		Core.emit_signal("msg", "Connecting to http://josephtheengineer.ddns.net/eden/worlds/direct-city.eden2...", Debug.DEBUG, self)
 		http.request("http://josephtheengineer.ddns.net/eden/worlds/direct-city.eden2", Array(), false)
 		downloading_direct_city = true
 		direct_city_downloader = http
@@ -160,7 +162,7 @@ func download_direct_city():
 		#_on_direct_city_request_completed()
 
 func download_world_button(path):
-	Core.emit_signal("msg", "Searching eden2 world database...", "Info")
+	Core.emit_signal("msg", "Searching eden2 world database...", Debug.INFO, self)
 	#get_node("UI/WorldSharing/TopContainer2/Search/Search/SearchResults/Content").text = "Downloading..."
 	Directory.new().make_dir("user://worlds/")
 	
@@ -168,18 +170,18 @@ func download_world_button(path):
 	http.set_download_file("user://worlds/" + path)
 	http.connect("request_completed", self, "_on_world_download_completed", ["user://worlds/" + path])
 	add_child(http)
-	Core.emit_signal("msg", "Downloading world " + EDEN2_DOWNLOAD + path, "Debug")
+	Core.emit_signal("msg", "Downloading world " + EDEN2_DOWNLOAD + path, Debug.DEBUG, self)
 	http.request(EDEN2_DOWNLOAD + path, Array(), false)
 	download_world_client = http
 	downloading = true
 	
 	downloaded_world_path = "user://worlds/" + path
 	
-	Core.emit_signal("msg", "Body size: " + str(http.get_body_size()), "Debug")
+	Core.emit_signal("msg", "Body size: " + str(http.get_body_size()), Debug.DEBUG, self)
 
 func _on_direct_city_request_completed():
 	downloading_direct_city = false
-	Core.emit_signal("msg", "Loading direct city...", "Info")
+	Core.emit_signal("msg", "Loading direct city...", Debug.INFO, self)
 	map_path = "user://worlds/direct_city.eden2"
 	map_name = "Direct City"
 	map_seed = 0

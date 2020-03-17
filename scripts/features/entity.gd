@@ -1,5 +1,6 @@
 # manages and stores entity data
 extends Node
+var script_name = "entity"
 var DictonaryFunc = load("res://scripts/features/dictonary_func.gd")
 
 export var components = Dictionary()
@@ -18,7 +19,7 @@ func set_component(path, value):
 #	var parents = Array()
 #	var root = false
 #	while root == false:
-#		#Debug.msg("Parent = " + str(parent.id) + parent.component, "Debug")
+#		#Debug.msg("Parent = " + str(parent.id) + parent.component, Debug.DEBUG, self)
 #		parents.append(parent)
 #		var woah = get_component(parent.id, parent.component + ".parent" )
 #

@@ -1,4 +1,5 @@
 extends Control
+var script_name = "build_window"
 
 func create_build_window():
 	var parent = get_node("MarginContainer/GridContainer")

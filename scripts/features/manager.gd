@@ -1,15 +1,16 @@
-extends Node
+#warning-ignore:unused_class_variable
+var script_name = "manager"
+var Debug = preload("res://scripts/features/debug.gd").new()
 var Entity = load("res://scenes/entity.tscn")
 
 func get_entities_with(component: String):
 	if Core.get_parent().has_node("/root/World/" + component):
-		var object = Core.get_parent().get_node("/root/World/" + component)
-		return object.get_children()
+		return Core.get_parent().get_node("/root/World/" + component).get_children()
 	else:
 		return false
 
 func create(entity: Dictionary):
-	Core.emit_signal("msg", "Creating new Entity, " + entity.type, "Debug")
+	Core.emit_signal("msg", "Creating new Entity, " + entity.type, Debug.DEBUG, self)
 	if entity.type == "interface":
 		if !Core.get_parent().get_node("/root/World").has_node("Interfaces"):
 			var interfaces = Control.new()
@@ -106,7 +107,7 @@ func create(entity: Dictionary):
 #
 #		get_node(path + str(id)).add_child(node)
 #	else:
-#		Core.emit_signal("msg", "Parent node doesn't exist yet!", "Warn")
+#		Core.emit_signal("msg", "Parent node doesn't exist yet!", Debug.WARN, self)
 #		return false
 #
 #	inherit_child_rect(id, component)

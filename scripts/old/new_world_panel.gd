@@ -39,19 +39,19 @@ func _mode_button_pressed(mode):
 func _start_generation():
 	match terrain_mode:
 		FLAT:
-			Hud.msg("Loading a new flat terrain world...", "Info")
+			Hud.msg("Loading a new flat terrain world...", Debug.INFO, self)
 			Hud.map_path = ""
 			Hud.map_name = "New Flat Terrain World"
 			Hud.map_seed = 0
 			Hud.load_world()
 		EDEN1:
-			Hud.msg("Loading a new natural terrain world...", "Info")
+			Hud.msg("Loading a new natural terrain world...", Debug.INFO, self)
 			Hud.map_path = ""
 			Hud.map_name = "New Natural Terrain World"
 			Hud.map_seed = floor(rand_range(0, 9999999))
 			Hud.load_world()
 		EDEN2:
-			Hud.msg("Loading a new natural terrain world...", "Info")
+			Hud.msg("Loading a new natural terrain world...", Debug.INFO, self)
 			Hud.map_path = ""
 			Hud.map_name = "New Natural Terrain World"
 			Hud.map_seed = floor(rand_range(0, 9999999))

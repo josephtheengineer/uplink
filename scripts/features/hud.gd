@@ -1,4 +1,5 @@
-extends Node
+#warning-ignore:unused_class_variable
+var script_name = "hud"
 
 var Manager = preload("res://scripts/features/manager.gd").new()
 var DebugInfo = preload("res://scripts/features/debug_info.gd").new()

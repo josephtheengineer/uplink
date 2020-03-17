@@ -1,4 +1,6 @@
 extends Node
+#warning-ignore:unused_class_variable
+var script_name = "client_system"
 ################################################################################
 #     _____ _                             
 #    / ____| |                            
@@ -135,7 +137,7 @@ func _ready(): #################################################################
 
 
 func create_chunk_system():
-	Core.emit_signal("msg", "Creating chunk system...", "Debug")
+	Core.emit_signal("msg", "Creating chunk system...", Debug.DEBUG, self)
 	var node = Node.new()
 	node.set_name("Chunk")
 	node.set_script(load("res://scripts/systems/chunk_system.gd"))
@@ -143,7 +145,7 @@ func create_chunk_system():
 
 
 func create_download_system():
-	Core.emit_signal("msg", "Creating download system...", "Debug")
+	Core.emit_signal("msg", "Creating download system...", Debug.DEBUG, self)
 	var node = Node.new()
 	node.set_name("Download")
 	node.set_script(load("res://scripts/systems/download_system.gd"))
@@ -151,7 +153,7 @@ func create_download_system():
 
 
 func create_input_system():
-	Core.emit_signal("msg", "Creating input system...", "Debug")
+	Core.emit_signal("msg", "Creating input system...", Debug.DEBUG, self)
 	var node = Node.new()
 	node.set_name("Input")
 	node.set_script(load("res://scripts/systems/input_system.gd"))
@@ -159,7 +161,7 @@ func create_input_system():
 
 
 func create_interface_system():
-	Core.emit_signal("msg", "Creating interface system...", "Debug")
+	Core.emit_signal("msg", "Creating interface system...", Debug.DEBUG, self)
 	var node = Node.new()
 	node.set_name("Interface")
 	node.set_script(load("res://scripts/systems/interface_system.gd"))
@@ -167,7 +169,7 @@ func create_interface_system():
 
 
 func create_sound_system():
-	Core.emit_signal("msg", "Creating sound system...", "Debug")
+	Core.emit_signal("msg", "Creating sound system...", Debug.DEBUG, self)
 	var node = Node.new()
 	node.set_name("Sound")
 	node.set_script(load("res://scripts/systems/sound_system.gd"))
@@ -176,7 +178,7 @@ func create_sound_system():
 
 func _on_app_ready():
 	SystemManager.check_systems()
-	Core.emit_signal("msg", "App ready!", "Info")
+	Core.emit_signal("msg", "App ready!", Debug.INFO, self)
 	
 	Diagnostics.run(self, "_on_diagnostics_finised")
 	#world_loaded()
@@ -190,7 +192,7 @@ func _on_diagnostics_finised(): ################################################
 
 
 func world_loaded(): ###########################################################
-	Core.emit_signal("msg", "World loaded!", "Info")
+	Core.emit_signal("msg", "World loaded!", Debug.INFO, self)
 	
 	#Core.get_parent().get_node("World/Inputs/JosephTheEngineer/Player").translation = Core.Server.last_location
 	
@@ -229,7 +231,7 @@ func init_main_menu(): #########################################################
 
 func init_world(): #############################################################
 	var t = OS.get_unix_time()
-	Core.emit_signal("msg", "Init took " + str(OS.get_unix_time()-t), "Info")
+	Core.emit_signal("msg", "Init took " + str(OS.get_unix_time()-t), Debug.INFO, self)
 
 
 
@@ -269,15 +271,15 @@ func _process(delta): #########################################################
 
 
 func _player_connected(id): ###################################################
-	Core.emit_signal("msg", "User " + str(id) + " connected", "Info")
-	Core.emit_signal("msg", "Total users: " + str(get_tree().get_network_connected_peers().size()), "Info")
+	Core.emit_signal("msg", "User " + str(id) + " connected", Debug.INFO, self)
+	Core.emit_signal("msg", "Total users: " + str(get_tree().get_network_connected_peers().size()), Debug.INFO, self)
 
 
 func _player_disconnected(id): ################################################
 	player_info.erase(id) # Erase player from info
 	
-	Core.emit_signal("msg", "User " + str(id) + " connected", "Info")
-	Core.emit_signal("msg", "Total users: " + str(get_tree().get_network_connected_peers().size()), "Info")
+	Core.emit_signal("msg", "User " + str(id) + " connected", Debug.INFO, self)
+	Core.emit_signal("msg", "Total users: " + str(get_tree().get_network_connected_peers().size()), Debug.INFO, self)
 
 
 func _connected_ok(): #########################################################
@@ -285,11 +287,11 @@ func _connected_ok(): #########################################################
 	rpc("register_player", get_tree().get_network_unique_id(), my_info)
 
 func _server_disconnected(): ##################################################
-	Core.emit_signal("msg", "Kicked from server!", "Info")
+	Core.emit_signal("msg", "Kicked from server!", Debug.INFO, self)
 
 
 func _connected_fail(): #######################################################
-	Core.emit_signal("msg", "Error connecting to server! ", "Error")
+	Core.emit_signal("msg", "Error connecting to server! ", Debug.ERROR, self)
 
 
 func _on_packet_received(id, packet): #########################################
@@ -310,7 +312,7 @@ func _on_ForwardButton_released(): ############################################
 
 
 func join_server(username, address): ###################################################
-	Core.emit_signal("msg", "Joining server...", "Info")
+	Core.emit_signal("msg", "Joining server...", Debug.INFO, self)
 	var host = address.rsplit(":")[0]
 	var port = null
 	if address.rsplit(":").size() > 1:
@@ -322,8 +324,8 @@ func join_server(username, address): ###########################################
 		port = DEFAULT_PORT
 	
 	var network = NetworkedMultiplayerENet.new()
-	Core.emit_signal("msg", "Connecting to host " + str(host) + ":" + str(port), "Info")
-	Core.emit_signal("msg", "Client status: " + str(network.create_client(host, port)), "Debug")
+	Core.emit_signal("msg", "Connecting to host " + str(host) + ":" + str(port), Debug.INFO, self)
+	Core.emit_signal("msg", "Client status: " + str(network.create_client(host, port)), Debug.DEBUG, self)
 	
 	get_tree().set_network_peer(network)
 	network.connect("connection_failed", self, "_on_connection_failed")
@@ -337,7 +339,7 @@ func leave_server(): ##########################################################
 
 
 func _on_connection_failed(error):
-	Core.emit_signal("msg", "Error connecting to server: " + error, "Error")
+	Core.emit_signal("msg", "Error connecting to server: " + error, Debug.ERROR, self)
 
 
 func send_message(msg): #######################################################
@@ -353,7 +355,7 @@ remote func send_data(data): ##################################################
 
 
 remote func register_player(id, info): ########################################
-	Core.emit_signal("msg", "Player info: " + str(info), "Info")
+	Core.emit_signal("msg", "Player info: " + str(info), Debug.INFO, self)
 	# Store the info
 	player_info[id] = info
 	# If I'm the server, let the new guy know about existing players
@@ -367,9 +369,9 @@ remote func register_player(id, info): ########################################
 func world_button(world):
 	pass
 	#if world == 1:
-		#Core.emit_signal("msg", "Opening world creation menu...", "Info")
+		#Core.emit_signal("msg", "Opening world creation menu...", Debug.INFO, self)
 		#create_new_world()
-		#Core.emit_signal("msg", "Loading a new flat terrain world...", "Info")
+		#Core.emit_signal("msg", "Loading a new flat terrain world...", Debug.INFO, self)
 		#map_path = ""
 		#map_name = "New Flat Terrain World"
 		#map_seed = 0
@@ -377,7 +379,7 @@ func world_button(world):
 	#elif world == 3:
 		#pass
 	#else:
-		#Core.emit_signal("msg", "Loading a new natural terrain world...", "Info")
+		#Core.emit_signal("msg", "Loading a new natural terrain world...", Debug.INFO, self)
 		#map_path = ""
 		#map_name = "New Natural Terrain World"
 		#map_seed = floor(rand_range(0, 9999999))

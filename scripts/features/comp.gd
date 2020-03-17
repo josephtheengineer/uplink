@@ -1,4 +1,4 @@
-extends Node
+var script_name = "comp"
 
 const NULL = "Null"
 const CHUNK = "Chunk"

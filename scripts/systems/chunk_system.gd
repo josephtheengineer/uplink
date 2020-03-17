@@ -1,6 +1,8 @@
 # manages chunk data
 # classified as a system because it gets run every frame and scans entities
 extends Node
+var script_name = "chunk_system"
+onready var Debug = preload("res://scripts/features/debug.gd").new()
 onready var ServerSystem = get_node("/root/World/Systems/Server")
 onready var ClientSystem = get_node("/root/World/Systems/Client")
 onready var EdenWorldDecoder = preload("res://scripts/features/eden_world_decoder.gd").new()
@@ -25,7 +27,7 @@ func create_chunk(position):
 		return false
 	chunks_processed_this_frame+=1
 	
-	Core.emit_signal("msg", "Creating chunk " + str(position) + "...", "Debug")
+	Core.emit_signal("msg", "Creating chunk " + str(position) + "...", Debug.DEBUG, self)
 	
 	var chunk_data = EdenWorldDecoder.get_chunk_data(position)
 	
@@ -192,7 +194,7 @@ func create_surrounding_chunks(center_chunk, distance):
 #			if Entity.get_component(id, "chunk.blocks_loaded"):
 #				ClientSystem.blocks_loaded -= Entity.get_component(id, "chunk.blocks_loaded")
 #				ClientSystem.blocks_found -= Entity.get_component(id, "chunk.block_data").size()
-#			Core.emit_signal("msg", "Destroyed chunk" + str(pos), "Debug")
+#			Core.emit_signal("msg", "Destroyed chunk" + str(pos), Debug.DEBUG, self)
 #			Entity.destory(id)
 
 #func init_chunk(id):
@@ -217,7 +219,7 @@ func create_surrounding_chunks(center_chunk, distance):
 
 func compile(block_data, materials, pos): # Returns blocks_loaded, mesh, vertex_data
 	var blocks_loaded = 0
-	Core.emit_signal("msg", "Compiling chunk...", "Info")
+	Core.emit_signal("msg", "Compiling chunk...", Debug.INFO, self)
 	var mesh_instance = MeshInstance.new()
 	mesh_instance.mesh = null
 	var mesh
@@ -233,7 +235,7 @@ func compile(block_data, materials, pos): # Returns blocks_loaded, mesh, vertex_
 	
 	for position in block_data.keys():
 		if Geometry.can_be_seen(position, block_data).size() != 6:# and position.y > 20:
-			#Core.emit_signal("msg", "Compiling block in position " + str(position), "Trace")
+			#Core.emit_signal("msg", "Compiling block in position " + str(position), Debug.TRACE, self)
 			var cube_data = Geometry.create_cube(position, block_data[position].id, mesh, materials, block_data) # Returns mesh, vertex_data
 			mesh = cube_data.mesh
 			vertex_data += cube_data.vertex_data
@@ -242,13 +244,13 @@ func compile(block_data, materials, pos): # Returns blocks_loaded, mesh, vertex_
 	#st.generate_normals(false)
 	#st.index()
 	#mesh = st.commit()
-	Core.emit_signal("msg", "Finished compiling!", "Debug")
+	Core.emit_signal("msg", "Finished compiling!", Debug.DEBUG, self)
 	return {"blocks_loaded" : blocks_loaded, "mesh" : mesh, "vertex_data" : vertex_data}
 
 
 func break_block(chunk, location): ####################################################
-	Core.emit_signal("msg", "Chunk position: " + str(chunk.components.position), "Debug")
-	Core.emit_signal("msg", "Removing block from chunk location " + str(location - chunk.components.position), "Info")
+	Core.emit_signal("msg", "Chunk position: " + str(chunk.components.position), Debug.DEBUG, self)
+	Core.emit_signal("msg", "Removing block from chunk location " + str(location - chunk.components.position), Debug.INFO, self)
 	
 	chunk.components.block_data.erase(location - chunk.components.position)
 
@@ -264,8 +266,8 @@ func place_block(chunk_id, block_id, location): ################################
 	if block_id == 0:
 		return
 	
-	#Hud.msg("Chunk translation: " + str(translation), "Debug")
-	#Hud.msg("Removing block from chunk location " + str(location - translation), "Info")
+	#Hud.msg("Chunk translation: " + str(translation), Debug.DEBUG, self)
+	#Hud.msg("Removing block from chunk location " + str(location - translation), Debug.INFO, self)
 	
 #	var block_data = Entity.get_component(chunk_id, "chunk.block_data")
 #	block_data[location - Entity.get_component(chunk_id, "chunk.position")] = block_id

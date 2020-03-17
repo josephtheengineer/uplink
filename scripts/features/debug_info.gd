@@ -1,4 +1,5 @@
-extends Node
+#warning-ignore:unused_class_variable
+var script_name = "debug_info"
 
 var Player = preload("res://scripts/features/player.gd").new()
 

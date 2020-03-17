@@ -1,4 +1,4 @@
-extends Node
+var script_name = "terrain_generator"
 
 var noise = OpenSimplexNoise.new()
 
