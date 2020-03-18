@@ -42,8 +42,8 @@ func _on_msg(message, level, obj):
 		ALL:
 			level_string = "  All"
 	
-	if level < 5:
-		print(level_string + " [ " + obj.script_name + " ] " + message)
+	#if level < 5:
+	print(level_string + " [ " + obj.script_name + " ] " + message)
 	
 	var file = File.new()
 	file.open(log_loc + "latest.txt", File.READ_WRITE)

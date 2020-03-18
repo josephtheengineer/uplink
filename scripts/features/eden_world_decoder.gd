@@ -72,8 +72,7 @@ func open_eden1_file():
 
 func read_int(position): ######################################################
 	Core.Server.map_file.seek(position)
-	var buffer = Core.Server.map_file.get_buffer(1)
-	return buffer[0]
+	return Core.Server.map_file.get_buffer(1)[0]
 
 func read_float(position): ####################################################
 	Core.Server.map_file.seek(position)

@@ -12,20 +12,21 @@ onready var SystemManager = preload("res://scripts/features/system_manager.gd").
 onready var TerrainGenerator = preload("res://scripts/features/terrain_generator.gd").new()
 onready var Geometry = preload("res://scripts/features/geometry.gd").new()
 
-var timer = 0
-var chunks_processed_this_frame = 0
-var chunk_wait_time = 0
-
-var sur_chunk_x = 0
-var sur_chunk_z = 0
+var _chunk_thread := Thread.new()
+var _chunk_thread_busy := false
 
 func _ready():
+	start_chunk_thread()
 	Core.emit_signal("system_ready", SystemManager.CHUNK, self)                ##### READY #####
 
+func _process(delta):
+	if !_chunk_thread_busy:
+		start_chunk_thread()
+
 func create_chunk(position):
-	if chunks_processed_this_frame > 1:# and !Player.can_see_chunk(position):
-		return false
-	chunks_processed_this_frame+=1
+#	if chunks_processed_this_frame > 1:# and !Player.can_see_chunk(position):
+#		return false
+#	chunks_processed_this_frame+=1
 	
 	Core.emit_signal("msg", "Creating chunk " + str(position) + "...", Debug.DEBUG, self)
 	
@@ -69,79 +70,79 @@ func destroy_chunk(position):
 	#	if entity.components.position == position:
 	#		Entity.destory(entity.id)
 
-signal rendered
-var thread
+func start_chunk_thread():
+	var userdata = {}
+	if Core.get_parent().has_node("World/Inputs/JosephTheEngineer"):
+		userdata.player_position = Core.get_parent().get_node("World/Inputs/JosephTheEngineer/Player").translation
+		userdata.render_distance = ClientSystem.render_distance
+		userdata.chunks = Manager.get_entities_with("Chunks")
+		Core.emit_signal("msg", "Starting chunk thread...", Debug.DEBUG, self)
+		_chunk_thread_busy = true
+		_chunk_thread.start(self, "_chunk_thread_process", userdata)
 
-func _process(delta):
-	chunks_processed_this_frame = 0
-	var entities = Manager.get_entities_with("Chunks")
-	if entities:
-		for node in entities:
+func _chunk_thread_process(userdata):
+	discover_surrounding_chunks(get_chunk(userdata.player_position), userdata.render_distance)
+	process_chunks(userdata.chunks)
+	_chunk_thread.call_deferred("wait_to_finish")
+	Core.emit_signal("msg", "Chunk thread finished!", Debug.DEBUG, self)
+	_chunk_thread_busy = false
+
+func process_chunks(chunks):
+	if chunks:
+		for node in chunks:
 			if node.components.size() != 0:
-				if node.components.rendered == false and chunk_wait_time > 60:
-					chunk_wait_time=0
+				if node.components.rendered == false:
 					_process_chunk(node)
-				else:
-					chunk_wait_time+=1
-
-	entities = Manager.get_entities_with("Inputs")
-	if entities:
-		for node in entities:
-			create_surrounding_chunks(get_chunk(node.get_node("Player").translation), ClientSystem.render_distance)
 
 func _process_chunk(node):
 	var chunk = Spatial.new()
 	chunk.name = "Chunk"
-	node.add_child(chunk)
-
+	
 	if !node.components.block_data:
 		var pos = node.components.position
 		chunk.translation = Vector3(pos.x * 16, pos.y * 16, pos.z * 16)
 		node.components.rendered = true
 		ClientSystem.chunk_index.append(pos)
 		return
-
+	
 	var chunk_data = compile(node.components.block_data, BlockData.blocks(), node.components.position) # Returns blocks_loaded, mesh, vertex_data
-
+	
 	var mesh_instance = MeshInstance.new()
 	mesh_instance.name = "MeshInstance"
 	chunk.add_child(mesh_instance)
 	mesh_instance.mesh = chunk_data.mesh
-
+	
 	var body = StaticBody.new()
 	body.name = "StaticBody"
 	mesh_instance.add_child(body)
-
+	
 	var collision_shape = CollisionShape.new()
 	var shape = ConcavePolygonShape.new()
 	shape.set_faces(chunk_data.vertex_data)
 	collision_shape.name = "CollisionShape"
 	collision_shape.shape = shape
 	body.add_child(collision_shape)
-
+	
 	ClientSystem.blocks_found += node.components.block_data.size()
 	ClientSystem.blocks_loaded += chunk_data.blocks_loaded
-
+	
 	var pos = node.components.position
 	chunk.translation = Vector3(pos.x * 16, pos.y * 16, pos.z * 16)
 	node.components.rendered = true
 	ClientSystem.chunk_index.append(pos)
-
+	
+	node.call_deferred("add_child", chunk)
+	
 	if node.components.object != null or node.components.method != null:
 		connect("rendered", node.components.object, node.components.method)
 		emit_signal("rendered")
-	#_exit_tree()
-
-# Thread must be disposed (or "joined"), for portability.
-func _exit_tree():
-    thread.wait_to_finish()
 
 #VoxelTerrain._precalculate_priority_positions()
 #VoxelTerrain._precalculate_neighboring()
 #VoxelTerrain._update_pending_blocks()
 
 # Creates one surrounding chunk per call
-func create_surrounding_chunks(center_chunk, distance):
+func discover_surrounding_chunks(center_chunk, distance):
 	var surrounding_chunks = []
 	
 	var top = center_chunk.x - distance;
@@ -254,7 +255,7 @@ func load_player_spawn_chunks(object, method):
 	for i in range(10):
 		create_chunk(Vector3(player_chunk.x, player_chunk.y-i, player_chunk.z))
 	
-	timer = Timer.new()
+	var timer = Timer.new()
 	timer.connect("timeout", self, "_on_timer_timeout")
 	timer.wait_time = 5
 	Core.add_child(timer)

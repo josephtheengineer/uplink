@@ -59,7 +59,7 @@ func world_stats_update(hud):
 	
 	Core.get_parent().get_node(stats + "TotalChunks").text = "Total Chunks: " + str(Core.Server.total_chunks)
 	Core.get_parent().get_node(stats + "ChunksCache").text = "Chunk Cache: " + str(Core.Server.chunks_cache_size)
-	Core.get_parent().get_node(stats + "ChunksLoaded").text = "Chunks Loaded: " + str(Core.get_parent().get_node("World/Chunks").get_child_count())
+	#Core.get_parent().get_node(stats + "ChunksLoaded").text = "Chunks Loaded: " + str(Core.get_parent().get_node("World/Chunks").get_child_count())
 	Core.get_parent().get_node(stats + "Seed").text = "Seed: " + str(Core.Server.map_seed)
 	
 
@@ -67,11 +67,11 @@ func chunk_info_update(hud, player_pos):
 	var stats = "World/Interfaces/" + str(hud.components.id) + "/Hud/HorizontalMain/VerticalMain/VerticalCenterContent/DebugStats/ChunkInfo/"
 	
 	var chunk_loc = Core.Client.ChunkSystem.get_chunk(player_pos)
-	var chunk = Core.get_parent().get_node("World/Chunks/" + str(chunk_loc))
-	
-	Core.get_parent().get_node(stats + "ChunkXYZ").text = "XYZ: " + str(chunk.components.position)
-	
-	if chunk:
-		Core.get_parent().get_node(stats + "ChunkAddress").text = "== Chunk: " + str(chunk.components.address) + " =="
-		Core.get_parent().get_node(stats + "BlocksLoaded").text = "Blocks Loaded: " + str(chunk.components.blocks_loaded)
-		#Core.get_parent().get_node(stats + "Blocks").text = "Blocks: " + Core.Client.action_mode
+	if Core.get_parent().has_node("World/Chunks"):
+		if Core.get_parent().get_node("World/Chunks").has_node(str(chunk_loc)):
+			var chunk = Core.get_parent().get_node("World/Chunks/" + str(chunk_loc))
+			
+			Core.get_parent().get_node(stats + "ChunkXYZ").text = "XYZ: " + str(chunk.components.position)
+			Core.get_parent().get_node(stats + "ChunkAddress").text = "== Chunk: " + str(chunk.components.address) + " =="
+			Core.get_parent().get_node(stats + "BlocksLoaded").text = "Blocks Loaded: " + str(chunk.components.blocks_loaded)
+			#Core.get_parent().get_node(stats + "Blocks").text = "Blocks: " + Core.Client.action_mode
