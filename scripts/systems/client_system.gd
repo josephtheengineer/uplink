@@ -31,7 +31,7 @@ onready var SystemManager = preload("res://scripts/features/system_manager.gd").
 onready var Hud = preload("res://scripts/features/hud.gd").new()
 
 #warning-ignore:unused_class_variable
-var version = "Uplink v0.0.0 beta0 r8"
+var version = "Uplink v0.0.0 beta0"
 #warning-ignore:unused_class_variable
 var total_players = 0
 #warning-ignore:unused_class_variable

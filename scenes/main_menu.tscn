@@ -430,7 +430,6 @@ anchor_bottom = 1.0
 color = Color( 0.230469, 0.230469, 0.230469, 1 )
 
 [node name="Leaderboard" type="MarginContainer" parent="UI"]
-editor/display_folded = true
 anchor_right = 1.0
 margin_top = -1080.0
 margin_bottom = -20.0
@@ -678,7 +677,6 @@ text = "Fetching data..."
 selection_enabled = true
 
 [node name="WorldSharing" type="MarginContainer" parent="UI"]
-editor/display_folded = true
 anchor_left = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -1038,7 +1036,6 @@ text = "Fetching data..."
 selection_enabled = true
 
 [node name="Account" type="MarginContainer" parent="UI"]
-editor/display_folded = true
 anchor_bottom = 1.0
 margin_left = -1920.0
 margin_right = -20.0
@@ -1149,7 +1146,6 @@ text = "Show name: true"
 selection_enabled = true
 
 [node name="Options" type="MarginContainer" parent="UI"]
-editor/display_folded = true
 visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -1176,7 +1172,6 @@ anchor_bottom = 1.0
 color = Color( 0.0588235, 0.0666667, 0.0627451, 1 )
 
 [node name="VBoxContainer" type="VBoxContainer" parent="UI/Options/TopContainer3/Options"]
-editor/display_folded = true
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 10.0
@@ -1230,7 +1225,6 @@ custom_fonts/font = ExtResource( 3 )
 text = "Back"
 
 [node name="LoadingContainer" type="VBoxContainer" parent="UI"]
-editor/display_folded = true
 visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -1289,7 +1283,6 @@ margin_bottom = 1080.0
 size_flags_vertical = 3
 
 [node name="TitleScreen" type="Control" parent="."]
-editor/display_folded = true
 visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -1332,7 +1325,6 @@ margin_bottom = 310.0
 color = Color( 0, 0, 0, 0.169583 )
 
 [node name="JosephTheEngineer" type="VBoxContainer" parent="TitleScreen"]
-editor/display_folded = true
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
