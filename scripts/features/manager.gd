@@ -1,6 +1,6 @@
 #warning-ignore:unused_class_variable
 var script_name = "manager"
-var Debug = preload("res://scripts/features/debug.gd").new()
+var Debug = preload("res://scripts/features/debug.gd")
 var Entity = load("res://scenes/entity.tscn")
 
 func get_entities_with(component: String):

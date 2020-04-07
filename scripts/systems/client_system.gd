@@ -135,7 +135,7 @@ func _ready(): #################################################################
 	
 	var error = Core.connect("app_ready", self, "_on_app_ready")
 	if error:
-		emit_signal("msg", "Error on binding to app_ready: " + str(error), Debug.WARN, self)
+		Core.emit_signal("msg", "Error on binding to app_ready: " + str(error), Debug.WARN, self)
 	
 
 
