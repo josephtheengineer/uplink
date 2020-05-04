@@ -5,6 +5,7 @@ onready var Entity = preload("res://scripts/features/entity.gd")
 onready var DebugInfo = preload("res://scripts/features/debug_info.gd")
 onready var SystemManager = preload("res://scripts/features/system_manager.gd").new()
 onready var Hud = preload("res://scripts/features/hud.gd").new()
+onready var RegionTileMap = preload("res://scripts/features/region_tile_map.gd").new()
 
 func _ready():
 	Core.emit_signal("system_ready", SystemManager.INTERFACE, self)                ##### READY #####
@@ -20,8 +21,18 @@ func _on_msg(message, level, obj):
 	if get_tree().get_root().has_node("/root/World/Interfaces/0/TTY/RichTextLabel"):
 		get_tree().get_root().get_node("/root/World/Interfaces/0/TTY/RichTextLabel").add_text(message + '\n')
 	
-	if get_tree().get_root().has_node("/root/World/Interfaces/Hud/Hud/HorizontalMain/VerticalMain/VerticalCenterContent/Chat/Content/Text/RichTextLabel"):
-		get_tree().get_root().get_node("/root/World/Interfaces/Hud/Hud/HorizontalMain/VerticalMain/VerticalCenterContent/Chat/Content/Text/RichTextLabel").add_text(message + '\n')
+	if Core.get_parent().has_node("World/Interfaces/Hud/Hud/HorizontalMain/VerticalMain/VerticalCenterContent/LeftPanel/TabContainer/Chat/Text/RichTextLabel"):
+		Core.get_parent().get_node("World/Interfaces/Hud/Hud/HorizontalMain/VerticalMain/VerticalCenterContent/LeftPanel/TabContainer/Chat/Text/RichTextLabel").add_text(message + '\n')
+
+func update_region_map():
+	Core.emit_signal("msg", "Updating region map", Debug.INFO, self)
+	var grid = Dictionary()
+	
+	for region in Core.Server.regions:
+		grid[region] = RegionTileMap.KNOWN
+	
+	if Core.get_parent().has_node("World/Interfaces/Hud/Hud/HorizontalMain/VerticalMain/VerticalCenterContent/LeftPanel/TabContainer/WorldMap/VBoxContainer/TileMap"):
+		Core.get_parent().get_node("World/Interfaces/Hud/Hud/HorizontalMain/VerticalMain/VerticalCenterContent/LeftPanel/TabContainer/WorldMap/VBoxContainer/TileMap").display_grid(grid)
 
 func process_horizontal_container(id):
 	pass

@@ -18,9 +18,9 @@ var home_rotation = 0
 var chunks_cache_size = 0
 var total_chunks = 0
 
-
 var map_file = File.new()
 var chunk_metadata = Dictionary()
+var regions = Dictionary()
 
 var worldAreaX = 0
 var worldAreaY = 0

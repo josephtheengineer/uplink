@@ -60,6 +60,9 @@ func create_chunk(position):
 	
 	Manager.create(chunk)
 	
+	if !chunk_data:
+		return false
+	
 	return true
 
 func destroy_chunk(position):
@@ -76,7 +79,7 @@ func start_chunk_thread():
 		userdata.player_position = Core.get_parent().get_node("World/Inputs/JosephTheEngineer/Player").translation
 		userdata.render_distance = ClientSystem.render_distance
 		userdata.chunks = Manager.get_entities_with("Chunks")
-		Core.emit_signal("msg", "Starting chunk thread...", Debug.DEBUG, self)
+		#Core.emit_signal("msg", "Starting chunk thread...", Debug.DEBUG, self)
 		_chunk_thread_busy = true
 		_chunk_thread.start(self, "_chunk_thread_process", userdata)
 
@@ -84,7 +87,7 @@ func _chunk_thread_process(userdata):
 	discover_surrounding_chunks(get_chunk(userdata.player_position), userdata.render_distance)
 	process_chunks(userdata.chunks)
 	_chunk_thread.call_deferred("wait_to_finish")
-	Core.emit_signal("msg", "Chunk thread finished!", Debug.DEBUG, self)
+	#Core.emit_signal("msg", "Chunk thread finished!", Debug.DEBUG, self)
 	_chunk_thread_busy = false
 
 func process_chunks(chunks):
@@ -184,7 +187,7 @@ func discover_surrounding_chunks(center_chunk, distance):
 			closest_chunk = chunk
 	
 	if closest_chunk != Vector3(0, 0, 0):
-		create_chunk(closest_chunk)
+		return create_chunk(closest_chunk)
 	
 #	# Remove chunks outside of bounds
 #	var entities = Entity.get_entities_with("chunk")
@@ -220,7 +223,7 @@ func discover_surrounding_chunks(center_chunk, distance):
 
 func compile(block_data, materials, pos): # Returns blocks_loaded, mesh, vertex_data
 	var blocks_loaded = 0
-	Core.emit_signal("msg", "Compiling chunk...", Debug.INFO, self)
+	Core.emit_signal("msg", "Compiling chunk...", Debug.TRACE, self)
 	var mesh_instance = MeshInstance.new()
 	mesh_instance.mesh = null
 	var mesh
@@ -252,12 +255,14 @@ signal chunks_loaded
 func load_player_spawn_chunks(object, method):
 	connect("chunks_loaded", object, method)
 	var player_chunk = get_chunk(Core.get_parent().get_node("World/Inputs/JosephTheEngineer/Player").translation)
-	for i in range(10):
-		create_chunk(Vector3(player_chunk.x, player_chunk.y-i, player_chunk.z))
+	for x in range(-1, 2):
+		for y in range(10):
+			for z in range(-1, 2):
+				create_chunk(Vector3(player_chunk.x+x, player_chunk.y-y, player_chunk.z+z))
 	
 	var timer = Timer.new()
 	timer.connect("timeout", self, "_on_timer_timeout")
-	timer.wait_time = 5
+	timer.wait_time = 10
 	Core.add_child(timer)
 	timer.start()
 

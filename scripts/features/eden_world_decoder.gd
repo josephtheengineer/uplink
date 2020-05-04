@@ -120,10 +120,17 @@ func get_metadata(): ##########################################################
 		Core.Server.chunk_metadata[Vector3(x, 2, y)] = (chunk_data)
 		Core.Server.chunk_metadata[Vector3(x, 3, y)] = (chunk_data)
 		
+		var region_loc = Vector3(int(floor(x/16)), int(floor(0/16)), int(floor(y/16)))
+		
+		if !Core.Server.regions.has(region_loc):
+			Core.emit_signal("msg", "New region found! " + str(region_loc), Debug.INFO)
+			Core.Server.regions[region_loc] = []
+		
+		Core.Server.regions[region_loc].append(Vector3(x, 0, y))
+		
 		chunk_pointer += 16
 	
-	
-	Core.emit_signal("msg", "Found " + str(Core.Server.chunk_metadata.size()) + " chunks", Debug.INFO, self);
+	Core.emit_signal("msg", "Found " + str(Core.Server.chunk_metadata.size()) + " chunks", Debug.INFO, self)
 	#Core.emit_signal("msg", str(Core.Server.chunk_metadata), Debug.TRACE, self)
 	Core.Server.total_chunks = Core.Server.chunk_metadata.size()
 	
@@ -147,7 +154,7 @@ func get_chunk_data(location): ################################################
 		return false
 	if !Core.Server.chunk_metadata.has(location):
 		#var chunks_map = Core.Server.chunk_metadata
-		Core.emit_signal("msg", "Chunk data does not exist! " + str(location), Debug.WARN, self);
+		Core.emit_signal("msg", "Chunk data does not exist! " + str(location), Debug.DEBUG, self);
 		return false
 	
 	var chunk_data = Dictionary()

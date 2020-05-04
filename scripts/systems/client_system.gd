@@ -139,7 +139,7 @@ func _ready(): #################################################################
 	
 
 
-func create_chunk_system():
+func create_chunk_system(): ####################################################
 	Core.emit_signal("msg", "Creating chunk system...", Debug.DEBUG, self)
 	var node = Node.new()
 	node.set_name("Chunk")
@@ -147,7 +147,7 @@ func create_chunk_system():
 	get_node("/root/World/Systems").call_deferred("add_child", node)
 
 
-func create_download_system():
+func create_download_system(): #################################################
 	Core.emit_signal("msg", "Creating download system...", Debug.DEBUG, self)
 	var node = Node.new()
 	node.set_name("Download")
@@ -155,7 +155,7 @@ func create_download_system():
 	get_node("/root/World/Systems").call_deferred("add_child", node)
 
 
-func create_input_system():
+func create_input_system(): ####################################################
 	Core.emit_signal("msg", "Creating input system...", Debug.DEBUG, self)
 	var node = Node.new()
 	node.set_name("Input")
@@ -163,7 +163,7 @@ func create_input_system():
 	get_node("/root/World/Systems").call_deferred("add_child", node)
 
 
-func create_interface_system():
+func create_interface_system(): ################################################
 	Core.emit_signal("msg", "Creating interface system...", Debug.DEBUG, self)
 	var node = Node.new()
 	node.set_name("Interface")
@@ -171,7 +171,7 @@ func create_interface_system():
 	get_node("/root/World/Systems").call_deferred("add_child", node)
 
 
-func create_sound_system():
+func create_sound_system(): ####################################################
 	Core.emit_signal("msg", "Creating sound system...", Debug.DEBUG, self)
 	var node = Node.new()
 	node.set_name("Sound")
@@ -179,7 +179,7 @@ func create_sound_system():
 	get_node("/root/World/Systems").call_deferred("add_child", node)
 
 
-func _on_app_ready():
+func _on_app_ready(): ##########################################################
 	SystemManager.check_systems()
 	Core.emit_signal("msg", "App ready!", Debug.INFO, self)
 	
@@ -187,14 +187,14 @@ func _on_app_ready():
 	#world_loaded()
 
 
-func _on_diagnostics_finised(): ####################################################
+func _on_diagnostics_finised(): ################################################
 	#ServerSystem.start()
 	Core.Server.load_world(self, "_on_world_loaded")
 	Core.get_parent().get_node("World/Interfaces/0").free()
 	Hud.create()
 
 
-func _on_world_loaded(): ###########################################################
+func _on_world_loaded(): #######################################################	
 	Core.emit_signal("msg", "World loaded!", Debug.INFO, self)
 	
 	ChunkSystem.load_player_spawn_chunks(self, "_on_chunks_loaded")
@@ -203,9 +203,10 @@ func _on_world_loaded(): #######################################################
 	
 	#create_hud()
 
-func _on_chunks_loaded():
+func _on_chunks_loaded(): ######################################################
 	Core.emit_signal("msg", "Player spawn chunks loaded!", Debug.INFO, self)
 	InputSystem.move_mode = "walk"
+	InterfaceSystem.update_region_map()
 
 func spawn_player(location):
 	var player = Dictionary()
@@ -218,26 +219,7 @@ func spawn_player(location):
 	
 	Manager.create(player)
 	InputSystem.move_mode = "fly"
-	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-
-func create_hud(): #############################################################
-	var hud = Dictionary()
-	#var hud_id = Entity.create({"hud" : hud})
-	
-#	var terminal = Dictionary()
-#	terminal.parent = Dictionary()
-#	terminal.position = Vector2(0, 0)
-#	terminal.debug = true
-#	terminal.text = ""
-#	terminal.min_size =  Vector2(500, 500)
-#	terminal.parent.id = gamearea_id
-#	terminal.parent.component = "horizontal_container"
-#	Entity.create({"terminal" : terminal})
-
-
-func init_main_menu(): #########################################################
-	ChunkSystem.create_chunk(Vector3(0, 0, 0))
-
+	InputSystem.attach_mouse()
 
 func init_world(): #############################################################
 	var t = OS.get_unix_time()

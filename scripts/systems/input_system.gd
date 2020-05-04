@@ -6,9 +6,11 @@ onready var Player = preload("res://scripts/features/player.gd").new()
 onready var Manager = preload("res://scripts/features/manager.gd").new()
 onready var Comp = preload("res://scripts/features/comp.gd").new()
 onready var SystemManager = preload("res://scripts/features/system_manager.gd").new()
+onready var DebugPanel = preload("res://scripts/features/debug_panel.gd").new()
 
 var pressed = false
 var move_mode = "walk"
+var mouse_attached = false
 
 enum direction {
 	UP
@@ -81,14 +83,9 @@ func _physics_process(delta): #################################################
 signal submit
 
 func _input(event): ###########################################################
-#	var entities = Manager.get_entities_with("Inputs")
-#	if entities:
-#		for id in entities:
-#			var player = entities[id]
-#			if player.rendered == true:
 	if Core.get_parent().has_node("World/Inputs/JosephTheEngineer"):
 		var player = get_node("/root/World/Inputs/JosephTheEngineer")
-		if event is InputEventMouseMotion:
+		if event is InputEventMouseMotion and mouse_attached:
 			player_move_head(event, player)
 		
 		elif event.is_action_pressed("action"):
@@ -102,35 +99,65 @@ func _input(event): ###########################################################
 			Core.emit_signal("msg", "Changing move_mode to walk...", Debug.INFO, self)
 			move_mode = "walk"
 	
-	if event.is_action_pressed("break"):
+	elif event.is_action_pressed("break"):
 		#action(OS.get_window_size() / 2)
 		Core.emit_signal("msg", "Break pressed!", Debug.DEBUG, self)
 	
-	if event is InputEventScreenTouch:
+	elif event is InputEventScreenTouch:
 		pass
 		#action(event.position)
 	
-	if event.is_action_pressed("burn"):
+	elif event.is_action_pressed("burn"):
 		Core.emit_signal("msg", "Changing action_mode to burn...", Debug.INFO, self)
 		Core.Client.action_mode = "burn"
 		#Debug.switch_mode("burn")
 	
-	if event.is_action_pressed("mine"):
+	elif event.is_action_pressed("mine"):
 		Core.emit_signal("msg", "Changing action_mode to mine...", Debug.INFO, self)
 		Core.Client.action_mode = "mine"
 		#Debug.switch_mode("mine")
 	
-	if event.is_action_pressed("build"):
+	elif event.is_action_pressed("build"):
 		Core.emit_signal("msg", "Changing action_mode to build...", Debug.INFO, self)
 		Core.Client.action_mode = "build"
 		#Debug.switch_mode("build")
 	
-	if event.is_action_pressed("paint"):
+	elif event.is_action_pressed("paint"):
 		Core.emit_signal("msg", "Changing action_mode to paint...", Debug.INFO, self)
 		Core.Client.action_mode = "paint"
 		#Debug.switch_mode("paint")
+	
+	elif event.is_action_pressed("ui_cancel"):
+		Core.emit_signal("msg", "Cancel event received", Debug.DEBUG, self)
+		if mouse_attached:
+			detach_mouse()
+		else:
+			attach_mouse()
+	
+	elif event.is_action_pressed("open_world_map"):
+		DebugPanel.open_world_map()
+	elif event.is_action_pressed("open_region_map"):
+		DebugPanel.open_region_map()
+	elif event.is_action_pressed("open_chunk_map"):
+		DebugPanel.open_chunk_map()
+	elif event.is_action_pressed("open_system_status"):
+		DebugPanel.open_system_status()
+	elif event.is_action_pressed("open_entity_analysis"):
+		DebugPanel.open_entity_analysis()
+	elif event.is_action_pressed("open_core_analysis"):
+		DebugPanel.open_core_analysis()
+	elif event.is_action_pressed("open_chat"):
+		DebugPanel.open_chat()
 
 var camera_angle = 0
+
+func detach_mouse():
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	mouse_attached = false
+
+func attach_mouse():
+	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	mouse_attached = true
 
 func player_move_head(event, player):
 	var head = player.get_node("Player/Head")
