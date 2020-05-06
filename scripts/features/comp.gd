@@ -1,4 +1,5 @@
-var script_name = "comp"
+#warning-ignore:unused_class_variable
+const script_name := "comp"
 
 const NULL = "Null"
 const CHUNK = "Chunk"

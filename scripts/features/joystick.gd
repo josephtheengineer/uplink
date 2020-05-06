@@ -1,4 +1,5 @@
-var script_name = "joystick"
+#warning-ignore:unused_class_variable
+const script_name := "joystick"
 
-func _ready():
+func _ready(): #################################################################
 	pass

@@ -1,6 +1,7 @@
 #warning-ignore:unused_class_variable
 var script_name = "diagnostics"
 var Debug = preload("res://scripts/features/debug.gd").new()
+var Manager = preload("res://scripts/features/manager.gd").new()
 
 var progress = 0
 var timer = Timer.new()
@@ -10,7 +11,6 @@ const keyword = "eden"
 signal diagnostics
 
 func run(object, method):
-	var Manager = load("res://scripts/features/manager.gd").new()
 	var error = connect("diagnostics", object, method)
 	if error:
 		Core.emit_signal("msg", "Event diagnostics failed to bind", Debug.WARN, self)

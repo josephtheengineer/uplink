@@ -1,6 +1,7 @@
 extends Node
+class_name ClientSystem
 #warning-ignore:unused_class_variable
-var script_name = "client_system"
+const script_name := "client_system"
 ################################################################################
 #     _____ _                             
 #    / ____| |                            
@@ -23,62 +24,62 @@ onready var InterfaceSystem
 #warning-ignore:unused_class_variable
 onready var SoundSystem
 
-onready var Debug = preload("res://scripts/features/debug.gd").new()
-onready var Diagnostics = preload("res://scripts/features/diagnostics.gd").new()
-onready var Player = preload("res://scripts/features/player.gd").new()
-onready var Manager = preload("res://scripts/features/manager.gd").new()
-onready var SystemManager = preload("res://scripts/features/system_manager.gd").new()
-onready var Hud = preload("res://scripts/features/hud.gd").new()
+onready var Debug := preload("res://scripts/features/debug.gd").new()
+onready var Diagnostics := preload("res://scripts/features/diagnostics.gd").new()
+onready var Player := preload("res://scripts/features/player.gd").new()
+onready var Manager := preload("res://scripts/features/manager.gd").new()
+onready var SystemManager := preload("res://scripts/features/system_manager.gd").new()
+onready var Hud := preload("res://scripts/features/hud.gd").new()
 
 #warning-ignore:unused_class_variable
-var version = "Uplink v0.0.0 beta0"
+var version := "Uplink v0.0.0 beta0"
 #warning-ignore:unused_class_variable
-var total_players = 0
+var total_players := 0
 #warning-ignore:unused_class_variable
-var players = Array()
+var players := Array()
 #warning-ignore:unused_class_variable
-var total_entities = 0
+var total_entities := 0
 #warning-ignore:unused_class_variable
-var blocks_loaded = 0
+var blocks_loaded := 0
 #warning-ignore:unused_class_variable
-var blocks_found = 0
+var blocks_found := 0
 #warning-ignore:unused_class_variable
-var chunk_index = []
+var chunk_index := []
 
 
 ############################# System Loaded Check ##############################
 #warning-ignore:unused_class_variable
-var chunk = false
-const CHUNK_REQUIRED = false
+var chunk := false
+const CHUNK_REQUIRED := false
 
 #warning-ignore:unused_class_variable
-var client = false
-const CLIENT_REQUIRED = true
+var client := false
+const CLIENT_REQUIRED := true
 
 #warning-ignore:unused_class_variable
-var download = false
-const DOWNLOAD_REQUIRED = false
+var download := false
+const DOWNLOAD_REQUIRED := false
 
 #warning-ignore:unused_class_variable
-var input = false
-const INPUT_REQUIRED = false
+var input := false
+const INPUT_REQUIRED := false
 
 #warning-ignore:unused_class_variable
-var interface = false
-const INTERFACE_REQUIRED = false
+var interface := false
+const INTERFACE_REQUIRED := false
 
 #warning-ignore:unused_class_variable
-var server = false
-const SERVER_REQUIRED = true
+var server := false
+const SERVER_REQUIRED := true
 
 #warning-ignore:unused_class_variable
-var sound = false
-const SOUND_REQUIRED = false
+var sound := false
+const SOUND_REQUIRED := false
 
-const TOTAL_SYSTEMS = 7
+const TOTAL_SYSTEMS := 7
 
-const DEFAULT_LOG_LOC = "user://logs/"
-var log_loc = "user://logs/"
+const DEFAULT_LOG_LOC := "user://logs/"
+var log_loc := "user://logs/"
 
 #var map_file = File.new()
 #var ChunkLocations = Dictionary()
@@ -91,24 +92,24 @@ var log_loc = "user://logs/"
 #var worldAreaWidth = 0
 #var worldAreaHeight = 0
 
-var render_distance = 2
-var player_move_forward = false
-var action_mode = "nothing"
-var username = "JosephTheEngineer"
+var render_distance := 2
+var player_move_forward := false
+var action_mode := "nothing"
+var username := "JosephTheEngineer"
 
 #var local_data = {}
-const DEFAULT_HOST = "josephtheengineer.ddns.net"
-const DEFAULT_IP = "101.183.54.6"
-const DEFAULT_PORT = 8888
-const DEFAULT_MAX_PLAYERS = 100
+const DEFAULT_HOST := "josephtheengineer.ddns.net"
+const DEFAULT_IP := "101.183.54.6"
+const DEFAULT_PORT := 8888
+const DEFAULT_MAX_PLAYERS := 100
 
-const MAIN_MENU_SEED = -1
+const MAIN_MENU_SEED := -1
 
 
 # Player info, associate ID to data
-var player_info = {}
+var player_info := {}
 # Info we send to other players
-var my_info = { name = "Ari", color = Color8(255, 0, 255) }
+var my_info := { name = "Ari", color = Color8(255, 0, 255) }
 
 
 ################################################################################
@@ -228,8 +229,8 @@ func init_world(): #############################################################
 
 
 
-func _process(delta): #########################################################
-	pass
+#func _process(delta): #########################################################
+#	pass
 #	var entities = Entity.get_entities_with("player")
 #	for id in entities:
 #		var components = entities[id].components
@@ -263,13 +264,14 @@ func _process(delta): #########################################################
 		#create_surrounding_chunks(get_chunk(Vector3(0, 0, 0)))
 
 
-func _player_connected(id): ###################################################
+func _player_connected(id: int): ###################################################
 	Core.emit_signal("msg", "User " + str(id) + " connected", Debug.INFO, self)
 	Core.emit_signal("msg", "Total users: " + str(get_tree().get_network_connected_peers().size()), Debug.INFO, self)
 
 
-func _player_disconnected(id): ################################################
-	player_info.erase(id) # Erase player from info
+func _player_disconnected(id: int): ################################################
+	if !player_info.erase(id): # Erase player from info
+		emit_signal("msg", "Player not found in player_info when trying to erase on disconnect.", Debug.WARN, self)
 	
 	Core.emit_signal("msg", "User " + str(id) + " connected", Debug.INFO, self)
 	Core.emit_signal("msg", "Total users: " + str(get_tree().get_network_connected_peers().size()), Debug.INFO, self)
@@ -304,7 +306,7 @@ func _on_ForwardButton_released(): ############################################
 ############################ networking functions #############################
 
 
-func join_server(username, address): ###################################################
+func join_server(nickname, address): ###################################################
 	Core.emit_signal("msg", "Joining server...", Debug.INFO, self)
 	var host = address.rsplit(":")[0]
 	var port = null
@@ -323,7 +325,11 @@ func join_server(username, address): ###########################################
 	get_tree().set_network_peer(network)
 	network.connect("connection_failed", self, "_on_connection_failed")
 	
-	get_tree().multiplayer.connect("network_peer_packet", self, "_on_packet_received")
+	var error = get_tree().multiplayer.connect("network_peer_packet", self, "_on_packet_received")
+	if error:
+		emit_signal("msg", "Error on binding to network_peer_packet: " 
+			+ str(error), Debug.WARN, self)
+	
 	get_tree().set_meta("network_peer", network)
 
 
@@ -359,8 +365,8 @@ remote func register_player(id, info): ########################################
 		for peer_id in player_info:
 			rpc_id(id, "register_player", peer_id, player_info[peer_id])
 
-func world_button(world):
-	pass
+#func world_button(world):
+#	pass
 	#if world == 1:
 		#Core.emit_signal("msg", "Opening world creation menu...", Debug.INFO, self)
 		#create_new_world()

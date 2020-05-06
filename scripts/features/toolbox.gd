@@ -1,4 +1,5 @@
-var script_name = "toolbox"
+#warning-ignore:unused_class_variable
+const script_name = "toolbox"
 
-func _ready():
+func _ready(): #################################################################
 	pass

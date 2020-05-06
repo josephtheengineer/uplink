@@ -1,8 +1,9 @@
-var script_name = "terrain_generator"
+#warning-ignore:unused_class_variable
+const script_name = "terrain_generator"
 
 var noise = OpenSimplexNoise.new()
 
-func setup_vars():
+func setup_vars(): #############################################################
 	randomize()
 	noise.seed = randi()
 	
@@ -11,7 +12,7 @@ func setup_vars():
 	noise.lacunarity = 1.5
 	noise.persistence = 0.75
 
-func generate_random_terrain(): ###############################################
+func generate_random_terrain(): ################################################
 	var chunk_data = Dictionary()
 	for x in 5:
 		for y in 10:
@@ -21,7 +22,7 @@ func generate_random_terrain(): ###############################################
 	return chunk_data
 
 
-func generate_flat_terrain(): #################################################
+func generate_flat_terrain(): ##################################################
 	var chunk_data = Dictionary()
 	for x in 16:
 		for y in 16:
@@ -38,7 +39,7 @@ func generate_flat_terrain(): #################################################
 	return chunk_data
 
 
-func generate_natural_terrain():
+func generate_natural_terrain(): ###############################################
 	var chunk_data = Dictionary()
 	var id = 0
 	var color = 0
@@ -66,7 +67,7 @@ func generate_natural_terrain():
 	return chunk_data
 
 
-func generate_matrix_terrain(): ###############################################
+func generate_matrix_terrain(): ################################################
 	for x in range(16):
 		for y in range(16):
 			for z in range(16):
@@ -80,7 +81,7 @@ func generate_matrix_terrain(): ###############################################
 						#place_block(2, Vector3(x, y, z))
 
 
-func generate_simple_terrain(): #################################################
+func generate_simple_terrain(): ################################################
 	for x in range(16):
 		for y in range(16):
 			for z in range(16):

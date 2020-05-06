@@ -1,10 +1,10 @@
 extends Control
+#warning-ignore:unused_class_variable
 var script_name = "build_window"
 
 func create_build_window():
 	var parent = get_node("MarginContainer/GridContainer")
-	var block_data = Array()
-	for i in range(35):
+	for _i in range(35):
 		var button = TextureButton.new()
 		button.texture_normal = load("res://textures/brick.png")
 		button.expand = true

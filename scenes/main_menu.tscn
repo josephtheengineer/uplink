@@ -142,19 +142,19 @@ margin_bottom = -10.0
 
 [node name="News" type="Label" parent="UI/Home/VBoxContainer/TopContainer/News/VBoxContainer"]
 margin_right = 588.0
-margin_bottom = 2.0
+margin_bottom = 31.0
 custom_fonts/font = ExtResource( 2 )
 text = "News"
 uppercase = true
 
 [node name="HSeparator2" type="HSeparator" parent="UI/Home/VBoxContainer/TopContainer/News/VBoxContainer"]
-margin_top = 6.0
+margin_top = 35.0
 margin_right = 588.0
-margin_bottom = 16.0
+margin_bottom = 45.0
 rect_min_size = Vector2( 0, 10 )
 
 [node name="Content" type="RichTextLabel" parent="UI/Home/VBoxContainer/TopContainer/News/VBoxContainer"]
-margin_top = 20.0
+margin_top = 49.0
 margin_right = 588.0
 margin_bottom = 437.0
 focus_mode = 2
@@ -173,19 +173,19 @@ rect_min_size = Vector2( 0, 10 )
 [node name="Changelog" type="Label" parent="UI/Home/VBoxContainer/TopContainer/News/VBoxContainer"]
 margin_top = 455.0
 margin_right = 588.0
-margin_bottom = 457.0
+margin_bottom = 486.0
 custom_fonts/font = ExtResource( 2 )
 text = "Changelog"
 uppercase = true
 
 [node name="HSeparator3" type="HSeparator" parent="UI/Home/VBoxContainer/TopContainer/News/VBoxContainer"]
-margin_top = 461.0
+margin_top = 490.0
 margin_right = 588.0
-margin_bottom = 471.0
+margin_bottom = 500.0
 rect_min_size = Vector2( 0, 10 )
 
 [node name="Content2" type="RichTextLabel" parent="UI/Home/VBoxContainer/TopContainer/News/VBoxContainer"]
-margin_top = 475.0
+margin_top = 504.0
 margin_right = 588.0
 margin_bottom = 892.0
 focus_mode = 2
@@ -223,19 +223,19 @@ margin_bottom = -10.0
 
 [node name="Title" type="Label" parent="UI/Home/VBoxContainer/TopContainer/Chat/VBoxContainer"]
 margin_right = 588.0
-margin_bottom = 2.0
+margin_bottom = 31.0
 custom_fonts/font = ExtResource( 2 )
 text = "Chat"
 uppercase = true
 
 [node name="HSeparator" type="HSeparator" parent="UI/Home/VBoxContainer/TopContainer/Chat/VBoxContainer"]
-margin_top = 6.0
+margin_top = 35.0
 margin_right = 588.0
-margin_bottom = 16.0
+margin_bottom = 45.0
 rect_min_size = Vector2( 0, 10 )
 
 [node name="Chat" type="RichTextLabel" parent="UI/Home/VBoxContainer/TopContainer/Chat/VBoxContainer"]
-margin_top = 20.0
+margin_top = 49.0
 margin_right = 588.0
 margin_bottom = 540.0
 focus_mode = 2
@@ -334,15 +334,15 @@ margin_bottom = -11.108
 
 [node name="Title" type="Label" parent="UI/Home/VBoxContainer/TopContainer/Planets/Foreground"]
 margin_right = 588.0
-margin_bottom = 2.0
+margin_bottom = 31.0
 custom_fonts/font = ExtResource( 2 )
 text = "Planets"
 uppercase = true
 
 [node name="HSeparator" type="HSeparator" parent="UI/Home/VBoxContainer/TopContainer/Planets/Foreground"]
-margin_top = 6.0
+margin_top = 35.0
 margin_right = 588.0
-margin_bottom = 16.0
+margin_bottom = 45.0
 rect_min_size = Vector2( 0, 10 )
 
 [node name="VSplitContainer" type="VSplitContainer" parent="UI/Home/VBoxContainer"]
@@ -383,16 +383,16 @@ rect_min_size = Vector2( 300, 0 )
 
 [node name="Label" type="Label" parent="UI/Home/VBoxContainer/BottomContainer/VBoxContainer"]
 margin_right = 300.0
-margin_bottom = 2.0
+margin_bottom = 31.0
 custom_fonts/font = ExtResource( 2 )
 text = "Now Playing"
 align = 2
 valign = 1
 
 [node name="Button" type="Button" parent="UI/Home/VBoxContainer/BottomContainer/VBoxContainer"]
-margin_top = 6.0
+margin_top = 35.0
 margin_right = 300.0
-margin_bottom = 36.0
+margin_bottom = 65.0
 rect_min_size = Vector2( 0, 30 )
 flat = true
 
@@ -405,9 +405,9 @@ align = 2
 valign = 1
 
 [node name="Label3" type="Label" parent="UI/Home/VBoxContainer/BottomContainer/VBoxContainer"]
-margin_top = 40.0
+margin_top = 69.0
 margin_right = 300.0
-margin_bottom = 60.0
+margin_bottom = 89.0
 custom_fonts/font = SubResource( 1 )
 text = "Playlist: Eden"
 align = 2
@@ -461,19 +461,19 @@ margin_bottom = -10.0
 
 [node name="TopUsers" type="Label" parent="UI/Leaderboard/TopContainer/Users/VBoxContainer"]
 margin_right = 601.0
-margin_bottom = 2.0
+margin_bottom = 31.0
 custom_fonts/font = ExtResource( 2 )
 text = "Top Users"
 uppercase = true
 
 [node name="HSeparator2" type="HSeparator" parent="UI/Leaderboard/TopContainer/Users/VBoxContainer"]
-margin_top = 6.0
+margin_top = 35.0
 margin_right = 601.0
-margin_bottom = 16.0
+margin_bottom = 45.0
 rect_min_size = Vector2( 0, 10 )
 
 [node name="Content" type="RichTextLabel" parent="UI/Leaderboard/TopContainer/Users/VBoxContainer"]
-margin_top = 20.0
+margin_top = 49.0
 margin_right = 601.0
 margin_bottom = 511.0
 focus_mode = 2
@@ -492,19 +492,19 @@ rect_min_size = Vector2( 0, 10 )
 [node name="TopWorlds" type="Label" parent="UI/Leaderboard/TopContainer/Users/VBoxContainer"]
 margin_top = 529.0
 margin_right = 601.0
-margin_bottom = 531.0
+margin_bottom = 560.0
 custom_fonts/font = ExtResource( 2 )
 text = "Top Worlds"
 uppercase = true
 
 [node name="HSeparator3" type="HSeparator" parent="UI/Leaderboard/TopContainer/Users/VBoxContainer"]
-margin_top = 535.0
+margin_top = 564.0
 margin_right = 601.0
-margin_bottom = 545.0
+margin_bottom = 574.0
 rect_min_size = Vector2( 0, 10 )
 
 [node name="Content2" type="RichTextLabel" parent="UI/Leaderboard/TopContainer/Users/VBoxContainer"]
-margin_top = 549.0
+margin_top = 578.0
 margin_right = 601.0
 margin_bottom = 1040.0
 focus_mode = 2
@@ -542,19 +542,19 @@ margin_bottom = -10.0
 
 [node name="UserStats" type="Label" parent="UI/Leaderboard/TopContainer/Stats/VBoxContainer"]
 margin_right = 601.0
-margin_bottom = 2.0
+margin_bottom = 31.0
 custom_fonts/font = ExtResource( 2 )
 text = "User stats"
 uppercase = true
 
 [node name="HSeparator2" type="HSeparator" parent="UI/Leaderboard/TopContainer/Stats/VBoxContainer"]
-margin_top = 6.0
+margin_top = 35.0
 margin_right = 601.0
-margin_bottom = 16.0
+margin_bottom = 45.0
 rect_min_size = Vector2( 0, 10 )
 
 [node name="RichTextLabel" type="RichTextLabel" parent="UI/Leaderboard/TopContainer/Stats/VBoxContainer"]
-margin_top = 20.0
+margin_top = 49.0
 margin_right = 601.0
 margin_bottom = 511.0
 focus_mode = 2
@@ -573,19 +573,19 @@ rect_min_size = Vector2( 0, 10 )
 [node name="GameStats" type="Label" parent="UI/Leaderboard/TopContainer/Stats/VBoxContainer"]
 margin_top = 529.0
 margin_right = 601.0
-margin_bottom = 531.0
+margin_bottom = 560.0
 custom_fonts/font = ExtResource( 2 )
 text = "Game stats"
 uppercase = true
 
 [node name="HSeparator3" type="HSeparator" parent="UI/Leaderboard/TopContainer/Stats/VBoxContainer"]
-margin_top = 535.0
+margin_top = 564.0
 margin_right = 601.0
-margin_bottom = 545.0
+margin_bottom = 574.0
 rect_min_size = Vector2( 0, 10 )
 
 [node name="Content2" type="RichTextLabel" parent="UI/Leaderboard/TopContainer/Stats/VBoxContainer"]
-margin_top = 549.0
+margin_top = 578.0
 margin_right = 601.0
 margin_bottom = 1040.0
 focus_mode = 2
@@ -623,19 +623,19 @@ margin_bottom = -10.0
 
 [node name="FeaturedWorlds" type="Label" parent="UI/Leaderboard/TopContainer/Featured/VBoxContainer"]
 margin_right = 602.0
-margin_bottom = 2.0
+margin_bottom = 31.0
 custom_fonts/font = ExtResource( 2 )
 text = "Featured Worlds"
 uppercase = true
 
 [node name="HSeparator" type="HSeparator" parent="UI/Leaderboard/TopContainer/Featured/VBoxContainer"]
-margin_top = 6.0
+margin_top = 35.0
 margin_right = 602.0
-margin_bottom = 16.0
+margin_bottom = 45.0
 rect_min_size = Vector2( 0, 10 )
 
 [node name="Content" type="RichTextLabel" parent="UI/Leaderboard/TopContainer/Featured/VBoxContainer"]
-margin_top = 20.0
+margin_top = 49.0
 margin_right = 602.0
 margin_bottom = 511.0
 focus_mode = 2
@@ -654,19 +654,19 @@ rect_min_size = Vector2( 0, 10 )
 [node name="New Worlds" type="Label" parent="UI/Leaderboard/TopContainer/Featured/VBoxContainer"]
 margin_top = 529.0
 margin_right = 602.0
-margin_bottom = 531.0
+margin_bottom = 560.0
 custom_fonts/font = ExtResource( 2 )
 text = "New Worlds"
 uppercase = true
 
 [node name="HSeparator3" type="HSeparator" parent="UI/Leaderboard/TopContainer/Featured/VBoxContainer"]
-margin_top = 535.0
+margin_top = 564.0
 margin_right = 602.0
-margin_bottom = 545.0
+margin_bottom = 574.0
 rect_min_size = Vector2( 0, 10 )
 
 [node name="Content2" type="RichTextLabel" parent="UI/Leaderboard/TopContainer/Featured/VBoxContainer"]
-margin_top = 549.0
+margin_top = 578.0
 margin_right = 602.0
 margin_bottom = 1040.0
 focus_mode = 2
@@ -710,15 +710,15 @@ margin_bottom = -12.7896
 
 [node name="YourWorlds" type="Label" parent="UI/WorldSharing/TopContainer2/YourWorlds/VBoxContainer"]
 margin_right = 594.0
-margin_bottom = 2.0
+margin_bottom = 31.0
 custom_fonts/font = ExtResource( 2 )
 text = "Your Worlds"
 uppercase = true
 
 [node name="HSeparator2" type="HSeparator" parent="UI/WorldSharing/TopContainer2/YourWorlds/VBoxContainer"]
-margin_top = 6.0
+margin_top = 35.0
 margin_right = 594.0
-margin_bottom = 16.0
+margin_bottom = 45.0
 rect_min_size = Vector2( 0, 10 )
 
 [node name="VSeparator" type="VSeparator" parent="UI/WorldSharing/TopContainer2"]
@@ -755,27 +755,27 @@ size_flags_vertical = 3
 
 [node name="Title" type="Label" parent="UI/WorldSharing/TopContainer2/Search/Search/SearchResults"]
 margin_right = 594.0
-margin_bottom = 2.0
+margin_bottom = 31.0
 custom_fonts/font = ExtResource( 2 )
 text = "Search"
 uppercase = true
 
 [node name="Separator" type="HSeparator" parent="UI/WorldSharing/TopContainer2/Search/Search/SearchResults"]
-margin_top = 6.0
+margin_top = 35.0
 margin_right = 594.0
-margin_bottom = 16.0
+margin_bottom = 45.0
 rect_min_size = Vector2( 0, 10 )
 
 [node name="Input" type="TextEdit" parent="UI/WorldSharing/TopContainer2/Search/Search/SearchResults"]
-margin_top = 20.0
+margin_top = 49.0
 margin_right = 594.0
-margin_bottom = 70.0
+margin_bottom = 99.0
 rect_min_size = Vector2( 0, 50 )
 custom_fonts/font = ExtResource( 3 )
 text = "World"
 
 [node name="Content" type="Control" parent="UI/WorldSharing/TopContainer2/Search/Search/SearchResults"]
-margin_top = 74.0
+margin_top = 103.0
 margin_right = 594.0
 margin_bottom = 521.0
 rect_clip_content = true
@@ -806,19 +806,19 @@ size_flags_vertical = 3
 
 [node name="Title" type="Label" parent="UI/WorldSharing/TopContainer2/Search/Search/WorldInfo"]
 margin_right = 594.0
-margin_bottom = 2.0
+margin_bottom = 31.0
 custom_fonts/font = ExtResource( 2 )
 text = "World Info"
 uppercase = true
 
 [node name="Separator" type="HSeparator" parent="UI/WorldSharing/TopContainer2/Search/Search/WorldInfo"]
-margin_top = 6.0
+margin_top = 35.0
 margin_right = 594.0
-margin_bottom = 16.0
+margin_bottom = 45.0
 rect_min_size = Vector2( 0, 10 )
 
 [node name="Picture" type="TextureRect" parent="UI/WorldSharing/TopContainer2/Search/Search/WorldInfo"]
-margin_top = 20.0
+margin_top = 49.0
 margin_right = 594.0
 margin_bottom = 417.0
 size_flags_horizontal = 3
@@ -863,19 +863,19 @@ margin_bottom = -10.0
 
 [node name="FeaturedWorlds" type="Label" parent="UI/WorldSharing/TopContainer2/Share/VBoxContainer"]
 margin_right = 596.0
-margin_bottom = 2.0
+margin_bottom = 31.0
 custom_fonts/font = ExtResource( 2 )
 text = "Share Worlds"
 uppercase = true
 
 [node name="HSeparator" type="HSeparator" parent="UI/WorldSharing/TopContainer2/Share/VBoxContainer"]
-margin_top = 6.0
+margin_top = 35.0
 margin_right = 596.0
-margin_bottom = 16.0
+margin_bottom = 45.0
 rect_min_size = Vector2( 0, 10 )
 
 [node name="RichTextLabel2" type="RichTextLabel" parent="UI/WorldSharing/TopContainer2/Share/VBoxContainer"]
-margin_top = 20.0
+margin_top = 49.0
 margin_right = 596.0
 margin_bottom = 521.0
 focus_mode = 2
@@ -893,19 +893,19 @@ rect_min_size = Vector2( 0, 10 )
 [node name="Info" type="Label" parent="UI/WorldSharing/TopContainer2/Share/VBoxContainer"]
 margin_top = 539.0
 margin_right = 596.0
-margin_bottom = 541.0
+margin_bottom = 570.0
 custom_fonts/font = ExtResource( 2 )
 text = "Info"
 uppercase = true
 
 [node name="HSeparator3" type="HSeparator" parent="UI/WorldSharing/TopContainer2/Share/VBoxContainer"]
-margin_top = 545.0
+margin_top = 574.0
 margin_right = 596.0
-margin_bottom = 555.0
+margin_bottom = 584.0
 rect_min_size = Vector2( 0, 10 )
 
 [node name="RichTextLabel" type="RichTextLabel" parent="UI/WorldSharing/TopContainer2/Share/VBoxContainer"]
-margin_top = 559.0
+margin_top = 588.0
 margin_right = 596.0
 margin_bottom = 1060.0
 focus_mode = 2
@@ -951,19 +951,19 @@ margin_bottom = -10.0
 
 [node name="Title" type="Label" parent="UI/Credits/TopContainer3/Credits/Content"]
 margin_right = 926.0
-margin_bottom = 2.0
+margin_bottom = 31.0
 custom_fonts/font = ExtResource( 2 )
 text = "Credits"
 uppercase = true
 
 [node name="Separator" type="HSeparator" parent="UI/Credits/TopContainer3/Credits/Content"]
-margin_top = 6.0
+margin_top = 35.0
 margin_right = 926.0
-margin_bottom = 16.0
+margin_bottom = 45.0
 rect_min_size = Vector2( 0, 10 )
 
 [node name="Text" type="RichTextLabel" parent="UI/Credits/TopContainer3/Credits/Content"]
-margin_top = 20.0
+margin_top = 49.0
 margin_right = 926.0
 margin_bottom = 1040.0
 focus_mode = 2
@@ -1013,19 +1013,19 @@ margin_bottom = -10.0
 
 [node name="Title" type="Label" parent="UI/Credits/TopContainer3/Info/Content"]
 margin_right = 926.0
-margin_bottom = 2.0
+margin_bottom = 31.0
 custom_fonts/font = ExtResource( 2 )
 text = "Info"
 uppercase = true
 
 [node name="Separator" type="HSeparator" parent="UI/Credits/TopContainer3/Info/Content"]
-margin_top = 6.0
+margin_top = 35.0
 margin_right = 926.0
-margin_bottom = 16.0
+margin_bottom = 45.0
 rect_min_size = Vector2( 0, 10 )
 
 [node name="Text" type="RichTextLabel" parent="UI/Credits/TopContainer3/Info/Content"]
-margin_top = 20.0
+margin_top = 49.0
 margin_right = 926.0
 margin_bottom = 1040.0
 focus_mode = 2
@@ -1067,19 +1067,19 @@ margin_bottom = -10.0
 
 [node name="AccountInfo" type="Label" parent="UI/Account/TopContainer2/AccountInfo/VBoxContainer"]
 margin_right = 916.0
-margin_bottom = 2.0
+margin_bottom = 31.0
 custom_fonts/font = ExtResource( 2 )
 text = "Account Info"
 uppercase = true
 
 [node name="HSeparator2" type="HSeparator" parent="UI/Account/TopContainer2/AccountInfo/VBoxContainer"]
-margin_top = 6.0
+margin_top = 35.0
 margin_right = 916.0
-margin_bottom = 16.0
+margin_bottom = 45.0
 rect_min_size = Vector2( 0, 10 )
 
 [node name="RichTextLabel" type="RichTextLabel" parent="UI/Account/TopContainer2/AccountInfo/VBoxContainer"]
-margin_top = 20.0
+margin_top = 49.0
 margin_right = 916.0
 margin_bottom = 1046.0
 focus_mode = 2
@@ -1123,19 +1123,19 @@ margin_bottom = -10.0
 
 [node name="AccountSettings" type="Label" parent="UI/Account/TopContainer2/AccountSettings/VBoxContainer"]
 margin_right = 916.0
-margin_bottom = 2.0
+margin_bottom = 31.0
 custom_fonts/font = ExtResource( 2 )
 text = "Account Settings"
 uppercase = true
 
 [node name="HSeparator2" type="HSeparator" parent="UI/Account/TopContainer2/AccountSettings/VBoxContainer"]
-margin_top = 6.0
+margin_top = 35.0
 margin_right = 916.0
-margin_bottom = 16.0
+margin_bottom = 45.0
 rect_min_size = Vector2( 0, 10 )
 
 [node name="RichTextLabel" type="RichTextLabel" parent="UI/Account/TopContainer2/AccountSettings/VBoxContainer"]
-margin_top = 20.0
+margin_top = 49.0
 margin_right = 916.0
 margin_bottom = 1060.0
 focus_mode = 2

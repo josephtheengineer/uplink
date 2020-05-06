@@ -1,5 +1,6 @@
 extends Node
-var script_name = "download_system"
+#warning-ignore:unused_class_variable
+const script_name := "download_system"
 onready var Debug = preload("res://scripts/features/debug.gd").new()
 onready var SystemManager = preload("res://scripts/features/system_manager.gd").new()
 
@@ -21,11 +22,11 @@ var map_seed = 0
 var map_path = "res://worlds/direct_city.eden2"
 var map_name = "direct_city.eden2"
 
-func _ready():
-	Core.emit_signal("system_ready", SystemManager.DOWNLOAD, self)                ##### READY #####
+func _ready(): #################################################################
+	Core.emit_signal("system_ready", SystemManager.DOWNLOAD, self)          ##### READY #####
 
 
-func _on_fetch_data_request_completed(result, response_code, headers, body):
+func _on_fetch_data_request_completed(result, response_code, headers, body): ###
 	#msg("Result: " + str(result), Debug.DEBUG, self)
 	var filename = null #fetch_data_request.get_download_file()
 	var file = File.new()
@@ -34,28 +35,36 @@ func _on_fetch_data_request_completed(result, response_code, headers, body):
 		Core.emit_signal("msg", "Error opening file", Debug.ERROR, self)
 	
 	if filename == "user://info/changelog.md":
-		get_node("UI/Home/VBoxContainer/TopContainer/News/VBoxContainer/Content2").text = file.get_as_text()
-		
+		var text_box: RichTextLabel = get_node("UI/Home/VBoxContainer/TopContainer/News/VBoxContainer/Content2")
+		text_box.text = file.get_as_text()
+	
 	elif filename == "user://info/featured-worlds.md":
-		get_node("UI/Leaderboard/TopContainer/Featured/VBoxContainer/Content").text = file.get_as_text()
-		
+		var text_box: RichTextLabel = get_node("UI/Leaderboard/TopContainer/Featured/VBoxContainer/Content")
+		text_box.text = file.get_as_text()
+	
 	elif filename == "user://info/game-stats.md":
-		get_node("UI/Leaderboard/TopContainer/Stats/VBoxContainer/Content2").text = file.get_as_text()
-		
+		var text_box: RichTextLabel = get_node("UI/Leaderboard/TopContainer/Stats/VBoxContainer/Content2")
+		text_box.text = file.get_as_text()
+	
 	elif filename == "user://info/info.md":
-		get_node("UI/Credits/TopContainer3/Info/Content/Text").text = file.get_as_text()
-		
+		var text_box: RichTextLabel = get_node("UI/Credits/TopContainer3/Info/Content/Text")
+		text_box.text = file.get_as_text()
+	
 	elif filename == "user://info/news.md":
-		get_node("UI/Home/VBoxContainer/TopContainer/News/VBoxContainer/Content").text = file.get_as_text()
-		
+		var text_box: RichTextLabel = get_node("UI/Home/VBoxContainer/TopContainer/News/VBoxContainer/Content")
+		text_box.text = file.get_as_text()
+	
 	elif filename == "user://info/new-worlds.md":
-		get_node("UI/Leaderboard/TopContainer/Featured/VBoxContainer/Content2").text = file.get_as_text()
-		
+		var text_box: RichTextLabel = get_node("UI/Leaderboard/TopContainer/Featured/VBoxContainer/Content2")
+		text_box.text = file.get_as_text()
+	
 	elif filename == "user://info/top-users.md":
-		get_node("UI/Leaderboard/TopContainer/Users/VBoxContainer/Content").text = file.get_as_text()
-		
+		var text_box: RichTextLabel = get_node("UI/Leaderboard/TopContainer/Users/VBoxContainer/Content")
+		text_box.text = file.get_as_text()
+	
 	elif filename == "user://info/top-worlds.md":
-		get_node("UI/Leaderboard/TopContainer/Users/VBoxContainer/Content2").text = file.get_as_text()
+		var text_box: RichTextLabel = get_node("UI/Leaderboard/TopContainer/Users/VBoxContainer/Content2")
+		text_box.text = file.get_as_text()
 	
 	#if file.get_as_text() != null:
 		#msg("Data fetch " + str(file_progress) + " of " + str(info.size()) + " successful", Debug.DEBUG, self)
@@ -66,7 +75,7 @@ func _on_fetch_data_request_completed(result, response_code, headers, body):
 		#file_progress += 1
 
 
-func fetch_data(): ############################################################
+func fetch_data(): #############################################################
 	var dir = Directory.new()
 	#if dir.dir_exists("user://info"):
 	dir.make_dir("user://info")
@@ -79,7 +88,7 @@ func fetch_data(): ############################################################
 		#file_progress += 1
 
 
-func _on_search_request_completed(result, response_code, headers, body):
+func _on_search_request_completed(result, response_code, headers, body): #######
 	var file = File.new()
 	if file.open("user://tmp/search.list", File.READ) != 0:
 		Core.emit_signal("msg", "Error opening file", Debug.ERROR, self)
@@ -104,7 +113,8 @@ func _on_search_request_completed(result, response_code, headers, body):
 	Core.emit_signal("msg", "Search complete!", Debug.INFO, self)
 	#search_client.queue_free()
 
-func _on_world_download_completed(path):
+
+func _on_world_download_completed(path: String): #######################################
 	#downloading = false
 	Core.emit_signal("msg", "Loading downloaded world...", Debug.INFO, self)
 	#map_path = path
@@ -128,7 +138,8 @@ func _on_world_download_completed(path):
 	#		
 	#		#last_downloaded_bytes = download_world_client.get_downloaded_bytes()
 
-func search():
+
+func search(): #################################################################
 	Core.emit_signal("msg", "Searching eden2 world database...", Debug.INFO, self)
 	#get_node("UI/WorldSharing/TopContainer2/Search/Search/SearchResults/Content").text = "Searching..."
 	Directory.new().make_dir("user://tmp")
@@ -143,9 +154,13 @@ func search():
 	http.request(EDEN2_SEARCH + text, Array(), false)
 	search_client = http
 
-func download_direct_city():
+
+func download_direct_city(): ###################################################
 	if File.new().file_exists("user://worlds/direct_city.eden2") == false:
-		Directory.new().make_dir("user://worlds/")
+		var error = Directory.new().make_dir("user://worlds/")
+		if error:
+			emit_signal("msg", "Failed to create worlds folder: " 
+				+ str(error), Debug.WARN, self)
 		
 		Core.emit_signal("msg", "Please wait, downloading Direct City...", Debug.INFO, self)
 		
@@ -161,10 +176,14 @@ func download_direct_city():
 		pass
 		#_on_direct_city_request_completed()
 
-func download_world_button(path):
+
+func download_world_button(path: String): ##############################################
 	Core.emit_signal("msg", "Searching eden2 world database...", Debug.INFO, self)
 	#get_node("UI/WorldSharing/TopContainer2/Search/Search/SearchResults/Content").text = "Downloading..."
-	Directory.new().make_dir("user://worlds/")
+	var error = Directory.new().make_dir("user://worlds/")
+	if error:
+		emit_signal("msg", "Failed to create worlds folder: " 
+			+ str(error), Debug.WARN, self)
 	
 	var http = HTTPRequest.new()
 	http.set_download_file("user://worlds/" + path)
@@ -179,7 +198,8 @@ func download_world_button(path):
 	
 	Core.emit_signal("msg", "Body size: " + str(http.get_body_size()), Debug.DEBUG, self)
 
-func _on_direct_city_request_completed():
+
+func _on_direct_city_request_completed(): ######################################
 	downloading_direct_city = false
 	Core.emit_signal("msg", "Loading direct city...", Debug.INFO, self)
 	map_path = "user://worlds/direct_city.eden2"

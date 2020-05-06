@@ -1,4 +1,5 @@
 extends Node
+#warning-ignore:unused_class_variable
 var script_name = "sound_system"
 onready var SystemManager = preload("res://scripts/features/system_manager.gd").new()
 

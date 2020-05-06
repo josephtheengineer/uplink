@@ -8,9 +8,26 @@
 
 config_version=4
 
-_global_script_classes=[  ]
+_global_script_classes=[ {
+"base": "Node",
+"class": "ClientSystem",
+"language": "GDScript",
+"path": "res://scripts/systems/client_system.gd"
+}, {
+"base": "Node",
+"class": "Entity",
+"language": "GDScript",
+"path": "res://scripts/features/entity.gd"
+}, {
+"base": "Node",
+"class": "ServerSystem",
+"language": "GDScript",
+"path": "res://scripts/systems/server_system.gd"
+} ]
 _global_script_class_icons={
-
+"ClientSystem": "",
+"Entity": "",
+"ServerSystem": ""
 }
 
 [application]

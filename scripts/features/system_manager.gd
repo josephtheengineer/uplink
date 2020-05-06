@@ -1,5 +1,5 @@
 #warning-ignore:unused_class_variable
-var script_name = "system_manager"
+const script_name = "system_manager"
 var Debug = preload("res://scripts/features/debug.gd").new()
 
 const CHUNK = 0
@@ -10,12 +10,12 @@ const INTERFACE = 4
 const SERVER = 5
 const SOUND = 6
 
-func setup():
+func setup(): ##################################################################
 	var error = Core.connect("system_ready", self, "_on_system_ready")
 	if error:
 		emit_signal("msg", "Error on binding to system_ready: " + str(error), Debug.WARN, self)
 
-func _on_system_ready(system, obj):
+func _on_system_ready(system: int, obj: Object): ###############################
 	match system:
 		CHUNK:
 			if Core.Client.chunk:
@@ -70,7 +70,7 @@ func _on_system_ready(system, obj):
 	if get_online_systems() == Core.Client.TOTAL_SYSTEMS:
 		Core.emit_signal("app_ready")
 
-func get_online_systems():
+func get_online_systems(): #####################################################
 	var online = 0
 	if Core.Client.chunk:
 		online+=1
@@ -88,7 +88,7 @@ func get_online_systems():
 		online+=1
 	return online
 
-func check_systems():
+func check_systems(): ##########################################################
 	var offline = []
 	if !Core.Client.chunk:
 		Core.emit_signal("msg", "Chunk System offline", Debug.WARN, self)

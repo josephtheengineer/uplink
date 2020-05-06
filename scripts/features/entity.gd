@@ -1,20 +1,22 @@
 # manages and stores entity data
+class_name Entity
 extends Node
-var script_name = "entity"
-var DictonaryFunc = load("res://scripts/features/dictonary_func.gd")
+#warning-ignore:unused_class_variable
+const script_name := "entity"
+var DictonaryFunc := preload("res://scripts/features/dictonary_func.gd").new()
 
-export var components = Dictionary()
+export var components := Dictionary()
 
-func destory():
+func destory(): ################################################################
 	Core.emit_signal("object_unloaded", self)
 	queue_free()
 	Core.emit_signal("object_unloaded", self)
 
-func set_component(path, value):
+func set_component(path: String, value): #######################################
 	DictonaryFunc.setInDict(components, path.split(".", false), value)
 	components = components
 
-#func get_node_path():
+#func get_node_path(): #########################################################
 #	var parent = get_parent()
 #	var parents = Array()
 #	var root = false

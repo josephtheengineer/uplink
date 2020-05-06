@@ -1,29 +1,39 @@
 extends Node
 
+#warning-ignore:unused_class_variable
+const script_name := "debug_panel"
+
 func open_chat():
-	if Core.get_parent().get_node("/root/World/Interfaces/Hud"):
-		Core.get_parent().get_node("/root/World/Interfaces/Hud/Hud/HorizontalMain/VerticalMain/VerticalCenterContent/LeftPanel/TabContainer").current_tab = 0
+	if Core.get_parent().has_node("/root/World/Interfaces/Hud/Hud/"):
+		var tab_container: TabContainer = Core.get_parent().get_node("/root/World/Interfaces/Hud/Hud/HorizontalMain/VerticalMain/VerticalCenterContent/LeftPanel/TabContainer")
+		tab_container.current_tab = 0
 
 func open_world_map():
 	if Core.get_parent().get_node("/root/World/Interfaces/Hud"):
-		Core.get_parent().get_node("/root/World/Interfaces/Hud/Hud/HorizontalMain/VerticalMain/VerticalCenterContent/LeftPanel/TabContainer").current_tab = 1
-	
+		var tab_container: TabContainer = Core.get_parent().get_node("/root/World/Interfaces/Hud/Hud/HorizontalMain/VerticalMain/VerticalCenterContent/LeftPanel/TabContainer")
+		tab_container.current_tab = 0
+
 func open_region_map():
 	if Core.get_parent().get_node("/root/World/Interfaces/Hud"):
-		Core.get_parent().get_node("/root/World/Interfaces/Hud/Hud/HorizontalMain/VerticalMain/VerticalCenterContent/LeftPanel/TabContainer").current_tab = 2
-	
+		var tab_container: TabContainer = Core.get_parent().get_node("/root/World/Interfaces/Hud/Hud/HorizontalMain/VerticalMain/VerticalCenterContent/LeftPanel/TabContainer")
+		tab_container.current_tab = 0
+
 func open_chunk_map():
 	if Core.get_parent().get_node("/root/World/Interfaces/Hud"):
-		Core.get_parent().get_node("/root/World/Interfaces/Hud/Hud/HorizontalMain/VerticalMain/VerticalCenterContent/LeftPanel/TabContainer").current_tab = 3
-	
+		var tab_container: TabContainer = Core.get_parent().get_node("/root/World/Interfaces/Hud/Hud/HorizontalMain/VerticalMain/VerticalCenterContent/LeftPanel/TabContainer")
+		tab_container.current_tab = 0
+
 func open_system_status():
 	if Core.get_parent().get_node("/root/World/Interfaces/Hud"):
-		Core.get_parent().get_node("/root/World/Interfaces/Hud/Hud/HorizontalMain/VerticalMain/VerticalCenterContent/LeftPanel/TabContainer").current_tab = 4
-	
+		var tab_container: TabContainer = Core.get_parent().get_node("/root/World/Interfaces/Hud/Hud/HorizontalMain/VerticalMain/VerticalCenterContent/LeftPanel/TabContainer")
+		tab_container.current_tab = 0
+
 func open_entity_analysis():
 	if Core.get_parent().get_node("/root/World/Interfaces/Hud"):
-		Core.get_parent().get_node("/root/World/Interfaces/Hud/Hud/HorizontalMain/VerticalMain/VerticalCenterContent/LeftPanel/TabContainer").current_tab = 5
-	
+		var tab_container: TabContainer = Core.get_parent().get_node("/root/World/Interfaces/Hud/Hud/HorizontalMain/VerticalMain/VerticalCenterContent/LeftPanel/TabContainer")
+		tab_container.current_tab = 0
+
 func open_core_analysis():
 	if Core.get_parent().get_node("/root/World/Interfaces/Hud"):
-		Core.get_parent().get_node("/root/World/Interfaces/Hud/Hud/HorizontalMain/VerticalMain/VerticalCenterContent/LeftPanel/TabContainer").current_tab = 6
+		var tab_container: TabContainer = Core.get_parent().get_node("/root/World/Interfaces/Hud/Hud/HorizontalMain/VerticalMain/VerticalCenterContent/LeftPanel/TabContainer")
+		tab_container.current_tab = 0

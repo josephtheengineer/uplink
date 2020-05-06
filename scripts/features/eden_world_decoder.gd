@@ -2,8 +2,9 @@
 # Based on code from Vuenctools for Eden || http://forum.edengame.net/index.php?/topic/295-vuenctools-for-eden-eden-world-manipulation-tool/
 # with help from Robert Munafo || http://www.mrob.com/pub/vidgames/eden-file-format.html
 
-var script_name = "eden_world_decoder"
-var Debug = preload("res://scripts/features/debug.gd").new()
+#warning-ignore:unused_class_variable
+const script_name := "eden_world_decoder"
+var Debug := preload("res://scripts/features/debug.gd").new()
 
 ################################## functions ##################################
 
@@ -70,17 +71,17 @@ func open_eden1_gzip_file():
 func open_eden1_file():
 	pass
 
-func read_int(position): ######################################################
+func read_int(position: int): ######################################################
 	Core.Server.map_file.seek(position)
 	return Core.Server.map_file.get_buffer(1)[0]
 
-func read_float(position): ####################################################
+func read_float(position: int): ####################################################
 	Core.Server.map_file.seek(position)
 	return Core.Server.map_file.get_float()
 
 
 func get_metadata(): ##########################################################
-	var chunk_pointer = read_int(35) * 256 * 256 * 256 + read_int(34) * 256 * 256 + read_int(33) * 256 + read_int(32)
+	var chunk_pointer: int = read_int(35) * 256 * 256 * 256 + read_int(34) * 256 * 256 + read_int(33) * 256 + read_int(32)
 	Core.emit_signal("msg", "Chunk Pointer: " + str(chunk_pointer), Debug.DEBUG, self)
 	Core.emit_signal("msg", "Float:" + str(read_float(4)), Debug.DEBUG, self)
 	Core.Server.last_location = Vector3(read_float(4), read_float(8), read_float(12))
@@ -92,11 +93,11 @@ func get_metadata(): ##########################################################
 	Core.Server.world_height = 0
 	while chunk_pointer + 11 < Core.Server.map_file.get_len():
 		# Find chunk address
-		var address = read_int(chunk_pointer + 11) * 256 * 256 * 256 + read_int(chunk_pointer + 10) * 256 * 256 + read_int(chunk_pointer + 9) * 256 + read_int(chunk_pointer + 8)
+		var address: int = read_int(chunk_pointer + 11) * 256 * 256 * 256 + read_int(chunk_pointer + 10) * 256 * 256 + read_int(chunk_pointer + 9) * 256 + read_int(chunk_pointer + 8)
 		# Find the position of the chunk
-		var x = (read_int(chunk_pointer + 1) * 256 + read_int(chunk_pointer))
+		var x: int = (read_int(chunk_pointer + 1) * 256 + read_int(chunk_pointer))
 		
-		var y = (read_int(chunk_pointer + 5) * 256 + read_int(chunk_pointer + 4))
+		var y: int = (read_int(chunk_pointer + 5) * 256 + read_int(chunk_pointer + 4))
 		
 		if Core.Server.worldAreaX > x:
 			Core.Server.worldAreaX = x
@@ -119,10 +120,10 @@ func get_metadata(): ##########################################################
 		Core.Server.chunk_metadata[Vector3(x, 2, y)] = (chunk_data)
 		Core.Server.chunk_metadata[Vector3(x, 3, y)] = (chunk_data)
 		
-		var region_loc = Vector3(int(floor(x/16)), int(floor(0/16)), int(floor(y/16)))
+		var region_loc := Vector3(floor(float(x)/16), floor(float(0)/16), floor(float(y)/16))
 		
 		if !Core.Server.regions.has(region_loc):
-			Core.emit_signal("msg", "New region found! " + str(region_loc), Debug.INFO)
+			Core.emit_signal("msg", "New region found! " + str(region_loc), Debug.INFO, self)
 			Core.Server.regions[region_loc] = []
 		
 		Core.Server.regions[region_loc].append(Vector3(x, 0, y))
@@ -147,7 +148,7 @@ func get_metadata(): ##########################################################
 	return true;
 
 
-func get_chunk_data(location): ################################################
+func get_chunk_data(location: Vector3): ################################################
 	if Core.Server.chunk_metadata.size() < 0:
 		Core.emit_signal("msg", "Invaild world data!", Debug.ERROR, self);
 		return false
@@ -156,23 +157,23 @@ func get_chunk_data(location): ################################################
 		Core.emit_signal("msg", "Chunk data does not exist! " + str(location), Debug.DEBUG, self);
 		return false
 	
-	var chunk_data = Dictionary()
-	var chunk_address = Core.Server.chunk_metadata[location].address
+	var chunk_data := Dictionary()
+	var chunk_address: int = Core.Server.chunk_metadata[location].address
 	#Core.emit_signal("msg", "Chunk Address: " + str(chunk_address), Debug.DEBUG, self)
 	
-	var baseHeight = location.y
+	var baseHeight := int(location.y)
 	for x in range(16):
 		for y in range(16):
 			for z in range(16):
 				var id = read_int(chunk_address + baseHeight * 8192 + x * 256 + y * 16 + z)
 				var color = read_int(chunk_address + baseHeight * 8192 + x * 256 + y * 16 + z + 4096)
 				
-				var RealX = (x + (location.x*16))
-				var RealY = (y + (location.z*16))
-				var RealZ = (z + (16 * baseHeight))
+				#var RealX = (x + (location.x*16))
+				#var RealY = (y + (location.z*16))
+				#var RealZ = (z + (16 * baseHeight))
 				
 				#var position = Vector3(x, z + 16 * baseHeight, y)
-				var position = Vector3(x, z, y)
+				var position := Vector3(x, z, y)
 				
 				#Logger.LogInt("=== Id: ", Id, " ===", Debug.DEBUG, self);
 				#Logger.LogInt("Color: ", Color, "", Debug.DEBUG, self);
@@ -183,7 +184,7 @@ func get_chunk_data(location): ################################################
 				if id != 0 && id <= 79 && id > 0:
 					# Logger.Log("Block is valid", Debug.DEBUG, self);
 					#Core.emit_signal("msg", id, Debug.TRACE, self)
-					var block_data  = {
+					var block_data := {
 						"id": id, 
 						"color": color
 					}

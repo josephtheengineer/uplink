@@ -1,15 +1,17 @@
 #warning-ignore:unused_class_variable
-var script_name = "manager"
-var Debug = preload("res://scripts/features/debug.gd")
-var Entity = load("res://scenes/entity.tscn")
+const script_name := "manager"
+var Debug := preload("res://scripts/features/debug.gd")
+var Entity := preload("res://scenes/entity.tscn")
 
-func get_entities_with(component: String):
+################################################################################
+
+func get_entities_with(component: String): #####################################
 	if Core.get_parent().has_node("/root/World/" + component):
 		return Core.get_parent().get_node("/root/World/" + component).get_children()
 	else:
 		return false
 
-func create(entity: Dictionary):
+func create(entity: Dictionary): ###############################################
 	Core.emit_signal("msg", "Creating new Entity, " + entity.type, Debug.TRACE, self)
 	if entity.type == "interface":
 		if !Core.get_parent().get_node("/root/World").has_node("Interfaces"):
@@ -21,13 +23,15 @@ func create(entity: Dictionary):
 			node.set_name("0")
 			Core.get_parent().get_node("/root/World/Interfaces").add_child(node)
 			Core.get_parent().get_node("/root/World/Interfaces/0").components = entity
-			Core.get_parent().get_node("/root/World/Interfaces/0").add_child(load("res://scenes/tty.tscn").instance())
+			var tty := preload("res://scenes/tty.tscn")
+			Core.get_parent().get_node("/root/World/Interfaces/0").add_child(tty.instance())
 		if entity.name_id == "hud":
 			var node = Entity.instance()
 			node.set_name(entity.id)
 			Core.get_parent().get_node("/root/World/Interfaces").add_child(node)
 			Core.get_parent().get_node("/root/World/Interfaces/"  + str(entity.id)).components = entity
-			Core.get_parent().get_node("/root/World/Interfaces/"  + str(entity.id)).add_child(load("res://scenes/hud.tscn").instance())
+			var hud := preload("res://scenes/hud.tscn")
+			Core.get_parent().get_node("/root/World/Interfaces/"  + str(entity.id)).add_child(hud.instance())
 			
 	elif entity.type == "chunk":
 		if !Core.get_parent().get_node("/root/World").has_node("Chunks"):
@@ -50,14 +54,15 @@ func create(entity: Dictionary):
 			node.set_name(entity.id)
 			Core.get_parent().get_node("/root/World/Inputs").add_child(node)
 			Core.get_parent().get_node("/root/World/Inputs/" + entity.id).components = entity
-			Core.get_parent().get_node("/root/World/Inputs/" + entity.id).add_child(load("res://scenes/player.tscn").instance())
+			var player := preload("res://scenes/player.tscn")
+			Core.get_parent().get_node("/root/World/Inputs/" + entity.id).add_child(player.instance())
 			Core.get_parent().get_node("/root/World/Inputs/" + entity.id + "/Player").translation = entity.position
 	#entity.debug = true
 	#entity.text = ""
 	
 	#emit_signal("entity_loaded", entity)
 
-#func create(components):
+#func create(components): ######################################################
 #	var entity = Dictionary()
 #
 #	entity.id = unique
@@ -75,7 +80,7 @@ func create(entity: Dictionary):
 #
 #	return entity.id
 
-#func edit(id, components):
+#func edit(id, components): ####################################################
 #	var entity = Dictionary()
 #
 #	entity.id = id
@@ -86,7 +91,7 @@ func create(entity: Dictionary):
 #
 #	return entity.id
 #
-#func get_component(id, path):
+#func get_component(id, path): #################################################
 #	var data = objects[id].components
 #	for i in path.split(".", false):
 #		if data.has(i):
@@ -95,7 +100,7 @@ func create(entity: Dictionary):
 #			return false
 #	return data
 
-#func add_node(id, component, node):
+#func add_node(id, component, node): ###########################################
 #	var path = get_node_path(get_component(id, component + ".parent"))
 #
 #	if get_tree().get_root().has_node(path):
@@ -114,7 +119,7 @@ func create(entity: Dictionary):
 #	set_component(id, component + ".rendered", true)
 #	return path
 #
-#func inherit_child_rect(id, component): # component string
+#func inherit_child_rect(id, component): # component string ####################
 #	var parent = get_node(get_node_path(get_component(id, component + ".parent")) + str(id))
 #	var child = get_node(get_node_path(get_component(id, component + ".parent")) + str(id) + "/" + component.capitalize().split(" ").join(""))
 #	parent.size_flags_horizontal = Control.SIZE_FILL

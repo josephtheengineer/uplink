@@ -1,8 +1,13 @@
-var script_name = "geometry"
+#warning-ignore:unused_class_variable
+const script_name := "geometry"
 
-const surrounding_blocks = [ Vector3(0, 0, 1), Vector3(0, 1, 0), Vector3(1, 0, 0), Vector3(0, 0, -1), Vector3(0, -1, 0), Vector3(-1, 0, 0) ]
+const surrounding_blocks = [ Vector3(0, 0, 1), Vector3(0, 1, 0), 
+	Vector3(1, 0, 0), Vector3(0, 0, -1), Vector3(0, -1, 0), 
+	Vector3(-1, 0, 0) ]
 
-func can_be_seen(position, block_data):
+################################################################################
+
+func can_be_seen(position: Vector3, block_data: Dictionary):
 	var num_surrounding_blocks = [ ]
 	
 	for surrounding_position in surrounding_blocks:
@@ -10,7 +15,7 @@ func can_be_seen(position, block_data):
 			num_surrounding_blocks.append(surrounding_position)
 	return num_surrounding_blocks
 
-func create_cube(position, id, mesh, materials, block_data):
+func create_cube(position: Vector3, id: int, mesh, materials: Dictionary, block_data: Dictionary):
 	var vertex_data = []
 	var st = SurfaceTool.new()
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
@@ -19,10 +24,12 @@ func create_cube(position, id, mesh, materials, block_data):
 	var sides_not_to_render = can_be_seen(position, block_data)
 	
 	if !sides_not_to_render.has(Vector3(0, -1, 0)):
-		vertex_data += create_horizontal_plane(st, position + Vector3(0, -1, 0), "down")
+		vertex_data += create_horizontal_plane(st, position 
+			+ Vector3(0, -1, 0), "down")
 	
 	if !sides_not_to_render.has(Vector3(0, 1, 0)): 
-		vertex_data += create_horizontal_plane(st, position + Vector3(0, 0, 0), "up")
+		vertex_data += create_horizontal_plane(st, position 
+			+ Vector3(0, 0, 0), "up")
 	
 	
 	
