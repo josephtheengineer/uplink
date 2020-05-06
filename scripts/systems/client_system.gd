@@ -206,6 +206,7 @@ func _on_world_loaded(): #######################################################
 func _on_chunks_loaded(): ######################################################
 	Core.emit_signal("msg", "Player spawn chunks loaded!", Debug.INFO, self)
 	InputSystem.move_mode = "walk"
+	InterfaceSystem.update_world_map()
 	InterfaceSystem.update_region_map()
 
 func spawn_player(location):

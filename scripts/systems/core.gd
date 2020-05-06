@@ -1,7 +1,5 @@
 extends Node
 
-# CHANGE ALL OF THESE TO UNDERSCORE VARS!!!! -_-
-
 #warning-ignore:unused_class_variable
 var script_name = "core"
 onready var Debug = preload("res://scripts/features/debug.gd").new()

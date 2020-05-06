@@ -66,7 +66,7 @@
 3/shapes = [  ]
 3/z_index = 0
 
-[node name="WorldMap" type="Control"]
+[node name="RegionMap" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 20.0
@@ -91,7 +91,7 @@ margin_right = 1920.0
 margin_bottom = 31.0
 rect_min_size = Vector2( 50, 0 )
 custom_fonts/font = ExtResource( 1 )
-text = "World Map"
+text = "Region Map"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -102,7 +102,7 @@ margin_right = 1920.0
 margin_bottom = 85.0
 rect_min_size = Vector2( 50, 50 )
 custom_fonts/font = ExtResource( 2 )
-text = "Regions found:"
+text = "Chunks found:"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -110,5 +110,6 @@ __meta__ = {
 [node name="TileMap" type="TileMap" parent="VBoxContainer"]
 tile_set = SubResource( 1 )
 cell_size = Vector2( 32, 32 )
+centered_textures = true
 format = 1
 script = ExtResource( 7 )

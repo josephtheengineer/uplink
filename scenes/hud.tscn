@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://assets/textures/ui/eden2/iphone/cusor.png" type="Texture" id=1]
 [ext_resource path="res://assets/fonts/body.tres" type="DynamicFont" id=2]
@@ -9,6 +9,7 @@
 [ext_resource path="res://scenes/navbox.tscn" type="PackedScene" id=7]
 [ext_resource path="res://scenes/toolbox.tscn" type="PackedScene" id=8]
 [ext_resource path="res://scenes/world_map.tscn" type="PackedScene" id=9]
+[ext_resource path="res://scenes/region_map.tscn" type="PackedScene" id=10]
 
 [node name="Hud" type="MarginContainer"]
 show_behind_parent = true
@@ -116,6 +117,13 @@ margin_bottom = 400.0
 rect_min_size = Vector2( 0, 50 )
 
 [node name="WorldMap" parent="HorizontalMain/VerticalMain/VerticalCenterContent/LeftPanel/TabContainer" instance=ExtResource( 9 )]
+visible = false
+margin_left = 4.0
+margin_top = 32.0
+margin_right = -4.0
+margin_bottom = -4.0
+
+[node name="RegionMap" parent="HorizontalMain/VerticalMain/VerticalCenterContent/LeftPanel/TabContainer" instance=ExtResource( 10 )]
 visible = false
 margin_left = 4.0
 margin_top = 32.0

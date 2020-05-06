@@ -87,7 +87,6 @@ func get_metadata(): ##########################################################
 	Core.Server.home_location = Vector3(read_float(16), read_float(20), read_float(24))
 	Core.Server.home_rotation = read_float(28)
 	
-	
 	Core.emit_signal("msg", "World file path is vaid. All systems are go for launch.", Debug.INFO, self)
 	Core.Server.world_width = 0
 	Core.Server.world_height = 0

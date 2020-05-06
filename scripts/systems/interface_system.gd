@@ -5,7 +5,7 @@ onready var Entity = preload("res://scripts/features/entity.gd")
 onready var DebugInfo = preload("res://scripts/features/debug_info.gd")
 onready var SystemManager = preload("res://scripts/features/system_manager.gd").new()
 onready var Hud = preload("res://scripts/features/hud.gd").new()
-onready var RegionTileMap = preload("res://scripts/features/region_tile_map.gd").new()
+onready var RegionTileMap = preload("res://scripts/features/ui_tile_map.gd").new()
 
 func _ready():
 	Core.emit_signal("system_ready", SystemManager.INTERFACE, self)                ##### READY #####
@@ -24,15 +24,29 @@ func _on_msg(message, level, obj):
 	if Core.get_parent().has_node("World/Interfaces/Hud/Hud/HorizontalMain/VerticalMain/VerticalCenterContent/LeftPanel/TabContainer/Chat/Text/RichTextLabel"):
 		Core.get_parent().get_node("World/Interfaces/Hud/Hud/HorizontalMain/VerticalMain/VerticalCenterContent/LeftPanel/TabContainer/Chat/Text/RichTextLabel").add_text(message + '\n')
 
-func update_region_map():
-	Core.emit_signal("msg", "Updating region map", Debug.INFO, self)
+func update_world_map():
+	Core.emit_signal("msg", "Updating world map", Debug.INFO, self)
 	var grid = Dictionary()
 	
 	for region in Core.Server.regions:
 		grid[region] = RegionTileMap.KNOWN
+	print(grid)
 	
 	if Core.get_parent().has_node("World/Interfaces/Hud/Hud/HorizontalMain/VerticalMain/VerticalCenterContent/LeftPanel/TabContainer/WorldMap/VBoxContainer/TileMap"):
-		Core.get_parent().get_node("World/Interfaces/Hud/Hud/HorizontalMain/VerticalMain/VerticalCenterContent/LeftPanel/TabContainer/WorldMap/VBoxContainer/TileMap").display_grid(grid)
+		Core.get_parent().get_node("World/Interfaces/Hud/Hud/HorizontalMain/VerticalMain/VerticalCenterContent/LeftPanel/TabContainer/WorldMap/VBoxContainer/TileMap").display_grid(grid, Vector2(0, 1))
+
+func update_region_map():
+	Core.emit_signal("msg", "Updating region map", Debug.INFO, self)
+	var grid = Dictionary()
+	
+	var region_chunks = Core.Server.regions[Core.Server.regions.keys()[0]] # Grid = array of Vector3's
+	
+	for chunk in region_chunks:
+		grid[chunk] = RegionTileMap.KNOWN
+	print(grid)
+	
+	if Core.get_parent().has_node("World/Interfaces/Hud/Hud/HorizontalMain/VerticalMain/VerticalCenterContent/LeftPanel/TabContainer/RegionMap/VBoxContainer/TileMap"):
+		Core.get_parent().get_node("World/Interfaces/Hud/Hud/HorizontalMain/VerticalMain/VerticalCenterContent/LeftPanel/TabContainer/RegionMap/VBoxContainer/TileMap").display_grid(grid, Vector2(0, 1))
 
 func process_horizontal_container(id):
 	pass
