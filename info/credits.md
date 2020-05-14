@@ -1,26 +1,46 @@
-Production and Programming
+Production, Programming and Story Design
 	Joseph Iuzzolino (JosephTheEngineer)
 
-Original Game Design
+Original Game Design and programming
 	Ari Ronen
 
+Project UP^L1NK open source contributors
+	Joseph Iuzzolino (JosephTheEngineer) - 30 commits
+
 Additional Programming
-	Vuenc
-	Robert Munafo
+	The Eden World File Format
+		Ari Ronen
 
-Artwork
-	Steve Byrne
+	la-map.c - the eden mapping tool
+		Robert Munafo
 
-Logo Design
-	Brastin3
+	Vuenctools - the eden world manipulator
+		Vuenc
 
-Additional Art
-	Oray Studios
+Inspiration
+	Eden: Unity Builder
+		Danyadd#1044
 
-Sound and Music
+	Eden World Manipulator (Vuenctools Rebooted)
+		Jeremy
+
+Original Artwork
+	Textures, UI and Original Logo
+		Steve Byrne
+	Additional Art
+		Oray Studios
+
+Original Sound and Music
 	Somatone Interactive
 	Adam Gubman
 	Vi Hart
+
+Research
+	The Eden World Builder File Format
+		Robert Munafo
+
+New Logo Design
+	Brastin3
 
 Special Thanks
 	Erik Measure
