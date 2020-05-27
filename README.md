@@ -26,4 +26,4 @@ See files in info/
 See CONTRIBUTING.md
 
 ## Licence
-This project is licenced with MIT, see LICENSE.md
+This project is licenced with MIT because it is the same licence that the Godot Engine uses, see LICENSE.md for details.

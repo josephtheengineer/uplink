@@ -1,4 +1,4 @@
-This project follows [Agis' Git Style Guide](https://github.com/agis/git-style-guide/blob/master/CONTRIBUTING.md) 
+This project follows [Agis' Git Style Guide](https://github.com/agis/git-style-guide/blob/master/CONTRIBUTING.md)
 and [Godot Engine's CONTRIBUTING.md](https://github.com/godotengine/godot/edit/master/CONTRIBUTING.md)
 
 # How to contribute efficiently
@@ -32,7 +32,7 @@ new issue**. The bugsquad will handle it from there if it's a duplicate.
 
 #### Specify the platform
 
-Eden: Universe Builder runs on a large variety of platforms and operating systems and devices.
+Uplink runs on a large variety of platforms and operating systems and devices.
 If you believe your issue is device/platform dependent (for example if it is
 related to the rendering, crashes or compilation errors), please specify:
 * Operating system
@@ -403,25 +403,25 @@ feature), *please* edit the commit title to something meaningful. Commits named
 
 ## Communicating with developers
 
-The Eden community has [many communication
-channels](josephtheengineer.ddns.net/eden), some used more for user-level
+Uplink has [many communication
+channels](theengineer.life/uplink), some used more for user-level
 discussions and support, others more for development discussions.
 
 To communicate with developers (e.g. to discuss a feature you want to implement
 or a bug you want to fix), the following channels can be used:
-- [Git issues](josephtheengineer.ddns.net/eden): If there is an
+- [Git issues](git.theengineer.life/uplink/issues): If there is an
   existing issue about a topic you want to discuss, just add a comment to it -
   all developers watch the repository and will get an email notification. You
   can also create a new issue - please keep in mind to create issues only to
   discuss quite specific points about the development, and not general user
   feedback or support requests.
-- [#eden IRC channel on
-  josephtheengineer.ddns.net](josephtheengineer.ddns.net): You will
+- [#uplink IRC channel on
+  irc.theengineer.life](irc.theengineer.life): You will
   find most core developers there, so it's the go-to channel for direct chat
-  about Eden Universe Builder development. Feel free to start discussing something there
+  about Uplink development. Feel free to start discussing something there
   to get some early feedback before writing up a detailed proposal in a GitHub
   issue.
-- [eden@josephtheengineer.ddns.net mailing
-  list](josephtheengineer.ddns.net/eden): Mailing list
-  for Eden developers to reach people directly in their
+- [uplink@theengineer.life mailing
+  list](mailing.theengineer.life/uplink): Mailing list
+  for Uplink developers to reach people directly in their
   mailbox and used primarily to announce news.
