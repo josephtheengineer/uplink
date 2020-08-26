@@ -1,0 +1,39 @@
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+<div class="form-padding">
+{{#if error}} <span>{{error}}</span>{{/if}}
+
+<script>
+	window.onload = function loadVars() {
+		document.getElementById('date').value="{{date}}"
+	}
+
+</script>
+
+<form action="/notes" method="post" class="notes-box">
+	<div class="notes-header">
+		<h1>Notes</h1> <a href="">Edit</a>
+	</div>
+
+	<div>
+		<label for="date">Note Date</label>
+		<input type="text" id="date" name="date" required>
+	</div>
+
+	<div>
+		<label for="template">Note Template</label>
+		<input type="text" id="template" name="template" required>
+	</div>
+
+	<div>
+		<label for="title">Note Title</label>
+		<input type="text" id="title" name="title">
+	</div>
+
+
+	<div class="form-button-outer">
+ 		<button class="button2" type="submit">Done</button>
+		<a class="button2 button cancelbtn" href="/login">Cancel</a>
+	</div>
+
+</form>

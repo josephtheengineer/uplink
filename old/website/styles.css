@@ -1,0 +1,240 @@
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	padding: 20px;
+	font-family: 'Roboto', sans-serif;
+	background-color: #070e11;
+}
+
+.content {
+	padding: 80px;
+}
+
+p, img, label, li, span {
+	color: #44525d;
+	font-size: 12px;
+	/*font-family: 'Dosis', sans-serif;*/
+	font-family: 'Roboto', sans-serif;
+}
+
+input {
+	color: white;
+	font-size: 12px;
+	font-family: 'Roboto', sans-serif;
+}
+
+b {
+	color: white;
+	font-size: 12px;
+	font-family: 'Roboto', sans-serif;
+}
+
+h1, button, .button {
+	color: white;
+	font-size: 20px;
+	font-family: 'Orbitron', sans-serif;
+}
+
+a {
+	color: #0d73cc;
+	text-decoration: none;
+}
+
+iframe {
+	width: 100%;
+	height: 1920px;
+	border: none;
+}
+
+.links {
+	display: flex;
+	justify-content: right;
+	align-items: center;
+
+	grid-column-start: 2;
+	grid-column-end: 4;
+	grid-row-start: 1;
+	grid-row-end: 2;
+	text-align: right;
+}
+
+
+.links-item {
+	display: inline-block;
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-top: 10px;
+	font-size: 40px;
+	font-family: 'Orbitron', sans-serif;
+}
+
+.links-item:hover {
+	background-color: white;
+}
+
+
+.gallery {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	/*grid-auto-rows: minmax(50px, auto);*/
+	grid-gap: 10px;
+}
+
+.gallery-img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.links-item {
+	/*font-size: 5vw;*/
+}
+
+/* ========== Login Page ========= */
+
+/* Full-width input fields */
+/*input[type=text], input[type=password] {*/
+input {
+	width: 100%;
+	padding: 12px 20px;
+	margin: 8px 0;
+	display: inline-block;
+	border: 1px solid white;
+	background-color: transparent;
+	box-sizing: border-box;
+}
+
+span.center {
+	vertical-align: middle;
+	margin-left: 5px;
+}
+
+input[type=checkbox] {
+	/*transform: scale(0.5);*/
+	vertical-align: middle;
+}
+
+/* Set a style for all buttons */
+button, .button {
+	background-color: #4CAF50;
+	color: white;
+	padding: 14px 20px;
+	margin: 8px 0;
+	border: none;
+	cursor: pointer;
+}
+
+button:hover, .button:hover {
+	opacity: 0.8;
+}
+
+/* Extra styles for the cancel button */
+.cancelbtn {
+	background-color: #f44336;
+}
+
+/* Center the image and position the close button */
+.imgcontainer {
+	text-align: center;
+	margin: 24px 0 12px 0;
+	position: relative;
+}
+
+img.avatar {
+	width: 40%;
+	border-radius: 50%;
+}
+
+.container {
+	padding: 16px;
+}
+
+span.psw {
+	float: right;
+	padding-top: 16px;
+}
+
+.form-padding {
+	margin-left: 30%;
+	margin-right: 30%;
+}
+
+.form-button-outer {
+	width: 100%;
+	text-align: center;
+}
+
+.button2 {
+	display: inline-block;
+	width: 49%;
+}
+
+.button1 {
+	width: 100%;
+}
+
+.white {
+	color: white;
+}
+
+
+/* ========== Dashboard ========= */
+
+#clients {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(186px, 1fr));
+	grid-gap: 10px;
+}
+
+#clients div {
+}
+
+#clients div form button {
+	object-fit: cover;
+	background-color: red;
+	width: 100%;
+	height: 100%;
+	margin: 0px;
+}
+
+#clients div form button p {
+}
+
+
+
+/* ========== Navigation Bar ========= */
+
+ul.nav {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	background-color: #333;
+	position: -webkit-sticky; /* Safari */
+	position: sticky;
+	top: 0;
+}
+
+ul.nav li {
+	float: left;
+}
+
+ul.nav li a {
+	display: block;
+	color: white;
+	text-align: center;
+	padding: 14px 16px;
+	text-decoration: none;
+}
+
+ul.nav li a:hover {
+	background-color: #111;
+}
+
+.active {
+	background-color: #4CAF50;
+}

@@ -12,17 +12,17 @@ _global_script_classes=[ {
 "base": "Node",
 "class": "ClientSystem",
 "language": "GDScript",
-"path": "res://scripts/systems/client_system.gd"
+"path": "res://src/scripts/sys/client.gd"
 }, {
 "base": "Node",
 "class": "Entity",
 "language": "GDScript",
-"path": "res://scripts/features/entity.gd"
+"path": "res://src/scripts/entity/entity.gd"
 }, {
 "base": "Node",
 "class": "ServerSystem",
 "language": "GDScript",
-"path": "res://scripts/systems/server_system.gd"
+"path": "res://src/scripts/sys/server.gd"
 } ]
 _global_script_class_icons={
 "ClientSystem": "",
@@ -33,7 +33,7 @@ _global_script_class_icons={
 [application]
 
 config/name="uplink"
-run/main_scene="res://scenes/world.tscn"
+run/main_scene="res://src/scenes/world/world.tscn"
 boot_splash/image="res://assets/textures/ui/icons/splash2.png"
 boot_splash/bg_color=Color( 0, 0, 0, 1 )
 config/icon="res://assets/textures/ui/icons/splash2.png"
@@ -215,4 +215,3 @@ quality/shading/force_vertex_shading=true
 quality/shading/force_lambert_over_burley=true
 quality/shading/force_blinn_over_ggx=true
 quality/depth/hdr=false
-environment/default_environment="res://scenes/environment.tres"

@@ -1,0 +1,150 @@
+body{
+  background-color: #25252C
+}
+
+#loading {
+    position: relative;
+    animation: loading-key 0.5s;
+    transform-origin: bottom;
+    animation-fill-mode: forwards;
+}
+
+/* label color */
+ .input-field label {
+   color: black;
+ }
+
+ .input-field input[type=text]:focus {
+  border-bottom: 1px solid #000;
+  box-shadow: 0 1px 0 0 #000;
+}
+
+@keyframes loading-key {
+    from {
+        transform: translateY(0px);
+    }
+    to {
+        transform: translateY(600px);
+    }
+}
+
+#center-loading {
+    position: relative;
+    animation: center-loading-key 3s;
+    transform-origin: bottom;
+    animation-fill-mode: forwards;
+}
+
+@keyframes center-loading-key {
+    from {
+        transform: translateY(0px);
+    }
+    to {
+        transform: translateY(150px);
+    }
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+table, tr, th, td{
+  border-collapse: collapse;
+  border: none !important;
+}
+
+#test {
+    margin-top: 25px;
+    font-size: 21px;
+    text-align: center;
+    animation: fadein 2s;
+    -moz-animation: fadein 2s; /* Firefox */
+    -webkit-animation: fadein 2s; /* Safari and Chrome */
+    -o-animation: fadein 2s; /* Opera */
+}
+@keyframes fadein {
+    from {
+        opacity:0;
+    }
+    to {
+        opacity:1;
+    }
+}
+@-moz-keyframes fadein { /* Firefox */
+    from {
+        opacity:0;
+    }
+    to {
+        opacity:1;
+    }
+}
+@-webkit-keyframes fadein { /* Safari and Chrome */
+    from {
+        opacity:0;
+    }
+    to {
+        opacity:1;
+    }
+}
+@-o-keyframes fadein { /* Opera */
+    from {
+        opacity:0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* ---------------- Shapes --------------- */
+
+.circleRed {
+  width: 20px;
+  height: 20px;
+  -webkit-border-radius: 25px;
+  -moz-border-radius: 25px;
+  border-radius: 25px;
+  background: #004d40;
+}
+
+.circleGreen {
+  width: 20px;
+  height: 20px;
+  -webkit-border-radius: 25px;
+  -moz-border-radius: 25px;
+  border-radius: 25px;
+  background: #e0f2f1;
+}
+
+.circleBlue {
+  width: 20px;
+  height: 20px;
+  -webkit-border-radius: 25px;
+  -moz-border-radius: 25px;
+  border-radius: 25px;
+  background: blue;
+}
+
+.circleGrey {
+  width: 20px;
+  height: 20px;
+  -webkit-border-radius: 25px;
+  -moz-border-radius: 25px;
+  border-radius: 25px;
+  background: grey;
+}
+
+.triangleRed {
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 20px solid #004d40;
+}
+
+.triangleGreen {
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 20px solid #e0f2f1;
+}

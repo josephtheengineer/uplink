@@ -1,0 +1,3 @@
+[submodule "uplink-assets"]
+	path = aux/assets
+	url = git@git.theengineer.life:uplink-assets
