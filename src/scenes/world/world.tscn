@@ -4,9 +4,6 @@
 [ext_resource path="res://src/scripts/sys/server.gd" type="Script" id=2]
 [ext_resource path="res://src/scenes/world/environment.tres" type="Environment" id=3]
 
-
-
-
 [node name="World" type="Node"]
 
 [node name="Systems" type="Node" parent="."]

@@ -1,15 +1,15 @@
 [gd_scene load_steps=17 format=2]
 
-[ext_resource path="res://scenes/environment.tres" type="Environment" id=1]
-[ext_resource path="res://assets/fonts/header.tres" type="DynamicFont" id=2]
-[ext_resource path="res://assets/fonts/body.tres" type="DynamicFont" id=3]
-[ext_resource path="res://assets/textures/ui/eden2/ui_text/ipad~menu_options.png" type="Texture" id=4]
-[ext_resource path="res://assets/fonts/league-mono/LeagueMono-Thin.otf" type="DynamicFontData" id=5]
-[ext_resource path="res://assets/textures/ui/eden2/iphone/edenlogo.png" type="Texture" id=6]
-[ext_resource path="res://assets/fonts/orbitron/Orbitron Medium.otf" type="DynamicFontData" id=7]
-[ext_resource path="res://assets/textures/ui/icons/splash2.png" type="Texture" id=8]
-[ext_resource path="res://assets/textures/ui/icons/josephtheengineer/JosephTheEngineer Logo 2018 Engineer Edition v2 Transparent Round.png" type="Texture" id=9]
-[ext_resource path="res://assets/sounds/music/eden1.ogg" type="AudioStream" id=10]
+[ext_resource path="res://src/scenes/world/environment.tres" type="Environment" id=1]
+[ext_resource path="res://aux/assets/fonts/header.tres" type="DynamicFont" id=2]
+[ext_resource path="res://aux/assets/fonts/body.tres" type="DynamicFont" id=3]
+[ext_resource path="res://aux/assets/textures/ui/eden2/ui_text/ipad~menu_options.png" type="Texture" id=4]
+[ext_resource path="res://aux/assets/fonts/league-mono/LeagueMono-Thin.otf" type="DynamicFontData" id=5]
+[ext_resource path="res://aux/assets/textures/ui/eden2/iphone/edenlogo.png" type="Texture" id=6]
+[ext_resource path="res://aux/assets/fonts/orbitron/Orbitron Medium.otf" type="DynamicFontData" id=7]
+[ext_resource path="res://aux/assets/textures/ui/icons/splash2.png" type="Texture" id=8]
+[ext_resource path="res://aux/assets/textures/ui/icons/josephtheengineer/JosephTheEngineer Logo 2018 Engineer Edition v2 Transparent Round.png" type="Texture" id=9]
+[ext_resource path="res://aux/assets/sounds/music/eden1.ogg" type="AudioStream" id=10]
 
 [sub_resource type="DynamicFont" id=1]
 font_data = ExtResource( 5 )
@@ -91,6 +91,9 @@ current = true
 [node name="UI" type="Control" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="BackgroundButton" type="Button" parent="UI"]
 anchor_right = 1.0

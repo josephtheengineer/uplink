@@ -1,14 +1,14 @@
-const script_name := "other_input"
-onready var Debug = preload("res://src/scripts/debug/debug.gd").new()
-onready var Player = preload("res://src/scripts/world/player.gd").new()
-onready var Manager = preload("res://src/scripts/manager/manager.gd").new()
-onready var Comp = preload("res://src/scripts/entity/comp.gd").new()
-onready var SystemManager = preload("res://src/scripts/manager/system.gd").new()
-onready var DebugPanel = preload("res://src/scripts/debug/panel.gd").new()
+#warning-ignore:unused_class_variable
+const meta := {
+	script_name = "input.other",
+	description = """
+		
+	"""
+}
 
 ################################################################################
 
-#func _process(delta): #########################################################
+#static func _process(delta): #########################################################
 #	var entities = Entity.get_entities_with("hud")
 #	for id in entities:
 #		if get_node("/root/World/" + str(id)):
@@ -31,21 +31,21 @@ onready var DebugPanel = preload("res://src/scripts/debug/panel.gd").new()
 #	if Input.is_action_just_pressed("restart"):
 #		get_tree().reload_current_scene()
 
-func _joystick_pressed(down, id): ##############################################
-	Core.emit_signal("msg", "Joystick pressed!", Debug.DEBUG, self)
+#static func _joystick_pressed(down, id): ##############################################
+#	Core.emit_signal("msg", "Joystick pressed!", Core.DEBUG, self)
 #	Entity.set_component(id, "joystick.pressed", down)
 	
 #	pressed = true
 
 ################################### signals ####################################
 
-#func ready(): #################################################################
+#static func ready(): #################################################################
 	#ClientSystem.total_players += 1
 	#Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	#camera_width_center = OS.get_window_size().x / 2
 	#camera_height_center = OS.get_window_size().y / 2
 
-#func _physics_process(delta): ##################################################
+#static func _physics_process(delta): ##################################################
 #	for node in Manager.get_entities_with("Input"):
 		#var components = node.components
 		#if components.has("player"):
@@ -71,7 +71,7 @@ func _joystick_pressed(down, id): ##############################################
 
 #var camera_angle = 0
 
-#func player_move(event, player): ###############################################
+#static func player_move(event, player): ###############################################
 #	var entities = Manager.get_entities_with("player")
 #	for id in entities:
 #		var components = entities[id]
@@ -93,46 +93,46 @@ func _joystick_pressed(down, id): ##############################################
 #					Player.camera_angle += change
 #
 #			elif event.is_action_pressed("action"):
-#				Core.emit_signal("msg", "Action pressed!", Debug.DEBUG, self)
+#				Core.emit_signal("msg", "Action pressed!", Core.DEBUG, self)
 #
 #				for id in Entity.get_entities_with("joystick"):
-#					Core.emit_signal("msg", "Mouse Position: " + str(event.position), Debug.DEBUG, self)
+#					Core.emit_signal("msg", "Mouse Position: " + str(event.position), Core.DEBUG, self)
 #					if event.position.x > 31 and event.position.x < 385 and event.position.y > 505 and event.position.y < 864:
-#						Core.emit_signal("msg", "Joystick pressed!", Debug.DEBUG, self)
+#						Core.emit_signal("msg", "Joystick pressed!", Core.DEBUG, self)
 #						pass
 #						#_joystick_pressed(true, 0)
 #
 #				Player.action(id, OS.get_window_size() / 2)
 #				if pressed:
-#					Core.emit_signal("msg", "Woah", Debug.INFO, self)
+#					Core.emit_signal("msg", "Woah", Core.INFO, self)
 #			#player.translation = components.player.position
 #			#components.player.rendered = true
 #			#Entity.edit(id, components)
 
-func player_action(event, player): #############################################
-	Core.emit_signal("msg", "Action pressed!", Debug.DEBUG, self)
-	
-	#for id in Entity.get_entities_with("joystick"):
-	#	Core.emit_signal("msg", "Mouse Position: " + str(event.position), Debug.DEBUG, self)
-	#	if event.position.x > 31 and event.position.x < 385 and event.position.y > 505 and event.position.y < 864:
-	#		Core.emit_signal("msg", "Joystick pressed!", Debug.DEBUG, self)
-	#		pass
-			#_joystick_pressed(true, 0)
-	
-	Player.action(player, OS.get_window_size() / 2)
+#static func player_action(event, player): #############################################
+#	Core.emit_signal("msg", "Action pressed!", Core.DEBUG, self)
+#
+#	#for id in Entity.get_entities_with("joystick"):
+#	#	Core.emit_signal("msg", "Mouse Position: " + str(event.position), Core.DEBUG, self)
+#	#	if event.position.x > 31 and event.position.x < 385 and event.position.y > 505 and event.position.y < 864:
+#	#		Core.emit_signal("msg", "Joystick pressed!", Core.DEBUG, self)
+#	#		pass
+#			#_joystick_pressed(true, 0)
+#
+#	Player.action(player, OS.get_window_size() / 2)
+#
+################################### static functions ###################################
+#
+#static func _stop_player(player): #####################################################
+#	player.stop()
+#	player.queue_free()
 
-################################## functions ###################################
-
-func _stop_player(player): #####################################################
-	player.stop()
-	player.queue_free()
-
-#func world_button(world):
+#static func world_button(world):
 #	pass
 	#if world == 1:
-		#Core.emit_signal("msg", "Opening world creation menu...", Debug.INFO, self)
+		#Core.emit_signal("msg", "Opening world creation menu...", Core.INFO, self)
 		#create_new_world()
-		#Core.emit_signal("msg", "Loading a new flat terrain world...", Debug.INFO, self)
+		#Core.emit_signal("msg", "Loading a new flat terrain world...", Core.INFO, self)
 		#map_path = ""
 		#map_name = "New Flat Terrain World"
 		#map_seed = 0
@@ -140,7 +140,7 @@ func _stop_player(player): #####################################################
 	#elif world == 3:
 		#pass
 	#else:
-		#Core.emit_signal("msg", "Loading a new natural terrain world...", Debug.INFO, self)
+		#Core.emit_signal("msg", "Loading a new natural terrain world...", Core.INFO, self)
 		#map_path = ""
 		#map_name = "New Natural Terrain World"
 		#map_seed = floor(rand_range(0, 9999999))

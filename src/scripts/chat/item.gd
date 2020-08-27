@@ -1,5 +1,12 @@
 extends Control
-var script_name = "chat_item"
+#warning-ignore:unused_class_variable
+const meta := {
+	script_name = "chat.item",
+	type = "impure",
+	description = """
+		
+	"""
+}
 
 func add_text(text):
 	get_node("Content").add_text(text)

@@ -1,15 +1,28 @@
 [gd_scene load_steps=11 format=2]
 
-[ext_resource path="res://assets/textures/ui/eden2/ipad/toolbox/ipad~burn.png" type="Texture" id=1]
-[ext_resource path="res://assets/textures/ui/eden2/ipad/toolbox/ipad~burn_active.png" type="Texture" id=2]
-[ext_resource path="res://assets/textures/ui/eden2/ipad/toolbox/ipad~destroy.png" type="Texture" id=3]
-[ext_resource path="res://assets/textures/ui/eden2/ipad/toolbox/ipad~destroy_active.png" type="Texture" id=4]
-[ext_resource path="res://assets/textures/ui/eden2/ipad/toolbox/ipad~build2.png" type="Texture" id=5]
-[ext_resource path="res://assets/textures/ui/eden2/ipad/toolbox/ipad~build2_active.png" type="Texture" id=6]
-[ext_resource path="res://assets/textures/ui/eden2/ipad/toolbox/ipad~palette.png" type="Texture" id=7]
-[ext_resource path="res://assets/textures/ui/eden2/ipad/toolbox/ipad~paint_active.png" type="Texture" id=8]
-[ext_resource path="res://assets/textures/ui/eden2/ipad/ipad~settings.png" type="Texture" id=9]
-[ext_resource path="res://assets/textures/quit.png" type="Texture" id=10]
+[ext_resource path="res://aux/assets/textures/ui/eden2/ipad/toolbox/ipad~burn.png" type="Texture" id=1]
+[ext_resource path="res://aux/assets/textures/ui/eden2/ipad/toolbox/ipad~burn_active.png" type="Texture" id=2]
+[ext_resource path="res://aux/assets/textures/ui/eden2/ipad/toolbox/ipad~destroy_active.png" type="Texture" id=3]
+[ext_resource path="res://aux/assets/textures/ui/eden2/ipad/toolbox/ipad~mine_active.png" type="Texture" id=4]
+[ext_resource path="res://aux/assets/textures/ui/eden2/ipad/toolbox/ipad~mine_active.png" type="Texture" id=5]
+[ext_resource path="res://aux/assets/textures/ui/eden2/ipad/toolbox/ipad~build2_active.png" type="Texture" id=6]
+[ext_resource path="res://aux/assets/textures/ui/eden2/ipad/toolbox/ipad~palette.png" type="Texture" id=7]
+[ext_resource path="res://aux/assets/textures/ui/eden2/ipad/toolbox/ipad~paint_active.png" type="Texture" id=8]
+[ext_resource path="res://aux/assets/textures/ui/eden2/ipad/ipad~settings.png" type="Texture" id=9]
+[ext_resource path="res://aux/assets/textures/quit.png" type="Texture" id=10]
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 [node name="Toolbox" type="VBoxContainer"]

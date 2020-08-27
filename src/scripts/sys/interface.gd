@@ -1,28 +1,35 @@
 extends Node
-const script_name := "interface_system"
-onready var Debug = preload("res://src/scripts/debug/debug.gd").new()
-onready var Entity = preload("res://src/scripts/entity/entity.gd")
-onready var SystemManager = preload("res://src/scripts/manager/system.gd").new()
-onready var Hud = preload("res://src/scripts/hud/hud.gd").new()
-onready var RegionTileMap = preload("res://src/scripts/ui/tile_map.gd").new()
-
+class_name InterfaceSystem
+#warning-ignore:unused_class_variable
+const meta := {
+	script_name = "sys.interface",
+	description = """
+		
+	"""
+}
+#warning-ignore:unused_class_variable
+var data := {
+	
+}
 
 func _ready(): #################################################################
-	Core.emit_signal("system_ready", SystemManager.INTERFACE, self)         ##### READY #####
-	var error := Core.connect("msg", self, "_on_msg")
+	Core.emit_signal("system_ready", Core.scripts.core.system.INTERFACE, self)         ##### READY #####
+	var error: int = Core.connect("msg", self, "_on_msg")
 	if error:
 		emit_signal("msg", "Error on binding to msg: " 
-			+ str(error), Debug.WARN, self)
+			+ str(error), Core.WARN, self)
 
 
 func _process(_delta): ##########################################################
+	return
 	for entity in Core.get_parent().get_node("World/Interfaces/").get_children():
 		if entity.components.name_id == 'hud':
-			Hud.process_hud(entity)
+			pass
+			#Hud.process_hud(entity)
 
 
-func _on_msg(message, level, obj): #############################################
-	#Core.emit_signal("msg", "Rec message", Debug.DEBUG, self)
+func _on_msg(message, _level, _obj): #############################################
+	#Core.emit_signal("msg", "Rec message", Core.DEBUG, self)
 	var label_path := "/root/World/Interfaces/0/TTY/RichTextLabel"
 	if get_tree().get_root().has_node(label_path):
 		var label: RichTextLabel = Core.get_parent().get_node(label_path)
@@ -37,22 +44,23 @@ func _on_msg(message, level, obj): #############################################
 
 
 func update_world_map(): #######################################################
-	Core.emit_signal("msg", "Updating world map", Debug.INFO, self)
+	Core.emit_signal("msg", "Updating world map", Core.INFO, self)
 	var grid := Dictionary()
 	
 	for region in Core.Server.regions:
-		grid[region] = RegionTileMap.KNOWN
+		grid[region] = Core.scripts.interface.tile_map.KNOWN
 	
-	Core.emit_signal("msg", "World map data: " + str(grid), Debug.TRACE, self)
+	Core.emit_signal("msg", "World map data: " + str(grid), Core.TRACE, self)
 	
 	var hud_path := "World/Interfaces/Hud/Hud/"
 	var world_map_path := hud_path + "HorizontalMain/VerticalMain/VerticalCenterContent/LeftPanel/TabContainer/WorldMap/"
 	if Core.get_parent().has_node(world_map_path + "VBoxContainer/TileMap"):
-		Core.get_parent().get_node(world_map_path + "VBoxContainer/TileMap").display_grid(grid, Vector2(0, 1))
+		var tile_map = Core.get_parent().get_node(world_map_path + "VBoxContainer/TileMap")
+		tile_map.display_grid(grid, Vector2(0, 1))
 
 
 func update_region_map(): ######################################################
-	Core.emit_signal("msg", "Updating region map", Debug.INFO, self)
+	Core.emit_signal("msg", "Updating region map", Core.INFO, self)
 	var grid = Dictionary()
 	
 	#var region_chunks = Core.Server.regions[Core.Server.regions.keys()[0]] # Grid = array of Vector3's
@@ -63,7 +71,8 @@ func update_region_map(): ######################################################
 	var hud_path := "World/Interfaces/Hud/Hud/"
 	var region_map_path := hud_path + "HorizontalMain/VerticalMain/VerticalCenterContent/LeftPanel/TabContainer/RegionMap/"
 	if Core.get_parent().has_node(region_map_path + "VBoxContainer/TileMap"):
-		Core.get_parent().get_node(region_map_path + "VBoxContainer/TileMap").display_grid(grid, Vector2(0, 1))
+		var tile_map = Core.get_parent().get_node(region_map_path + "VBoxContainer/TileMap")
+		tile_map.display_grid(grid, Vector2(0, 1))
 
 
 #func process_horizontal_container(id: int): ####################################
@@ -71,13 +80,13 @@ func update_region_map(): ######################################################
 
 
 func create_toolbox(id: int): ##################################################
-	var toolbox := preload("res://scenes/toolbox.tscn").instance()
+	var toolbox := preload("res://src/scenes/hud/toolbox.tscn").instance()
 	
 	Entity.add_node(id, "toolbox", toolbox)
 
 
-func process_toolbox(id: int):
-	pass
+#func process_toolbox(id: int):
+#	pass
 
 
 func create_terminal(id: int): #################################################
@@ -85,7 +94,7 @@ func create_terminal(id: int): #################################################
 		"terminal.parent"))
 	if !path:
 		path = "/root/World/"
-	var terminal_resource := preload("res://scenes/terminal.tscn")
+	var terminal_resource := preload("res://src/scenes/terminal/terminal.tscn")
 	var terminal = terminal_resource.instance()
 	Entity.add_node(id, "terminal", terminal)
 	
@@ -102,7 +111,8 @@ func create_terminal(id: int): #################################################
 			"terminal.position")
 	
 	if Entity.get_component(id, "terminal.text"):
-		terminal_node.get_node("Text").text = Entity.get_component(id, 
+		var text: RichTextLabel = terminal_node.get_node("Text")
+		text.text = Entity.get_component(id, 
 			"terminal.text")
 
 
@@ -120,7 +130,7 @@ func create_terminal(id: int): #################################################
 
 ############################## public variables ################################
 
-onready var dot_template = preload("res://scenes/dot.tscn")
+onready var dot_template = preload("res://src/scenes/main_menu/dot.tscn")
 
 const info = [ "changelog.md", "featured-worlds.md", "game-stats.md", 
 	"info.md", "news.md", "new-worlds.md", "top-users.md", "top-worlds.md" ]
@@ -141,7 +151,7 @@ var loader
 var wait_frames
 var time_max = 100 # msec
 var current_scene
-var process = false
+var process_ui = false
 #var main_menu = true
 var background_pressed = false
 var search_is_focused = false
@@ -159,7 +169,7 @@ const CHAT = 13
 const NAVBAR = 14
 const TOOLBOX = 15
 
-var current_interface = [ TITLE_SCREEN ]
+#var current_interface = [ TITLE_SCREEN ]
 
 
 func change_interface(interfaces): #############################################
@@ -187,7 +197,7 @@ func process_interface(): ######################################################
 	#World.map_seed = -1
 	#add_child(World)
 	#draw_dots()
-	Core.emit_signal("msg", "Starting logs...", Debug.INFO, self)
+	Core.emit_signal("msg", "Starting logs...", Core.INFO, self)
 	
 	# fetch data from the website for the main menu
 	#fetch_data()
@@ -201,7 +211,7 @@ func process_interface(): ######################################################
 	show_world_list(world_data, true)
 
 
-func process(delta): ###########################################################
+func process(): ###########################################################
 	#update_positions()
 	if Input.is_action_just_pressed("action"):
 		background_pressed = true
@@ -212,9 +222,11 @@ func process(delta): ###########################################################
 	
 	if ui_snaped == false:
 		var closest_position = Vector2(0, 0)
+		
+		var ui: Control = get_node("UI")
 		for position in positions.values():
-			if abs(position.x - get_node("UI").rect_position.x) <= abs(closest_position.x - get_node("UI").rect_position.x):
-				if abs(position.y - get_node("UI").rect_position.y) <= abs(closest_position.y - get_node("UI").rect_position.y):
+			if abs(position.x - ui.rect_position.x) <= abs(closest_position.x - ui.rect_position.x):
+				if abs(position.y - ui.rect_position.y) <= abs(closest_position.y - ui.rect_position.y):
 					closest_position = position
 		snaped_position = closest_position
 		ui_snaped = true
@@ -226,13 +238,13 @@ func process(delta): ###########################################################
 		if distance_to_move_sub < Vector2(1, 1):
 			distance_to_move_sub = Vector2(1, 1)
 	
-	if !process:
+	if !process_ui:
 		return false
 	
 	if loader == null:
-		Core.emit_signal("msg", "Loader was null!", Debug.DEBUG, self)
+		Core.emit_signal("msg", "Loader was null!", Core.DEBUG, self)
 		# no need to process anymore
-		process = false
+		process_ui = false
 		return
 	
 	if wait_frames > 0: # wait for frames to let the "loading" animation show up
@@ -247,30 +259,30 @@ func process(delta): ###########################################################
 		if err == ERR_FILE_EOF: # Finished loading.
 			var resource = loader.get_resource()
 			loader = null
-			Core.emit_signal("msg", "Removing old scene...", Debug.DEBUG, self)
-			get_node("UI/LoadingContainer").visible = false
+			Core.emit_signal("msg", "Removing old scene...", Core.DEBUG, self)
+			var container: VBoxContainer = get_node("UI/LoadingContainer")
+			container.visible = false
 			current_scene.queue_free() # get rid of the old scene
-			Core.emit_signal("msg", "Setting new scene...", Debug.DEBUG, self)
+			Core.emit_signal("msg", "Setting new scene...", Core.DEBUG, self)
 			set_new_scene(resource)
 			break
 		elif err == OK:
 			update_progress()
 		else: # error during loading
-			Core.emit_signal("msg", "Error during loading", Debug.ERROR, self)
+			Core.emit_signal("msg", "Error during loading", Core.ERROR, self)
 			loader = null
 		break
 
 
-func _on_AnimationPlayer_animation_finished(anim_name): ########################
-	pass
+#func _on_AnimationPlayer_animation_finished(anim_name): ########################
 	#if anim_name == "TitleScreen":
 		#get_node("TitleScreen/AnimationPlayer").play("TitleScreenFlashingText")
 	#if anim_name == "TitleScreenFlashingText":
 		#get_node("TitleScreen/AnimationPlayer").play("TitleScreenFlashingText")
 
 
-func _on_CreateServerButton_pressed(): #########################################
-	World.create_server("server")
+#func _on_CreateServerButton_pressed(): #########################################
+#	World.create_server("server")
 
 
 func _on_JoinServerButton_pressed(): ###########################################
@@ -279,26 +291,31 @@ func _on_JoinServerButton_pressed(): ###########################################
 	#World.join_server("player", address)
 
 
-func _on_SendButton_pressed(): #################################################
-	Core.emit_signal("msg", "Sending message...", Debug.INFO, self)
-	World.send_message("Hello!")
+#func _on_SendButton_pressed(): #################################################
+	#Core.emit_signal("msg", "Sending message...", Core.INFO, self)
+	#World.send_message("Hello!")
 
 
 func _on_SharedWorlds_released(): ##############################################
 	Core.emit_signal("msg", "Shared worlds are not implemented yet!", 
-		Debug.WARN, self)
+		Core.WARN, self)
 	
 
 
 func _on_OptionsButton_pressed(): ##############################################
-	get_node("/root/Main Menu/UI/Home").visible = false
-	get_node("/root/Main Menu/UI/Options").visible = true
+	var home: MarginContainer = get_node("/root/Main Menu/UI/Home")
+	home.visible = false
+	var options: MarginContainer = get_node("/root/Main Menu/UI/Options")
+	options.visible = true
 	workspace = "options"
 
 
 func _on_OptionsBackButton_pressed(): ##########################################
-	get_node("/root/Main Menu/UI/Options").visible = false
-	get_node("/root/Main Menu/UI/Home").visible = true
+	var options: MarginContainer = get_node("/root/Main Menu/UI/Options")
+	options.visible = false
+	
+	var home: MarginContainer = get_node("/root/Main Menu/UI/Home")
+	home.visible = true
 	workspace = "home"
 
 
@@ -326,8 +343,11 @@ func input(event): #############################################################
 			add_child(music_player)
 			music_player.play()
 			
-			get_node("TitleScreen").visible = false
-			get_node("UI").visible = true
+			var titlescreen: Control = get_node("TitleScreen")
+			titlescreen.visible = false
+			
+			var ui: Control = get_node("UI")
+			ui.visible = true
 			
 	if event.is_action_pressed("action"):
 		pass
@@ -392,8 +412,9 @@ func show_world_list(world_data, is_downloaded):
 
 
 func create_new_world():
-	Core.emit_signal("msg", "World creation menu", Debug.DEBUG, self)
-	add_child(load("res://scenes/new_world_panel.tscn").instance())
+	Core.emit_signal("msg", "World creation menu", Core.DEBUG, self)
+	var world: PackedScene = load("res://scenes/new_world_panel.tscn")
+	add_child(world.instance())
 
 
 func draw_dots(): ##############################################################
@@ -405,7 +426,7 @@ func draw_dots(): ##############################################################
 
 
 func update_progress(): ########################################################
-	Core.emit_signal("msg", "Updating progress...", Debug.DEBUG, self)
+	Core.emit_signal("msg", "Updating progress...", Core.DEBUG, self)
 	var progress = float(loader.get_stage()) / loader.get_stage_count()
 	var animation_player: AnimationPlayer = get_node("AnimationPlayer")
 	# Update your progress bar?
@@ -428,21 +449,21 @@ func set_new_scene(scene_resource): ############################################
 
 
 func load_world(): #############################################################
-	Core.emit_signal("msg", "Changing scene to world.tscn...", Debug.INFO, 
+	Core.emit_signal("msg", "Changing scene to world.tscn...", Core.INFO, 
 		self)
 	var path = "res://scenes/world.tscn"
 	
 	loader = ResourceLoader.load_interactive(path)
 	if loader == null: # check for errors
-		Core.emit_signal("msg", "Loader was null!", Debug.ERROR, self)
+		Core.emit_signal("msg", "Loader was null!", Core.ERROR, self)
 		return
-	process = true
+	process_ui = true
 	
 	var loading_container: VBoxContainer = get_node("UI/LoadingContainer")
 	loading_container.visible = true
 	
 	# start your "loading..." animation
-	Core.emit_signal("msg", "Starting animation...", Debug.DEBUG, self)
+	Core.emit_signal("msg", "Starting animation...", Core.DEBUG, self)
 	var animation_player: AnimationPlayer = get_node("AnimationPlayer")
 	animation_player.play("Loading")
 	
@@ -450,7 +471,7 @@ func load_world(): #############################################################
 
 
 func _on_SwipeDetector_swiped(direction): ######################################
-	Core.emit_signal("msg", "Swipe signal received! Direction: " + str(direction), Debug.INFO, self)
+	Core.emit_signal("msg", "Swipe signal received! Direction: " + str(direction), Core.INFO, self)
 
 
 func _on_search_focus_entered(): ###############################################

@@ -1,9 +1,13 @@
 #warning-ignore:unused_class_variable
-const script_name := "block_data"
+const meta := {
+	script_name = "eden.block_data",
+	description = """
+		
+	"""
+}
 
-var block_materials := Dictionary()
-
-func blocks():
+static func blocks():
+	var block_materials := Dictionary()
 	# tex order = right, front, back, left, top, bottom
 	generate_block_mesh(1, "bedrock", single_sided_block("bedrock"))
 	generate_block_mesh(2, "stone", single_sided_block("grey_stone"))
@@ -111,22 +115,22 @@ func blocks():
 	
 	return block_materials
 
-func generate_block_mesh(id: int, block_name: String, textures: Array): ###########################
+static func generate_block_mesh(id: int, _block_name: String, textures: Array): ###########################
 	var mat = SpatialMaterial.new()
-	var tex = load("res://assets/textures/" + textures[0] + ".png")
+	var tex = load("res://aux/assets/textures/" + textures[0] + ".png")
 	mat.albedo_texture = tex
 	
-	block_materials[id] = mat
+	#block_materials[id] = mat
 
 
-func single_sided_block(data): ################################################
+static func single_sided_block(data): ################################################
 	var arr = Array()
 	for _i in range(6):
 		arr.append(data)
 	return arr
 
 
-func two_sided_block(side_tex, top_bot_tex): ##################################
+static func two_sided_block(side_tex, top_bot_tex): ##################################
 	var arr = Array()
 	for _i in range(4):
 		arr.append(side_tex)

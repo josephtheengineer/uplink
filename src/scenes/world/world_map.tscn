@@ -6,14 +6,7 @@
 [ext_resource path="res://aux/assets/textures/crystal_purple.png" type="Texture" id=4]
 [ext_resource path="res://aux/assets/textures/crystal_green.png" type="Texture" id=5]
 [ext_resource path="res://aux/assets/textures/crystal_white.png" type="Texture" id=6]
-[ext_resource path="res://src/scripts/ui/tile_map.gd" type="Script" id=7]
-
-
-
-
-
-
-
+[ext_resource path="res://src/scripts/interface/tile_map.gd" type="Script" id=7]
 
 [sub_resource type="TileSet" id=1]
 0/name = "crystal_green.png 0"

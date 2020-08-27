@@ -4,9 +4,14 @@
 [ext_resource path="res://aux/assets/fonts/body.tres" type="DynamicFont" id=2]
 [ext_resource path="res://aux/assets/textures/crystal_pink.png" type="Texture" id=3]
 [ext_resource path="res://aux/assets/textures/crystal_purple.png" type="Texture" id=4]
-[ext_resource path="res://assets/textures/crystal_green.png" type="Texture" id=5]
-[ext_resource path="res://assets/textures/crystal_white.png" type="Texture" id=6]
-[ext_resource path="res://scripts/features/ui_tile_map.gd" type="Script" id=7]
+[ext_resource path="res://aux/assets/textures/crystal_green.png" type="Texture" id=5]
+[ext_resource path="res://aux/assets/textures/crystal_white.png" type="Texture" id=6]
+[ext_resource path="res://src/scripts/interface/tile_map.gd" type="Script" id=7]
+
+
+
+
+
 
 
 

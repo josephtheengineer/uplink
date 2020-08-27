@@ -1,7 +1,9 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://assets/fonts/label-background.tres" type="StyleBox" id=1]
-[ext_resource path="res://assets/fonts/body.tres" type="DynamicFont" id=2]
+[ext_resource path="res://aux/assets/fonts/label-background.tres" type="StyleBox" id=1]
+[ext_resource path="res://aux/assets/fonts/body.tres" type="DynamicFont" id=2]
+
+
 
 [node name="DebugStats" type="VBoxContainer"]
 margin_right = 1920.0

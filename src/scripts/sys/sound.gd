@@ -1,35 +1,42 @@
 extends Node
+class_name SoundSystem
 #warning-ignore:unused_class_variable
-var script_name = "sound_system"
-onready var SystemManager = preload("res://scripts/features/system_manager.gd").new()
-
-var music_player = AudioStreamPlayer3D.new()
-var playlist_progress = 0
-var playlist = "Eden"
+const meta := {
+	script_name = "sys.sound",
+	description = """
+		
+	"""
+}
+#warning-ignore:unused_class_variable
+var data := {
+	music_player = AudioStreamPlayer3D.new(),
+	playlist_progress = 0,
+	playlist = "Eden"
+}
 
 func _ready():
-	Core.emit_signal("system_ready", SystemManager.SOUND, self)                ##### READY #####
+	Core.emit_signal("system_ready", Core.scripts.core.system.SOUND, self)                ##### READY #####
 
 func music_player_finished():
-	if playlist == "Eden":
-		if playlist_progress > 7:
-			playlist_progress = 0
+	if data.playlist == "Eden":
+		if data.playlist_progress > 7:
+			data.playlist_progress = 0
 		
-		var audio = load("res://sounds/music/eden" + str(playlist_progress) + ".ogg")
+		var audio = load("res://sounds/music/eden" + str(data.playlist_progress) + ".ogg")
 		audio.loop = false
-		music_player.stream = audio
+		data.music_player.stream = audio
 		
 		#if playlist_progress != 7:
 #			get_node("UI/Home/VBoxContainer/BottomContainer/VBoxContainer/Button/Song").text = "Eden " + str(playlist_progress) + " by Adam Gubman"
 		#else:
 				#get_node("UI/Home/VBoxContainer/BottomContainer/VBoxContainer/Button/Song").text = "Eden " + str(playlist_progress) + " by Vodlos"
 		
-	elif playlist == "Engineer":
+	elif data.playlist == "Engineer":
 		pass
 	
-	add_child(music_player)
-	music_player.play()
-	playlist_progress += 1
+	add_child(data.music_player)
+	data.music_player.play()
+	data.playlist_progress += 1
 
 #func _process(delta):
 	#music_player.translation = Vector3(8, 8, 0)
