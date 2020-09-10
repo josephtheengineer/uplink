@@ -29,7 +29,6 @@ var months_days = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
 func _ready():
 	var date = OS.get_date()
-	#print(date)
 	var title: Button = get_node("HBoxContainer/VBox/Header/Title")
 	title.text = str(date.year)
 	display_grid(12)

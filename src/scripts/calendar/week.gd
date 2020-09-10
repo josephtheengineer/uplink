@@ -21,7 +21,6 @@ var system_date = OS.get_date()
 
 func _ready():
 	var date = OS.get_date()
-	#print(date)
 	var title: Button = get_node("HBoxContainer/VBox/Header/Title")
 	title.text = str(date.year) + " " + str(date.month)
 	display_grid()

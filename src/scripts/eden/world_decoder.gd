@@ -26,11 +26,14 @@ static func load_world(): ######################################################
 	else:
 		Core.emit_signal("msg", "WorldPath is: " + Core.Server.data.map.path, Core.INFO, meta)
 	
+	if not Core.Server.data.map.file:
+		Core.Server.data.map.file = File.new()
+	
 	if not Core.Server.data.map.file.file_exists(Core.Server.data.map.path):
 		Core.emit_signal("msg", "World file does not exist!", Core.WARN, meta)
 		Core.emit_signal("msg", "Creating file " + Core.Server.data.map.path, Core.INFO, meta)
 		return create_world()
-	elif Core.Server.data.map.file.open(Core.Server.map_path, File.READ) != 0:
+	elif Core.Server.data.map.file.open(Core.Server.data.map.path, File.READ) != 0:
 		Core.emit_signal("msg", "Error opening file", Core.ERROR, meta)
 		return false
 	elif read_int(0) == null:
@@ -41,12 +44,12 @@ static func load_world(): ######################################################
 	Core.Server.data.map.file.seek(0)
 	if Core.Server.data.map.file.get_buffer(1)[0] == 0x1f and Core.Server.data.map.file.get_buffer(2)[0] == 0x8b:
 		Core.emit_signal("msg", "Map file is compressed... Decompressing", Core.DEBUG, meta)
-		if Core.Server.data.map.file.open_compressed(Core.Server.map_path, File.READ, File.COMPRESSION_GZIP) != 0:
+		if Core.Server.data.map.file.open_compressed(Core.Server.data.map.path, File.READ, File.COMPRESSION_GZIP) != 0:
 			Core.emit_signal("msg", "Error opening file", Core.ERROR, meta)
 			return false
 	else:
 		Core.emit_signal("msg", "Map file is uncompressed", Core.DEBUG, meta)
-		if Core.Server.data.map.file.open(Core.Server.map_path, File.READ) != 0:
+		if Core.Server.data.map.file.open(Core.Server.data.map.path, File.READ) != 0:
 			Core.emit_signal("msg", "Error opening file", Core.ERROR, meta)
 			return false
 	
@@ -84,13 +87,12 @@ static func get_metadata(): ####################################################
 	var chunk_pointer: int = read_int(35) * 256 * 256 * 256 + read_int(34) * 256 * 256 + read_int(33) * 256 + read_int(32)
 	Core.emit_signal("msg", "Chunk Pointer: " + str(chunk_pointer), Core.DEBUG, meta)
 	Core.emit_signal("msg", "Float:" + str(read_float(4)), Core.DEBUG, meta)
-	Core.Server.last_location = Vector3(read_float(4), read_float(8), read_float(12))
-	Core.Server.home_location = Vector3(read_float(16), read_float(20), read_float(24))
-	Core.Server.home_rotation = read_float(28)
+	Core.Server.data.map.last_location = Vector3(read_float(4), read_float(8), read_float(12))
+	Core.Server.data.map.home.location = Vector3(read_float(16), read_float(20), read_float(24))
+	Core.Server.data.map.home.rotation = read_float(28)
 	
 	Core.emit_signal("msg", "World file path is vaid. All systems are go for launch.", Core.INFO, meta)
-	Core.Server.world_width = 0
-	Core.Server.world_height = 0
+	Core.Server.data.map.size = Vector2(0, 0)
 	while chunk_pointer + 11 < Core.Server.data.map.file.get_len():
 		# Find chunk address
 		var address: int = read_int(chunk_pointer + 11) * 256 * 256 * 256 + read_int(chunk_pointer + 10) * 256 * 256 + read_int(chunk_pointer + 9) * 256 + read_int(chunk_pointer + 8)
@@ -99,15 +101,15 @@ static func get_metadata(): ####################################################
 		
 		var y: int = (read_int(chunk_pointer + 5) * 256 + read_int(chunk_pointer + 4))
 		
-		if Core.Server.worldAreaX > x:
-			Core.Server.worldAreaX = x
-		if Core.Server.worldAreaY > y:
-			Core.Server.worldAreaY = y
+		if Core.Server.data.map.area.x > x:
+			Core.Server.data.map.area.x = x
+		if Core.Server.data.map.area.y > y:
+			Core.Server.data.map.area.y = y
 		
-		if Core.Server.world_width < x:
-			Core.Server.world_width = x
-		if Core.Server.world_height < y:
-			Core.Server.world_height = y
+		if Core.Server.data.map.size.x < x:
+			Core.Server.data.map.size.x = x
+		if Core.Server.data.map.size.y < y:
+			Core.Server.data.map.size.y = y
 		
 		var chunk_data  = {
 			"address": address, 
@@ -115,34 +117,32 @@ static func get_metadata(): ####################################################
 			"y": y, 
 		}
 		
-		Core.Server.chunk_metadata[Vector3(x, 0, y)] = (chunk_data)
-		Core.Server.chunk_metadata[Vector3(x, 1, y)] = (chunk_data)
-		Core.Server.chunk_metadata[Vector3(x, 2, y)] = (chunk_data)
-		Core.Server.chunk_metadata[Vector3(x, 3, y)] = (chunk_data)
+		Core.Server.data.map.chunk_metadata[Vector3(x, 0, y)] = (chunk_data)
+		Core.Server.data.map.chunk_metadata[Vector3(x, 1, y)] = (chunk_data)
+		Core.Server.data.map.chunk_metadata[Vector3(x, 2, y)] = (chunk_data)
+		Core.Server.data.map.chunk_metadata[Vector3(x, 3, y)] = (chunk_data)
 		
 		var region_loc := Vector3(floor(float(x)/16), floor(float(0)/16), floor(float(y)/16))
 		
-		if !Core.Server.regions.has(region_loc):
+		if !Core.Server.data.map.regions.has(region_loc):
 			Core.emit_signal("msg", "New region found! " + str(region_loc), Core.INFO, meta)
-			Core.Server.regions[region_loc] = []
+			Core.Server.data.map.regions[region_loc] = []
 		
-		Core.Server.regions[region_loc].append(Vector3(x, 0, y))
+		Core.Server.data.map.regions[region_loc].append(Vector3(x, 0, y))
 		
 		chunk_pointer += 16
 	
-	Core.emit_signal("msg", "Found " + str(Core.Server.chunk_metadata.size()) + " chunks", Core.INFO, meta)
+	Core.emit_signal("msg", "Found " + str(Core.Server.data.map.chunk_metadata.size()) + " chunks", Core.INFO, meta)
 	#Core.emit_signal("msg", str(Core.Server.chunk_metadata), Core.TRACE, meta)
-	Core.Server.total_chunks = Core.Server.chunk_metadata.size()
+	Core.Server.data.map.total_chunks = Core.Server.data.map.chunk_metadata.size()
 	
 	# Get the total world width | max - min + 1
-	Core.Server.world_width = Core.Server.world_width - Core.Server.worldAreaX + 1;
-	Core.emit_signal("msg", "World width: " + str(Core.Server.world_width), Core.INFO, meta)
-	
+	Core.Server.data.map.size.x = Core.Server.data.map.size.x - Core.Server.data.map.area.x + 1;
 	# Get the total world height | max - min + 1
-	Core.Server.world_height = Core.Server.world_height - Core.Server.worldAreaY + 1;
-	Core.emit_signal("msg", "World height: " + str(Core.Server.world_height), Core.INFO, meta)
+	Core.Server.data.map.size.y = Core.Server.data.map.size.y - Core.Server.data.map.area.y + 1;
+	Core.emit_signal("msg", "World size: " + str(Core.Server.data.map.size), Core.INFO, meta)
 	
-	if Core.Server.chunk_metadata.size() < 1:
+	if Core.Server.data.map.chunk_metadata.size() < 1:
 		Core.emit_signal("msg", "GetWorldMetadata: ChunkLocations was null!", Core.ERROR, meta);
 		return false;
 	return true;
@@ -158,7 +158,7 @@ static func get_chunk_data(location: Vector3): #################################
 		return false
 	
 	var chunk_data := Dictionary()
-	var chunk_address: int = Core.Server.chunk_metadata[location].address
+	var chunk_address: int = Core.Server.data.map.chunk_metadata[location].address
 	#Core.emit_signal("msg", "Chunk Address: " + str(chunk_address), Core.DEBUG, meta)
 	
 	var baseHeight := int(location.y)

@@ -8,49 +8,90 @@ const meta := {
 	"""
 }
 #warning-ignore:unused_class_variable
-var data := {
+const DEFAULT_DATA := {
 	
 }
+#warning-ignore:unused_class_variable
+var data := DEFAULT_DATA
 
 func _ready(): #################################################################
+	Core.connect("reset", self, "_reset")
 	Core.emit_signal("system_ready", Core.scripts.core.system.INTERFACE, self)         ##### READY #####
 	var error: int = Core.connect("msg", self, "_on_msg")
 	if error:
 		emit_signal("msg", "Error on binding to msg: " 
-			+ str(error), Core.WARN, self)
+			+ str(error), Core.WARN, meta)
 
 
-func _process(_delta): ##########################################################
-	return
-	for entity in Core.get_parent().get_node("World/Interfaces/").get_children():
-		if entity.components.name_id == 'hud':
-			pass
-			#Hud.process_hud(entity)
+func _process(_delta): #########################################################
+	if Core.get_parent().has_node("World/Interfaces"):
+		for entity in Core.get_parent().get_node("World/Interfaces/").get_children():
+			if entity.components.name_id == 'hud':
+				Core.scripts.interface.hud.process_hud(entity)
 
 
-func _on_msg(message, _level, _obj): #############################################
-	#Core.emit_signal("msg", "Rec message", Core.DEBUG, self)
+func _reset():
+	data = DEFAULT_DATA
+
+
+func _on_msg(message, level, script_meta): #####################################
+	var level_string = "All"
+	match level:
+		Core.FATAL:
+			level_string = "Fatal"
+		Core.ERROR:
+			level_string = "Error"
+		Core.WARN:
+			level_string = " Warn"
+		Core.INFO:
+			level_string = " Info"
+		Core.DEBUG:
+			level_string = "Debug"
+		Core.TRACE:
+			level_string = "Trace"
+		Core.ALL:
+			level_string = "  All"
+	
+	#Core.emit_signal("msg", "Rec message", Core.DEBUG, meta)
 	var label_path := "/root/World/Interfaces/0/TTY/RichTextLabel"
 	if get_tree().get_root().has_node(label_path):
 		var label: RichTextLabel = Core.get_parent().get_node(label_path)
-		label.add_text(message + '\n')
+		if label.text == "":
+			var file = File.new()
+			file.open(Core.Client.data.log_path + "latest.txt", File.READ)
+			label.add_text(file.get_as_text())
+			file.close()
+		label.add_text(level_string + " [ " + meta.script_name + " ] " + message + "\n")
 	
 	var hud_path := "World/Interfaces/Hud/Hud/"
 	var chat_path := hud_path + "HorizontalMain/VerticalMain/VerticalCenterContent/LeftPanel/TabContainer/Chat/Content/TabContainer/"
 	var display_path := chat_path + "msg/RichTextLabel"
-	if Core.get_parent().has_node(display_path):
+	if Core.get_parent().has_node(display_path) and level < Core.TRACE:
 		var label: RichTextLabel = Core.get_parent().get_node(display_path)
-		label.add_text(message + '\n')
+		if label.text == "loading...":
+			label.text = ""
+			var file = File.new()
+			file.open(Core.Client.data.log_path + "latest.txt", File.READ)
+			var file_text = file.get_as_text().split("\n")
+			for i in range(file_text.size()-2):
+				var split = file_text[i]
+				split = split.split(" ", false)
+				if split.size() > 0:
+					if split[0] == "Info:" || split[0] == "Warn:" || split[0] == "Error:" || split[0] == "Fatal:":
+						label.add_text(file_text[i] + "\n")
+			file.close()
+		if level <= Core.INFO:
+			label.add_text(level_string + " [ " + script_meta.script_name + " ] " + message + "\n")
 
 
 func update_world_map(): #######################################################
-	Core.emit_signal("msg", "Updating world map", Core.INFO, self)
+	Core.emit_signal("msg", "Updating world map", Core.INFO, meta)
 	var grid := Dictionary()
 	
-	for region in Core.Server.regions:
+	for region in Core.Server.data.map.regions:
 		grid[region] = Core.scripts.interface.tile_map.KNOWN
 	
-	Core.emit_signal("msg", "World map data: " + str(grid), Core.TRACE, self)
+	Core.emit_signal("msg", "World map data: " + str(grid), Core.TRACE, meta)
 	
 	var hud_path := "World/Interfaces/Hud/Hud/"
 	var world_map_path := hud_path + "HorizontalMain/VerticalMain/VerticalCenterContent/LeftPanel/TabContainer/WorldMap/"
@@ -60,7 +101,7 @@ func update_world_map(): #######################################################
 
 
 func update_region_map(): ######################################################
-	Core.emit_signal("msg", "Updating region map", Core.INFO, self)
+	Core.emit_signal("msg", "Updating region map", Core.INFO, meta)
 	var grid = Dictionary()
 	
 	#var region_chunks = Core.Server.regions[Core.Server.regions.keys()[0]] # Grid = array of Vector3's
@@ -79,41 +120,37 @@ func update_region_map(): ######################################################
 #	pass
 
 
-func create_toolbox(id: int): ##################################################
-	var toolbox := preload("res://src/scenes/hud/toolbox.tscn").instance()
-	
-	Entity.add_node(id, "toolbox", toolbox)
+#func create_toolbox(id: int): ##################################################
+#	var toolbox := preload("res://src/scenes/hud/toolbox.tscn").instance()
+#
+#	Entity.add_node(id, "toolbox", toolbox)
 
 
 #func process_toolbox(id: int):
 #	pass
 
 
-func create_terminal(id: int): #################################################
-	var path = Entity.get_node_path(Entity.get_component(id, 
-		"terminal.parent"))
-	if !path:
-		path = "/root/World/"
-	var terminal_resource := preload("res://src/scenes/terminal/terminal.tscn")
-	var terminal = terminal_resource.instance()
-	Entity.add_node(id, "terminal", terminal)
-	
-	if !get_tree().get_root().has_node(path + str(id)):
-		return false
-	
-	if Entity.get_component(id, "terminal.min_size"):
-		terminal.rect_min_size = Entity.get_component(id, 
-			"terminal.min_size")
-	
-	var terminal_node: Control = get_node(path + str(id) + "/Terminal")
-	if Entity.get_component(id, "terminal.position"):
-		terminal_node.rect_position = Entity.get_component(id, 
-			"terminal.position")
-	
-	if Entity.get_component(id, "terminal.text"):
-		var text: RichTextLabel = terminal_node.get_node("Text")
-		text.text = Entity.get_component(id, 
-			"terminal.text")
+#func create_terminal(entity: Entity): #################################################
+#	var terminal_resource := preload("res://src/scenes/terminal/terminal.tscn")
+#	var terminal = terminal_resource.instance()
+#	entity.add_node(terminal)
+#
+#	if !get_tree().get_root().has_node(path + str(id)):
+#		return false
+#
+#	if Entity.get_component(id, "terminal.min_size"):
+#		terminal.rect_min_size = Entity.get_component(id, 
+#			"terminal.min_size")
+#
+#	var terminal_node: Control = get_node(path + str(id) + "/Terminal")
+#	if Entity.get_component(id, "terminal.position"):
+#		terminal_node.rect_position = Entity.get_component(id, 
+#			"terminal.position")
+#
+#	if Entity.get_component(id, "terminal.text"):
+#		var text: RichTextLabel = terminal_node.get_node("Text")
+#		text.text = Entity.get_component(id, 
+#			"terminal.text")
 
 
 #################################### Main Menu stuff ###########################
@@ -197,7 +234,7 @@ func process_interface(): ######################################################
 	#World.map_seed = -1
 	#add_child(World)
 	#draw_dots()
-	Core.emit_signal("msg", "Starting logs...", Core.INFO, self)
+	Core.emit_signal("msg", "Starting logs...", Core.INFO, meta)
 	
 	# fetch data from the website for the main menu
 	#fetch_data()
@@ -242,7 +279,7 @@ func process(): ###########################################################
 		return false
 	
 	if loader == null:
-		Core.emit_signal("msg", "Loader was null!", Core.DEBUG, self)
+		Core.emit_signal("msg", "Loader was null!", Core.DEBUG, meta)
 		# no need to process anymore
 		process_ui = false
 		return
@@ -259,17 +296,17 @@ func process(): ###########################################################
 		if err == ERR_FILE_EOF: # Finished loading.
 			var resource = loader.get_resource()
 			loader = null
-			Core.emit_signal("msg", "Removing old scene...", Core.DEBUG, self)
+			Core.emit_signal("msg", "Removing old scene...", Core.DEBUG, meta)
 			var container: VBoxContainer = get_node("UI/LoadingContainer")
 			container.visible = false
 			current_scene.queue_free() # get rid of the old scene
-			Core.emit_signal("msg", "Setting new scene...", Core.DEBUG, self)
+			Core.emit_signal("msg", "Setting new scene...", Core.DEBUG, meta)
 			set_new_scene(resource)
 			break
 		elif err == OK:
 			update_progress()
 		else: # error during loading
-			Core.emit_signal("msg", "Error during loading", Core.ERROR, self)
+			Core.emit_signal("msg", "Error during loading", Core.ERROR, meta)
 			loader = null
 		break
 
@@ -292,13 +329,13 @@ func _on_JoinServerButton_pressed(): ###########################################
 
 
 #func _on_SendButton_pressed(): #################################################
-	#Core.emit_signal("msg", "Sending message...", Core.INFO, self)
+	#Core.emit_signal("msg", "Sending message...", Core.INFO, meta)
 	#World.send_message("Hello!")
 
 
 func _on_SharedWorlds_released(): ##############################################
 	Core.emit_signal("msg", "Shared worlds are not implemented yet!", 
-		Core.WARN, self)
+		Core.WARN, meta)
 	
 
 
@@ -412,7 +449,7 @@ func show_world_list(world_data, is_downloaded):
 
 
 func create_new_world():
-	Core.emit_signal("msg", "World creation menu", Core.DEBUG, self)
+	Core.emit_signal("msg", "World creation menu", Core.DEBUG, meta)
 	var world: PackedScene = load("res://scenes/new_world_panel.tscn")
 	add_child(world.instance())
 
@@ -426,7 +463,7 @@ func draw_dots(): ##############################################################
 
 
 func update_progress(): ########################################################
-	Core.emit_signal("msg", "Updating progress...", Core.DEBUG, self)
+	Core.emit_signal("msg", "Updating progress...", Core.DEBUG, meta)
 	var progress = float(loader.get_stage()) / loader.get_stage_count()
 	var animation_player: AnimationPlayer = get_node("AnimationPlayer")
 	# Update your progress bar?
@@ -455,7 +492,7 @@ func load_world(): #############################################################
 	
 	loader = ResourceLoader.load_interactive(path)
 	if loader == null: # check for errors
-		Core.emit_signal("msg", "Loader was null!", Core.ERROR, self)
+		Core.emit_signal("msg", "Loader was null!", Core.ERROR, meta)
 		return
 	process_ui = true
 	
@@ -463,7 +500,7 @@ func load_world(): #############################################################
 	loading_container.visible = true
 	
 	# start your "loading..." animation
-	Core.emit_signal("msg", "Starting animation...", Core.DEBUG, self)
+	Core.emit_signal("msg", "Starting animation...", Core.DEBUG, meta)
 	var animation_player: AnimationPlayer = get_node("AnimationPlayer")
 	animation_player.play("Loading")
 	
@@ -471,7 +508,7 @@ func load_world(): #############################################################
 
 
 func _on_SwipeDetector_swiped(direction): ######################################
-	Core.emit_signal("msg", "Swipe signal received! Direction: " + str(direction), Core.INFO, self)
+	Core.emit_signal("msg", "Swipe signal received! Direction: " + str(direction), Core.INFO, meta)
 
 
 func _on_search_focus_entered(): ###############################################

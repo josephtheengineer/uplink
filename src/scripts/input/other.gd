@@ -32,7 +32,7 @@ const meta := {
 #		get_tree().reload_current_scene()
 
 #static func _joystick_pressed(down, id): ##############################################
-#	Core.emit_signal("msg", "Joystick pressed!", Core.DEBUG, self)
+#	Core.emit_signal("msg", "Joystick pressed!", Core.DEBUG, meta)
 #	Entity.set_component(id, "joystick.pressed", down)
 	
 #	pressed = true
@@ -93,29 +93,29 @@ const meta := {
 #					Player.camera_angle += change
 #
 #			elif event.is_action_pressed("action"):
-#				Core.emit_signal("msg", "Action pressed!", Core.DEBUG, self)
+#				Core.emit_signal("msg", "Action pressed!", Core.DEBUG, meta)
 #
 #				for id in Entity.get_entities_with("joystick"):
-#					Core.emit_signal("msg", "Mouse Position: " + str(event.position), Core.DEBUG, self)
+#					Core.emit_signal("msg", "Mouse Position: " + str(event.position), Core.DEBUG, meta)
 #					if event.position.x > 31 and event.position.x < 385 and event.position.y > 505 and event.position.y < 864:
-#						Core.emit_signal("msg", "Joystick pressed!", Core.DEBUG, self)
+#						Core.emit_signal("msg", "Joystick pressed!", Core.DEBUG, meta)
 #						pass
 #						#_joystick_pressed(true, 0)
 #
 #				Player.action(id, OS.get_window_size() / 2)
 #				if pressed:
-#					Core.emit_signal("msg", "Woah", Core.INFO, self)
+#					Core.emit_signal("msg", "Woah", Core.INFO, meta)
 #			#player.translation = components.player.position
 #			#components.player.rendered = true
 #			#Entity.edit(id, components)
 
 #static func player_action(event, player): #############################################
-#	Core.emit_signal("msg", "Action pressed!", Core.DEBUG, self)
+#	Core.emit_signal("msg", "Action pressed!", Core.DEBUG, meta)
 #
 #	#for id in Entity.get_entities_with("joystick"):
-#	#	Core.emit_signal("msg", "Mouse Position: " + str(event.position), Core.DEBUG, self)
+#	#	Core.emit_signal("msg", "Mouse Position: " + str(event.position), Core.DEBUG, meta)
 #	#	if event.position.x > 31 and event.position.x < 385 and event.position.y > 505 and event.position.y < 864:
-#	#		Core.emit_signal("msg", "Joystick pressed!", Core.DEBUG, self)
+#	#		Core.emit_signal("msg", "Joystick pressed!", Core.DEBUG, meta)
 #	#		pass
 #			#_joystick_pressed(true, 0)
 #
@@ -130,9 +130,9 @@ const meta := {
 #static func world_button(world):
 #	pass
 	#if world == 1:
-		#Core.emit_signal("msg", "Opening world creation menu...", Core.INFO, self)
+		#Core.emit_signal("msg", "Opening world creation menu...", Core.INFO, meta)
 		#create_new_world()
-		#Core.emit_signal("msg", "Loading a new flat terrain world...", Core.INFO, self)
+		#Core.emit_signal("msg", "Loading a new flat terrain world...", Core.INFO, meta)
 		#map_path = ""
 		#map_name = "New Flat Terrain World"
 		#map_seed = 0
@@ -140,7 +140,7 @@ const meta := {
 	#elif world == 3:
 		#pass
 	#else:
-		#Core.emit_signal("msg", "Loading a new natural terrain world...", Core.INFO, self)
+		#Core.emit_signal("msg", "Loading a new natural terrain world...", Core.INFO, meta)
 		#map_path = ""
 		#map_name = "New Natural Terrain World"
 		#map_seed = floor(rand_range(0, 9999999))

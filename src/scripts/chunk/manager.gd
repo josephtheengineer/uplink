@@ -15,6 +15,9 @@ static func create_chunk(position: Vector3): ###################################
 	if !chunk_data:
 		chunk_data = generate_terrain(Core.Server.data.map.seed, position)
 	
+	#if !chunk_data:
+		#return
+	
 	var chunk = Dictionary()
 	chunk.name_id = "chunk"
 	chunk.type = "chunk"
@@ -53,8 +56,8 @@ static func destroy_chunk(_position: Vector3): #################################
 static func generate_terrain(map_seed: int, position: Vector3): #######################
 	var noise = Core.scripts.chunk.generator.generate_noise()
 	if map_seed == 0:
-		if position.y == 0:
-			return Core.scripts.chunk.generator.generate_natural_terrain(noise)
+		if position.y == 1 and position.x == 1 and position.z == 1:
+			return Core.scripts.chunk.generator.generate_flat_terrain()
 	else:
 		if position.y == 0:
-			return Core.scripts.chunk.generator.generate_flat_terrain(noise)
+			return Core.scripts.chunk.generator.generate_natural_terrain(noise)

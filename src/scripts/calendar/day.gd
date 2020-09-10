@@ -12,7 +12,6 @@ var path := "HBoxContainer/VBox/Dates"
 
 func _ready():
 	var date = OS.get_date()
-	#print(date)
 	var title: Button = get_node("HBoxContainer/VBox/Header/Title")
 	title.text = str(date.year) + " " + str(date.month) + " " + str(date.day)
 	

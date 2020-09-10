@@ -2,7 +2,5 @@
 
 [ext_resource path="res://src/scripts/core/entity/main.gd" type="Script" id=1]
 
-
-
 [node name="Entity" type="Node"]
 script = ExtResource( 1 )

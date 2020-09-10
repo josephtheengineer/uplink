@@ -47,6 +47,14 @@ static func create(entity: Dictionary): ########################################
 			Core.get_parent().get_node("/root/World/Chunks").add_child(node)
 			Core.get_parent().get_node("/root/World/Chunks/" + str(entity.id)).components = entity
 			
+			var line = ImmediateGeometry.new()
+			line.begin(Mesh.PRIMITIVE_LINES)
+			line.set_color(Color(1, 0, 0))
+			for point in Core.scripts.chunk.geometry.CHUNK_HIGHLIGHT:
+				line.add_vertex(point + (entity.position*16) + Vector3(0, -1, 0))
+			line.end()
+			Core.get_parent().get_node("/root/World/Chunks/" + str(entity.id)).add_child(line)
+			
 	elif entity.type == "input":
 		if !Core.get_parent().get_node("/root/World").has_node("Inputs"):
 			var inputs = Node.new()

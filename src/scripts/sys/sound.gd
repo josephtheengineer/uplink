@@ -8,14 +8,19 @@ const meta := {
 	"""
 }
 #warning-ignore:unused_class_variable
-var data := {
-	music_player = AudioStreamPlayer3D.new(),
+const DEFAULT_DATA := {
+	music_player = null,
 	playlist_progress = 0,
 	playlist = "Eden"
 }
+var data := DEFAULT_DATA
 
 func _ready():
+	Core.connect("reset", self, "_reset")
 	Core.emit_signal("system_ready", Core.scripts.core.system.SOUND, self)                ##### READY #####
+
+func _reset():
+	data = DEFAULT_DATA
 
 func music_player_finished():
 	if data.playlist == "Eden":

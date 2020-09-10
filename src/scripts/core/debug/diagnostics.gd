@@ -8,11 +8,7 @@ const meta := {
 
 const keyword = "eden"
 
-static func run(signal_hook, object, method):
-	var error = object.connect(signal_hook, object, method)
-	if error:
-		Core.emit_signal("msg", "Event diagnostics failed to bind", Core.WARN, meta)
-	
+static func run(signal_link, meta_data, name):
 	randomize()
 	var tty = Dictionary()
 	tty.name_id = "tty"
@@ -24,13 +20,13 @@ static func run(signal_hook, object, method):
 	Core.emit_signal("msg", "Staring tty on id " + str(id), Core.INFO, meta)
 	
 	var timer = Timer.new()
-	timer.connect("timeout", Core.scripts.core.debug.diagnostics, "_update_terminal", [object, signal_hook])
+	timer.connect("timeout", Core.scripts.core.debug.diagnostics, "_update_terminal", [signal_link, meta_data, name])
 	timer.set_name("TimerTTY")
 	timer.wait_time = 0.01
 	Core.add_child(timer)
 	Core.get_node("TimerTTY").start()
 
-static func _update_terminal(object, signal_hook):
+static func _update_terminal(signal_link, meta_data, name):
 	#Core.emit_signal("msg", "Update called!", Core.DEBUG, meta)
 	#timer.wait_time = rand_range(0, 1)
 	match Core.Client.data.diagnostics.progress:
@@ -113,7 +109,7 @@ static func _update_terminal(object, signal_hook):
 		38:
 			Core.emit_signal("msg", "Is Window Always on Top: " + str(OS.is_window_always_on_top()), Core.INFO, meta)
 		39:
-			object.emit_signal(signal_hook)
+			Core.emit_signal(signal_link, meta_data, name)
 			#show_text(id, components, "Type '" + keyword +"' to continue: ")
 			#OS.show_virtual_keyboard()
 			#create_text_input()

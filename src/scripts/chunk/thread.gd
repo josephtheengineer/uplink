@@ -2,25 +2,39 @@
 const meta := {
 	script_name = "chunk.thread",
 	description = """
+		
 	"""
 }
 
+const MULTITHREADING = true
+const BLOCK_LIMIT = 16*16*16
+
 static func start_chunk_thread(): #####################################################
 	var userdata = {}
-	var player_path = "World/Inputs/JosephTheEngineer/Player"
+	var player_path = "World/Inputs/" + Core.Client.data.subsystem.input.Link.data.player
 	if !Core.get_parent().has_node(player_path):
 		return false
 	
 	var player = Core.get_parent().get_node(player_path)
-	userdata.player_position = player.translation
-	userdata.render_distance = Core.Client.data.player.render_distance
+	userdata.player_position = player.get_node("Player").translation
+	userdata.render_distance = player.components.render_distance
 	userdata.chunks = Core.scripts.core.manager.get_entities_with("Chunks")
+	if !userdata.chunks:
+		return
 	#Core.emit_signal("msg", "Starting chunk thread...", Core.DEBUG, meta)
 	Core.Client.data.subsystem.chunk.Link.data.thread_busy = true
-	var error: int = Core.Client.data.subsystem.chunk.Link.data.thread.start(Core.Client.data.subsystem.chunk.Link, "_chunk_thread_process", userdata)
-	if error:
-		Core.emit_signal("msg", "Error starting chunk thread: " 
-		+ str(error), Core.WARN, meta)
+	if not Core.Client.data.subsystem.chunk.Link.data.thread:
+		Core.Client.data.subsystem.chunk.Link.data.thread = Thread.new()
+	
+	if MULTITHREADING:
+		var error: int = Core.Client.data.subsystem.chunk.Link.data.thread.start(Core.Client.data.subsystem.chunk.Link, "_chunk_thread_process", userdata)
+		if error:
+			Core.emit_signal("msg", "Error starting chunk thread: " 
+			+ str(error), Core.WARN, meta)
+			Core.Client.data.subsystem.chunk.Link.data.thread_busy = false
+	else:
+		Core.emit_signal("msg", "Multithreading has been turnend off, game will be very slow when loading chunks!", Core.WARN, meta)
+		Core.Client.data.subsystem.chunk.Link._chunk_thread_process(userdata)
 
 
 static func process_chunks(chunks: Array): #######################################
@@ -40,7 +54,7 @@ static func _process_chunk(node): #############################################
 		var pos = node.components.position
 		chunk.translation = Vector3(pos.x * 16, pos.y * 16, pos.z * 16)
 		node.components.rendered = true
-		Core.Client.chunk_index.append(pos)
+		Core.Client.data.chunk_index.append(pos)
 		return
 	
 	# Returns blocks_loaded, mesh, vertex_data
@@ -56,6 +70,9 @@ static func _process_chunk(node): #############################################
 	body.name = "StaticBody"
 	mesh_instance.add_child(body)
 	
+	#var units = 1
+	#mesh_instance.scale = Vector3(0.063, 0.063, 0.063)
+	
 	var collision_shape = CollisionShape.new()
 	var shape = ConcavePolygonShape.new()
 	shape.set_faces(chunk_data.vertex_data)
@@ -63,13 +80,13 @@ static func _process_chunk(node): #############################################
 	collision_shape.shape = shape
 	body.add_child(collision_shape)
 	
-	Core.Client.blocks_found += node.components.block_data.size()
-	Core.Client.blocks_loaded += chunk_data.blocks_loaded
+	Core.Client.data.blocks_found += node.components.block_data.size()
+	Core.Client.data.blocks_loaded += chunk_data.blocks_loaded
 	
 	var pos = node.components.position
 	chunk.translation = Vector3(pos.x * 16, pos.y * 16, pos.z * 16)
 	node.components.rendered = true
-	Core.Client.chunk_index.append(pos)
+	Core.Client.data.chunk_index.append(pos)
 	
 	node.call_deferred("add_child", chunk)
 	
@@ -113,10 +130,11 @@ static func discover_surrounding_chunks(center_chunk: Vector3, distance: int): #
 	var chunks_to_create = []
 	
 	for chunk in surrounding_chunks:
-		if !Core.Client.chunk_index.has(chunk):
+		if !Core.Client.data.chunk_index.has(chunk):
 			chunks_to_create.append(chunk)
 	
-	var min_distance = Core.Client.render_distance + 500
+	var player_name = Core.Client.data.subsystem.input.Link.data.player
+	var min_distance = Core.get_parent().get_node("World/Inputs/" + player_name).components.render_distance + 500
 	var closest_chunk = Vector3()
 	
 	#var woah = center_chunk.distance_to(Vector3(0, 0, 0))
@@ -127,7 +145,7 @@ static func discover_surrounding_chunks(center_chunk: Vector3, distance: int): #
 			closest_chunk = chunk
 	
 	if closest_chunk != Vector3(0, 0, 0):
-		return Core.scriptss.chunk.manager.create_chunk(closest_chunk)
+		return Core.scripts.chunk.manager.create_chunk(closest_chunk)
 	
 #	# Remove chunks outside of bounds
 #	var entities = Entity.get_entities_with("chunk")
@@ -138,7 +156,7 @@ static func discover_surrounding_chunks(center_chunk: Vector3, distance: int): #
 #			if Entity.get_component(id, "chunk.blocks_loaded"):
 #				Core.Client.blocks_loaded -= Entity.get_component(id, "chunk.blocks_loaded")
 #				Core.Client.blocks_found -= Entity.get_component(id, "chunk.block_data").size()
-#			Core.emit_signal("msg", "Destroyed chunk" + str(pos), Core.DEBUG, self)
+#			Core.emit_signal("msg", "Destroyed chunk" + str(pos), Core.DEBUG, meta)
 #			Entity.destory(id)
 
 
@@ -146,24 +164,68 @@ static func discover_surrounding_chunks(center_chunk: Vector3, distance: int): #
 static func compile(block_data: Dictionary, materials: Dictionary): ########################
 	var blocks_loaded = 0
 	Core.emit_signal("msg", "Compiling chunk...", Core.TRACE, meta)
-	var mesh_instance = MeshInstance.new()
-	mesh_instance.mesh = null
-	var mesh
+	#var mesh
 	var vertex_data = []
 	#var block_data_ext = block_data
 	
 	#mat.albedo_color = Color(1, 0, 0, 1)
 	
+	# create atlas
+	var image_texture = ImageTexture.new()
+	var dynamic_image = Image.new()
+	
+	var data = PoolByteArray()
+	for x in 2:
+		for y in 2:
+			if x == 0 and y == 0:
+				data.append(100)
+				data.append(100)
+				data.append(255)
+			else:
+				data.append(0)
+				data.append(0)
+				data.append(0)
+	
+	dynamic_image.create_from_data(2, 2, false, Image.FORMAT_RGB8, data)
+	#dynamic_image.fill(Color(0, 0, 1))
+	image_texture.create_from_image(dynamic_image)
+	
+	var mat = SpatialMaterial.new()
+	mat.albedo_texture = image_texture
+	
+	var mesh = SurfaceTool.new()
+	mesh.begin(Mesh.PRIMITIVE_TRIANGLES)
+	mesh.set_material(mat)
+	
+	var VSIZE = Core.scripts.chunk.geometry.VSIZE
+	
+	var voxel_data = Dictionary()
+	# draw an outline of voxels (for debuging mostly)
+	for x in 16:
+		for y in 16:
+			for z in 16:
+				if x == 0 and y == 0 or x == 0 and z == 0 or z == 0 and y == 0:
+					voxel_data[Vector3(x*VSIZE, y*VSIZE, z*VSIZE)] = 1
+				elif x == 15 and y == 15 or x == 15 and z == 15 or z == 15 and y == 15:
+					voxel_data[Vector3(x*VSIZE, y*VSIZE, z*VSIZE)] = 1
+				elif x == 15 and y == 0 or x == 15 and z == 0 or z == 15 and y == 0:
+					voxel_data[Vector3(x*VSIZE, y*VSIZE, z*VSIZE)] = 1
+				elif x == 0 and y == 15 or x == 0 and z == 15 or z == 0 and y == 15:
+					voxel_data[Vector3(x*VSIZE, y*VSIZE, z*VSIZE)] = 1
+	
 	for position in block_data.keys():
-		if Geometry.can_be_seen(position, block_data).size() != 6:
-			var cube_data = Geometry.create_cube(position, 
-				block_data[position].id, mesh, materials, 
-				block_data) # Returns mesh, vertex_data
-			
-			mesh = cube_data.mesh
-			vertex_data += cube_data.vertex_data
-			blocks_loaded += 1
+		if blocks_loaded >= BLOCK_LIMIT:
+			Core.emit_signal("msg", "Chunk contained more then " + str(BLOCK_LIMIT) + " blocks!", Core.ERROR, meta)
+			break
+		#if Core.scripts.chunk.geometry.can_be_seen(position, block_data).size() != 6:
+		#Core.emit_signal("msg", "Creating cube...", Core.TRACE, meta)
+		var cube_data = Core.scripts.chunk.geometry.create_cube(position, 
+			voxel_data, mesh, block_data) # Returns mesh, vertex_data
+		
+		#mesh = cube_data.mesh
+		vertex_data += cube_data.vertex_data
+		blocks_loaded += 1
 	
 	Core.emit_signal("msg", "Finished compiling!", Core.DEBUG, meta)
-	return {"blocks_loaded" : blocks_loaded, "mesh" : mesh, "vertex_data" : 
+	return {"blocks_loaded" : blocks_loaded, "mesh" : mesh.commit(), "vertex_data" : 
 		vertex_data}

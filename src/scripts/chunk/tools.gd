@@ -26,10 +26,5 @@ static func get_chunk(location: Vector3): ######################################
 	
 	return Vector3(x, y, z)
 
-static func get_chunk_id(location: Vector3): ##########################################
-	Core.emit_signal("msg", "get_chunk_id is not implemented yet! arg: " + str(location), Core.WARN, meta)
-#	var entities = Entity.get_entities_with("chunk")
-#	for id in entities:
-#		if Entity.get_component(id, "chunk.position") == location:
-#			return id
-#	return false
+static func get_local_chunk_pos(location: Vector3, chunk_location: Vector3):
+	return location - chunk_location*16

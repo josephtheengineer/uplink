@@ -2,7 +2,6 @@
 
 [ext_resource path="res://src/scenes/world/environment.tres" type="Environment" id=1]
 
-
 [sub_resource type="CapsuleShape" id=1]
 radius = 0.6
 height = 2.0

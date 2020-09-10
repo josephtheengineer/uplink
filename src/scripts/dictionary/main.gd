@@ -7,13 +7,13 @@ const meta := {
 }
 
 # Get a given data from a dictionary with position provided as a list
-static func getFromDict(dataDict, mapList):    
+static func get_from_dict(dataDict, mapList):    
 	for k in mapList: 
 		dataDict = dataDict[k]
 	return dataDict
 
 # Set a given data in a dictionary with position provided as a list
-static func setInDict(dataDict, mapList, value):
+static func set_in_dict(dataDict, mapList, value):
 	var dict = mapList
 	dict.remove(dict.size() - 1)
 	

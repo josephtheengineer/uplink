@@ -12,12 +12,13 @@ __meta__ = {
 [node name="Background" type="ColorRect" parent="."]
 margin_right = 1920.0
 margin_bottom = 1080.0
-color = Color( 0, 0, 0, 1 )
+color = Color( 0.054902, 0.0941176, 0.129412, 1 )
 
 [node name="Text" type="RichTextLabel" parent="."]
 margin_right = 1920.0
 margin_bottom = 1080.0
 focus_mode = 2
 custom_fonts/normal_font = ExtResource( 1 )
+custom_colors/default_color = Color( 0.266667, 0.321569, 0.364706, 1 )
 scroll_following = true
 selection_enabled = true

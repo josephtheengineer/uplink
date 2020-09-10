@@ -28,7 +28,6 @@ __meta__ = {
 }
 
 [node name="Year" type="ScrollContainer" parent="TabContainer"]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
@@ -482,6 +481,7 @@ rect_min_size = Vector2( 20, 0 )
 size_flags_vertical = 3
 
 [node name="Schedule" type="ScrollContainer" parent="TabContainer"]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0

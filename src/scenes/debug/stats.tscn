@@ -3,27 +3,28 @@
 [ext_resource path="res://aux/assets/fonts/label-background.tres" type="StyleBox" id=1]
 [ext_resource path="res://aux/assets/fonts/body.tres" type="DynamicFont" id=2]
 
-
-
 [node name="DebugStats" type="VBoxContainer"]
 margin_right = 1920.0
 margin_bottom = 1080.0
 size_flags_horizontal = 9
 size_flags_vertical = 9
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="ClientInfo" type="VBoxContainer" parent="."]
 margin_right = 1920.0
 margin_bottom = 326.0
 
 [node name="Version" type="Label" parent="ClientInfo"]
-margin_left = 1626.0
+margin_left = 1836.0
 margin_right = 1920.0
 margin_bottom = 29.0
 size_flags_horizontal = 8
 custom_styles/normal = ExtResource( 1 )
 custom_fonts/font = ExtResource( 2 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-text = "Eden Universe Builder"
+text = "Uplink"
 align = 2
 
 [node name="PlayerXYZ" type="Label" parent="ClientInfo"]

@@ -9,13 +9,13 @@ const meta := {
 	"""
 }
 
-export var components := Dictionary()
+var components := Dictionary()
 
 func destory(): ################################################################
-	Core.emit_signal("object_unloaded", self)
+	Core.emit_signal("object_unloaded", meta)
 	queue_free()
-	Core.emit_signal("object_unloaded", self)
+	Core.emit_signal("object_unloaded", meta)
 
 func set_component(path: String, value): #######################################
-	Core.aux.dictonary.functions.setInDict(components, path.split(".", false), value)
+	Core.scripts.dictionary.main.setInDict(components, path.split(".", false), value)
 	components = components

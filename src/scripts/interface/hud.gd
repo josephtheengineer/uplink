@@ -16,7 +16,7 @@ static func create(): ##########################################################
 
 static func process_hud(hud): #########################################################
 	if hud:
-		Core.scriptss.core.debug.info.player_move_update(hud)
-		Core.scriptss.core.debug.info.action_mode_update(hud)
-		Core.scriptss.core.debug.info.frame_update(hud)
-		Core.scriptss.core.debug.info.world_stats_update(hud)
+		Core.scripts.core.debug.info.player_move_update(hud)
+		Core.scripts.core.debug.info.action_mode_update(hud)
+		Core.scripts.core.debug.info.frame_update(hud)
+		Core.scripts.core.debug.info.world_stats_update(hud)

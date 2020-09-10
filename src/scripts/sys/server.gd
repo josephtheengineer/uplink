@@ -8,104 +8,110 @@ const meta := {
 	"""
 }
 #warning-ignore:unused_class_variable
-var data := {
+const DEFAULT_DATA := {
 	online = false,
+	port = 8888,
+	max_players = 100,
 	map = {
 		seed = 0,
-		path = "user://worlds/videogame-museum.eden2",
+		path = "user://worlds/videogame-museum",
 		name = "Videogame Museum",
 		last_location = Vector3(0, 0, 0),
-		home_location = Vector3(0, 0, 0),
-		home_rotation = 0,
+		home = {
+			location = Vector3(0, 0, 0),
+			rotation = 0
+		},
 		chunks_cache_size = 0,
 		total_chunks = 0,
-		file = File.new(),
+		file = null,
 		chunk_metadata = Dictionary(),
 		regions = Dictionary(),
-		worldAreaX = 0,
-		worldAreaY = 0,
-		world_width = 0,
-		world_height = 0
+		area = Vector2(),
+		size = Vector2()
 	}
 }
+#warning-ignore:unused_class_variable
+var data := DEFAULT_DATA
 
 ################################################################################
 
 func _ready(): #################################################################
-	#create_world()
+	Core.connect("reset", self, "_reset")
 	Core.emit_signal("system_ready", Core.scripts.core.system.SERVER, self)            ##### READY #####
 
+func _process(_delta):
+	if not custom_multiplayer:
+		return
+	#Core.emit_signal("msg", "Server status: " + str(custom_multiplayer.network_peer.get_connection_status()), Core.INFO, meta)
+	#if not custom_multiplayer.has_network_peer():
+		#return
+	custom_multiplayer.poll()
+
+
+func _reset():
+	data = DEFAULT_DATA
 
 func create_world(): ###########################################################
 	# Needs to create chunk data but not chunk render
 	# Core.Client.Chunk.create_chunk(Vector3(0, 0, 0))
 	pass
 
-
-func create_server(_username: String): ##########################################
-	Core.emit_signal("msg", "Creating server...", Core.INFO, self)
-	var network = NetworkedMultiplayerENet.new()
-	network.create_server(8888, 100)
-	get_tree().set_network_peer(network)
-	
-	network.connect("peer_connected", self, "_peer_connected")
-	network.connect("peer_disconnected", self, "_peer_disconnected")
-	get_tree().set_meta("network_peer", network)
-
-
 func _peer_connected(id: int): #################################################
 	Core.emit_signal("msg", "User " + str(id) + " connected", Core.INFO, 
-		self)
+		meta)
 	
 	Core.emit_signal("msg", "Total users: " 
 		+ str(get_tree().get_network_connected_peers().size()), 
-		Core.INFO, self)
+		Core.INFO, meta)
 
 
 func _peer_disconnected(id: int): ##############################################
 	Core.emit_signal("msg", "User " + str(id) + " disconnected", 
-		Core.INFO, self)
+		Core.INFO, meta)
 	Core.emit_signal("msg", "Total users: " 
 		+ str(get_tree().get_network_connected_peers().size()), 
-		Core.INFO, self)
+		Core.INFO, meta)
 
+const DEFAULT_PLAYER := {
+	name_id = "player",
+	type = "input",
+	id = 0,
+	position = Vector3(0, 100, 0),
+	velocity = Vector3(),
+	direction = Vector3(),
+	move_direction = null,
+	mouse_sensitivity = 0.3,
+	pressed = false,
+	move_mode = "walk",
+	mouse_attached = false,
+	render_distance = 2,
+	move_forward = false,
+	action_mode = "nothing",
+	color = Color8(255, 0, 255),
+	looking_at_block = Vector3(),
+	looking_at_chunk = Vector3(),
+	cursor_pos = Vector3()
+}
 
-signal world_loaded
-func load_world(object: Object, method: String):
-	var error := connect("world_loaded", object, method)
-	if error:
-		emit_signal("msg", "Error on binding to world_loaded: " 
-			+ str(error), Core.WARN, self)
-	
-	Core.emit_signal("msg", "Loading world...", Core.INFO, self)
-	Core.emit_signal("msg", "Running demo preset...", Core.INFO, self)
-	Core.emit_signal("msg", "Removing all entities...", Core.DEBUG, self)
-	#for id in Entity.objects:
-		#Entity.destory(id)
-	
-	Core.scripts.eden.world_decoder.load_world()
+func spawn_player_at_default_pos(username: String):
 	Core.emit_signal("msg", "Spawning player at last known location: " 
-		+ str(data.map.last_location), Core.DEBUG, self)
+		+ str(Core.Server.data.map.last_location), Core.DEBUG, meta)
 	
-	var chunk_position = Core.scripts.chunk.tools.get_chunk(data.map.last_location)
+	var chunk_position = Core.scripts.chunk.tools.get_chunk(Core.Server.data.map.last_location)
 	chunk_position.y = 0
-	spawn_player(data.map.last_location, Core.Client.data.player.username)
-	Core.Client.attach_player()
+	spawn_player(Core.Server.data.map.last_location, username)
+	Core.scripts.client.player.main.attach(Core.get_parent().get_node("/root/World/Inputs/" + username))
 	
 	Core.emit_signal("msg", "Chunk: " + str(chunk_position), Core.DEBUG, 
-		self)
-	
-	#Core.emit_signal("msg", str(EdenWorldDecoder.get_chunk_data(chunk_position)), Core.TRACE, self)
-	Core.scripts.chunk.manager.create_chunk(Vector3(0, 0, 0))
-	emit_signal("world_loaded")
+		meta)
 
-func spawn_player(location, username):
-	var player = Dictionary()
-	player.name_id = "player"
-	player.type = "input"
-	player.id = "JosephTheEngineer"
-	player.position = Vector3(location.x, 100, location.z) #Vector3(9*16, 100, 130*16) 
-	#ServerSystem.last_location * 16
-	player.username = username
+func spawn_player(location: Vector3, username: String):
+	var player = DEFAULT_PLAYER
+	player.id = username
+	player.position = Vector3(location.x, 100, location.z)
 	
 	Core.scripts.core.manager.create(player)
+	Core.scripts.client.player.main.attach(Core.get_parent().get_node("/root/World/Inputs/" + username))
+
+func send_message(msg): #######################################################
+	Core.Client.rpc("send_data", msg)

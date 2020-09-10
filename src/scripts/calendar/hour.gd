@@ -19,9 +19,8 @@ const MARGIX_Y = 50
 #var sel_month = system_date.month
 #var sel_day = system_date.day
 
-func _ready():
-	var date = OS.get_date()
-	#print(date)
+#func _ready():
+#	var date = OS.get_date()
 
 func _process(_delta):
 	var title: Button = get_node("HBoxContainer/VBox/Header/Title")
