@@ -110,7 +110,7 @@ static func get_looking_at(player: Entity, position: Vector2): #################
 			Core.get_node("BlockHighlight").free()
 		line.begin(Mesh.PRIMITIVE_LINES)
 		line.set_color(Color(1, 0, 0))
-		for point in Core.scripts.chunk.geometry.BLOCK_HIGHLIGHT:
+		for point in Core.scripts.chunk.geometry.BOX_HIGHLIGHT:
 			line.add_vertex(point + block_location + Vector3(0, -1, 0))
 		line.end()
 		line.name = "BlockHighlight"

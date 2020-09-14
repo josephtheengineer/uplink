@@ -16,25 +16,10 @@ static func break_block(chunk: Entity, location: Vector3): #####################
 		+ str(location), Core.INFO, meta)
 	
 	chunk.components.block_data.erase(location)
+	chunk.components.rendered = false
 	
-	var mesh: MeshInstance = chunk.get_node("Chunk/MeshInstance")
-	mesh.mesh = null
-	
-	# Returns blocks_loaded, mesh, vertex_data
-	var chunk_data = Core.scripts.chunk.thread.compile(
-		chunk.components.block_data, 
-		Core.scripts.eden.block_data.blocks()
-	) 
-	
-	if !Core.Client.data.subsystem.chunk.Link.data.destroyer_of_chunks:
-		mesh.mesh = chunk_data.mesh
-	
-	var shape = ConcavePolygonShape.new()
-	shape.set_faces(chunk_data.vertex_data)
-	var node: CollisionShape = chunk.get_node(
-		"Chunk/MeshInstance/StaticBody/CollisionShape"
-	)
-	node.shape = shape
+	if Core.Client.data.subsystem.chunk.Link.data.destroyer_of_chunks:
+		chunk.get_node("Chunk/MeshInstance").mesh = null
 
 static func place_block(chunk: Entity, location: Vector3, block_id: int): #####################
 	if !chunk.components.block_data:
@@ -49,22 +34,4 @@ static func place_block(chunk: Entity, location: Vector3, block_id: int): ######
 		id = block_id,
 		color = 0,
 	}
-	
-	var mesh: MeshInstance = chunk.get_node("Chunk/MeshInstance")
-	mesh.mesh = null
-	
-	# Returns blocks_loaded, mesh, vertex_data
-	var chunk_data = Core.scripts.chunk.thread.compile(
-		chunk.components.block_data, 
-		Core.scripts.eden.block_data.blocks()
-	) 
-	
-	if !Core.Client.data.subsystem.chunk.Link.data.destroyer_of_chunks:
-		mesh.mesh = chunk_data.mesh
-	
-	var shape = ConcavePolygonShape.new()
-	shape.set_faces(chunk_data.vertex_data)
-	var node: CollisionShape = chunk.get_node(
-		"Chunk/MeshInstance/StaticBody/CollisionShape"
-	)
-	node.shape = shape
+	chunk.components.rendered = false

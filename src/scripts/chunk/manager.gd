@@ -44,6 +44,69 @@ static func create_chunk(position: Vector3): ###################################
 	return true
 
 
+static func generate_chunk_components(node: Entity): ###########################
+	var chunk = Spatial.new()
+	chunk.name = "Chunk"
+	
+	if !node.components.block_data:
+		var pos = node.components.position
+		chunk.translation = Vector3(pos.x * 16, pos.y * 16, pos.z * 16)
+		node.components.rendered = true
+		Core.Client.data.chunk_index.append(pos)
+		return
+	
+	var line = ImmediateGeometry.new()
+	line.name = "Highlight"
+	node.add_child(line)
+	draw_chunk_highlight(node, Color(255, 255, 255))
+	
+	var mesh_instance = MeshInstance.new()
+	mesh_instance.name = "MeshInstance"
+	chunk.add_child(mesh_instance)
+	
+	
+	var body = StaticBody.new()
+	body.name = "StaticBody"
+	mesh_instance.add_child(body)
+	
+	#var units = 1
+	#mesh_instance.scale = Vector3(0.063, 0.063, 0.063)
+	
+	var collision_shape = CollisionShape.new()
+	collision_shape.name = "Shape"
+	body.add_child(collision_shape)
+	
+	Core.Client.data.blocks_found += node.components.block_data.size()
+	
+	var pos = node.components.position
+	chunk.translation = Vector3(pos.x * 16, pos.y * 16, pos.z * 16)
+	Core.Client.data.chunk_index.append(pos)
+	
+	node.call_deferred("add_child", chunk)
+	
+	if node.components.object != null or node.components.method != null:
+		var error = Core.connect("rendered", node.components.object, node.components.method)
+		if error:
+			Core.emit_signal("msg", "Error on binding to rendered signal on chunk: " + str(error), Core.WARN, meta)
+		Core.emit_signal("rendered")
+		
+
+static func draw_chunk_highlight(node: Entity, color: Color):
+	var m = SpatialMaterial.new()
+	#m.flags_use_point_size = true
+	#m.params_point_size = 1
+	m.vertex_color_use_as_albedo = true
+	m.flags_unshaded = true
+	m.albedo_color = color
+	
+	var line = node.get_node("Highlight")
+	line.clear()
+	line.set_material_override(m)
+	line.begin(Mesh.PRIMITIVE_LINES)
+	for point in Core.scripts.chunk.geometry.BOX_HIGHLIGHT:
+		line.add_vertex(point*Core.scripts.chunk.geometry.CSIZE + (node.components.position*16) + Vector3(0, -1, 0))
+	line.end()
+
 static func destroy_chunk(_position: Vector3): #########################################
 	Core.emit_signal("msg", "Destroying a chunk is not implemented yet!", 
 		Core.WARN, meta)

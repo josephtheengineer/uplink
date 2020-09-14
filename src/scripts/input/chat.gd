@@ -16,7 +16,7 @@ const commands = [
 	"/host world_path port(default=8888) max_players(default=100) - host a server",
 	"/connect username, host(default=127.0.0.1), port(default=8888) - connect to a server",
 	"/reset - resets Uplink back to its default state",
-	"/tp - teleports the player to a x, y, z"
+	"/tp - teleports the player to a x, y, z can subsitute coord for ~"
 ]
 
 func _ready():
@@ -121,7 +121,24 @@ func _chat_input(box: TextEdit, input: String):
 				return
 			var player_name = Core.Client.data.subsystem.input.Link.data.player
 			var player = Core.get_parent().get_node("World/Inputs/" + player_name)
-			player.get_node("Player").translation = Vector3(args[1], args[2], args[3])
+			var teleport_vector := Vector3()
+			
+			if args[1] == "~":
+				teleport_vector.x = player.get_node("Player").translation.x
+			else:
+				teleport_vector.x = float(args[1])
+			
+			if args[2] == "~":
+				teleport_vector.y = player.get_node("Player").translation.y
+			else:
+				teleport_vector.y =  float(args[2])
+			
+			if args[3] == "~":
+				teleport_vector.z = player.get_node("Player").translation.z
+			else:
+				teleport_vector.x =  float(args[3])
+			
+			player.get_node("Player").translation = teleport_vector
 		"reset":
 			reset()
 		_:
