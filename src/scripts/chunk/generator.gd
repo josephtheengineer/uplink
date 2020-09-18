@@ -34,9 +34,9 @@ static func generate_flat_terrain(): ###########################################
 	for x in 16:
 		for y in 16:
 			for z in 16:
-				#if y == 0:
-				chunk_data[Vector3(x, y, z)] = {}
-				chunk_data[Vector3(x, y, z)].id = 8
+				if y == 0 and x == 0:
+					chunk_data[Vector3(x, y, z)] = {}
+					chunk_data[Vector3(x, y, z)].id = 8
 				#elif y == 15:
 					#chunk_data[Vector3(x, y, z)] = 8
 				#elif y > 1:

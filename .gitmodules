@@ -1,13 +1,9 @@
-[submodule "uplink-assets"]
-	path = aux/assets
-	url = git@git.theengineer.life:uplink-assets
-
-[submodule "godot-headers"]
-	path = aux/headers
-	url = https://github.com/godotengine/godot_headers
 [submodule "aux/assets"]
 	path = aux/assets
 	url = git@git.theengineer.life:uplink-assets
 [submodule "aux/headers"]
 	path = aux/headers
 	url = https://github.com/godotengine/godot_headers
+[submodule "aux/cpp"]
+	path = aux/cpp
+	url = https://github.com/godotengine/godot-cpp

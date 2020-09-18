@@ -17,8 +17,9 @@ shape = SubResource( 1 )
 transform = Transform( 1, 0, -1.40908e-27, 0, 1, 0, 0, 0, 1, 0, 0.75, 0 )
 
 [node name="Camera" type="Camera" parent="Head"]
+transform = Transform( 1, 0, 1.40908e-27, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
 environment = ExtResource( 1 )
-current = true
-fov = 90.0
-near = 0.01
-far = 1000.0
+
+[node name="ARVROrigin" type="ARVROrigin" parent="Head"]
+
+[node name="ARVRCamera" type="ARVRCamera" parent="Head/ARVROrigin"]

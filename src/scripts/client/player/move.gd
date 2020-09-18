@@ -11,7 +11,7 @@ const meta := {
 #var camera_angle := 0
 const MOUSE_SENSITIVITY := 0.3
 
-const FLY_SPEED := 40
+const FLY_SPEED := 80
 const FLY_ACCEL := 4
 
 const GRAVITY := -9.8 * 3
@@ -70,7 +70,7 @@ static func walk(player: Entity, delta: float): ################################
 	
 	# move
 	var body: KinematicBody = player.get_node("Player")
-	body.move_and_slide(player.components.velocity, Vector3(0, 1, 0))
+	player.components.velocity = body.move_and_slide(player.components.velocity, Vector3(0, 1, 0))
 	
 	if Input.is_action_just_pressed("jump"):
 		player.components.velocity.y = JUMP_HEIGHT
@@ -112,4 +112,6 @@ static func look(player: Entity, event): #######################################
 	head.rotation_degrees.y += -event.relative.x * player.components.mouse_sensitivity
 	
 	var change = -event.relative.y * player.components.mouse_sensitivity
+	#if change + camera_angle < 90 and change + camera_angle > -90:
+	#	camera_angle += change
 	head.rotation_degrees.x += change

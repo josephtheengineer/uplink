@@ -14,7 +14,7 @@ const DEFAULT_DATA := {
 	player = "default"
 }
 #warning-ignore:unused_class_variable
-var data := DEFAULT_DATA
+var data := DEFAULT_DATA.duplicate()
 
 signal chat_input(obj, input)
 
@@ -31,7 +31,8 @@ func _ready(): #################################################################
 	Core.emit_signal("system_ready", Core.scripts.core.system.INPUT, self)             ##### READY #####
 
 func _reset():
-	data = DEFAULT_DATA
+	Core.emit_signal("msg", "Reseting input system database...", Core.DEBUG, meta)
+	data = DEFAULT_DATA.duplicate()
 
 func _chat_input():
 	var node: TextEdit = Core.get_node(data.input_path)

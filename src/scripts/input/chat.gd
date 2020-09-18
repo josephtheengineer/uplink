@@ -14,14 +14,20 @@ const commands = [
 	"/voxel-editor - launch the voxel editor",
 	"/test-world - a world for testing the engine",
 	"/host world_path port(default=8888) max_players(default=100) - host a server",
-	"/connect username, host(default=127.0.0.1), port(default=8888) - connect to a server",
-	"/reset - resets Uplink back to its default state",
-	"/tp - teleports the player to a x, y, z can subsitute coord for ~"
+	"/connect username host(default=127.0.0.1) port(default=8888) - connect to a server",
+	"/tp x y z - teleports the player can subsitute coord for ~",
+	"/full-reset - resets Uplink back to its default state",
+	"/break - executes a breakpoint",
+	"/quit - exits Uplink",
+	"/get-var system(Client, Server, Chunk, Download, Input, Interface, Sound) path(path.to.var)",
+	"/init-vr - enables stereoscopic output and head tracking"
 ]
+
 
 func _ready():
 	var node = Core.get_node("/root/World/Systems/Input")
 	node.connect("chat_input", self, "_chat_input")
+	msg("Welcome to Uplink! To start a demo sequence type /demo or for a list of commands type /help", meta)
 
 func msg(message: String, _meta: Dictionary):
 	var chat = get_node("RichTextLabel")
@@ -62,26 +68,32 @@ func _chat_input(box: TextEdit, input: String):
 			help()
 		"demo":
 			Core.emit_signal("msg", "Running demo preset...", Core.INFO, meta)
-			reset()
+			msg("Running demo preset...", meta)
+			Core.get_parent().get_node("World/Interfaces/Hud/Hud/Background").visible = false
+			#reset()
 			Core.emit_signal("system_process_start", "server.bootup")
 			Core.emit_signal("system_process_start", "client.connect")
 			Core.emit_signal("system_process_start", "client.spawn")
 		"voxel-editor":
 			Core.emit_signal("msg", "Opening voxel editor...", Core.INFO, meta)
+			msg("Opening voxel editor...", meta)
+			Core.get_parent().get_node("World/Interfaces/Hud/Hud/Background").visible = false
 			reset()
 			Core.emit_signal("system_process_start", "server.bootup")
 			Core.emit_signal("system_process_start", "client.connect")
 			Core.emit_signal("system_process_start", "client.spawn")
 		"test-world":
+			#reset()
+			#yield(get_tree().create_timer(2), "timeout")
+			Core.get_parent().get_node("World/Interfaces/Hud/Hud/Background").visible = false
 			Core.Server.data.map.path = "user://worlds/empty.eden"
 			Core.Server.data.map.seed = 0
-			reset()
 			Core.emit_signal("system_process_start", "server.bootup")
 			Core.emit_signal("system_process_start", "client.connect")
 			Core.emit_signal("system_process_start", "client.spawn")
 		"host": # host(world_path, port=8888, max_players=100)
 			var args = input.split(" ", false)
-			if args.size() <= 1:
+			if args.size() < 2 or args.size() > 4:
 				invalid_command_usage(cmd)
 				return
 			
@@ -96,8 +108,9 @@ func _chat_input(box: TextEdit, input: String):
 			Core.emit_signal("system_process_start", "server.bootup")
 			
 		"connect": # connect(username, host=127.0.0.1, port=8888)
+			Core.get_parent().get_node("World/Interfaces/Hud/Hud/Background").visible = false
 			var args = input.split(" ", false)
-			if args.size() <= 1:
+			if args.size() < 2 or args.size() > 4:
 				invalid_command_usage(cmd)
 				return
 			
@@ -114,9 +127,9 @@ func _chat_input(box: TextEdit, input: String):
 			Core.emit_signal("system_process_start", "client.connect")
 			Core.emit_signal("system_process_start", "client.spawn")
 			#Core.emit_signal("system_process_start", "client.print_world_stats")
-		"tp":
+		"tp": # tp(x, y, z)
 			var args = input.split(" ", false)
-			if args.size() <= 3:
+			if args.size() != 4:
 				invalid_command_usage(cmd)
 				return
 			var player_name = Core.Client.data.subsystem.input.Link.data.player
@@ -139,14 +152,36 @@ func _chat_input(box: TextEdit, input: String):
 				teleport_vector.x =  float(args[3])
 			
 			player.get_node("Player").translation = teleport_vector
-		"reset":
+		"full-reset": # full-reset()
+			Core.get_parent().get_node("World/Interfaces/Hud/Hud/Background").visible = true
 			reset()
+		"break": # break()
+			breakpoint
+		"quit": # quit()
+			Core.get_tree().quit()
+		"get-var": # get_var(sys, path)
+			var args = input.split(" ", false)
+			if args.size() != 3:
+				invalid_command_usage(cmd)
+				return
+			get_var(args)
+		"init-vr":
+			#print(ARVRServer.get_interfaces())
+			var arvr_interface = ARVRServer.find_interface("Native mobile")
+			if arvr_interface and arvr_interface.initialize():
+				get_viewport().arvr = true
 		_:
 			if cmd == null:
 				msg("Please provide a command string", meta)
 				Core.emit_signal("msg", "Please provide a command string", Core.WARN, meta)
 			else:
 				invalid_command(cmd)
+
+func get_var(args: Array):
+	var sys = Core.get_parent().get_node("World/Systems/" + args[1])
+	var data = Core.scripts.dictionary.main.get_from_dict(sys.data, args[2].split("."))
+	msg(args[1] + ": " + args[2] + " = " + str(data), meta)
+	Core.emit_signal("msg", args[1] + ": " + args[2] + " = " + str(data), Core.INFO, meta)
 
 func invalid_command(cmd: String):
 	msg("Invalid command " + cmd, meta)

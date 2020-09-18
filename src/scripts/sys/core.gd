@@ -71,6 +71,8 @@ const scripts := {
 			main = preload("res://src/scripts/core/entity/main.gd")
 		},
 		manager = preload("res://src/scripts/core/manager.gd"),
+		memory = preload("res://src/scripts/core/memory.gd"),
+		files = preload("res://src/scripts/core/files.gd"),
 		system = preload("res://src/scripts/core/system.gd")
 	},
 	dictionary = {
@@ -171,12 +173,14 @@ signal reset()
 onready var Client: ClientSystem = get_node("/root/World/Systems/Client")
 #warning-ignore:unused_class_variable
 onready var Server: ServerSystem = get_node("/root/World/Systems/Server")
+#warning-ignore:unused_class_variable
+const VoxelMesh = preload("res://voxel_mesh.gdns")
 
 var signals = [ "system_ready", "entity_loaded", "request_entity_unload", 
 		"app_ready", "request_scene_load", "scene_loaded", 
 		"entity_moved", "entity_used", "damage_dealt", 
 		"entity_picked_up", "break_block", "place_block", "gui_loaded", 
-		"gui_pushed", "system_process_start", "system_process"]
+		"gui_pushed", "system_process_start", "system_process", "reset"]
 
 ################################################################################
 
@@ -186,6 +190,10 @@ func _ready(): #################################################################
 		if error:
 			emit_signal("msg", "Error on binding to " + app_signal 
 				+ ": " + str(error), WARN, meta)
+
+func _process(delta):
+	scripts.core.memory.check()
+	scripts.core.files.check()
 
 
 func _on_system_ready(system, obj): ############################################
@@ -269,7 +277,10 @@ func _on_system_process_start(script_name):
 	var script = scripts.dictionary.main.get_from_dict(scripts, script_name.split("."))
 	script.call(script.meta.steps[0])
 
-func _on_system_process(meta_script, step, start = false):
+func _on_reset(): ##############################################################
+	emit_signal("msg", "Event reset called.", TRACE, meta)
+
+func _on_system_process(meta_script, step, start = false): #####################
 	emit_signal("msg", "Event system_process called. meta: [script_name]: "
 		+ str(meta_script.script_name) + ", step: " + str(step) + ", start: " 
 		+ str(start), TRACE, meta)
@@ -318,7 +329,8 @@ func _on_msg(message: String, level: int, meta: Dictionary):
 	file.close()
 
 	if level == FATAL:
-		breakpoint
+		print("ERR FATAL received, terminating active processes")
+		Core.get_tree().quit()
 
 	#for id in Entity.get_entities_with("terminal"):
 	#	var components = Entity.objects[id].components

@@ -72,6 +72,10 @@ config/icon="res://aux/assets/textures/ui/icons/splash2.png"
 
 Core="*res://src/scripts/sys/core.gd"
 
+[buffer]
+
+physics_engine=false
+
 [debug]
 
 gdscript/warnings/unused_class_variable=true

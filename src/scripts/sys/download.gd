@@ -21,10 +21,13 @@ const DEFAULT_DATA := {
 		seed = 0,
 		path = "res://worlds/direct_city.eden2",
 		name = "direct_city.eden2"
+	},
+	required = {
+		
 	}
 }
 #warning-ignore:unused_class_variable
-var data := DEFAULT_DATA
+var data := DEFAULT_DATA.duplicate()
 
 const EDEN2_SEARCH = "http://app.edengame.net/list2.php?search="
 const EDEN2_DOWNLOAD = "http://files.edengame.net/"
@@ -35,7 +38,8 @@ func _ready(): #################################################################
 
 
 func _reset():
-	data = DEFAULT_DATA
+	Core.emit_signal("msg", "Reseting download system database...", Core.DEBUG, meta)
+	data = DEFAULT_DATA.duplicate()
 
 
 func _on_fetch_data_request_completed(_result, _response_code, _headers, _body): ###

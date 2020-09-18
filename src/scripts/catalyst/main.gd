@@ -4,7 +4,7 @@ const meta := {
 	script_name = "catalyst.main",
 	type = "impure",
 	description = """
-		
+		lack direction?
 	"""
 }
 

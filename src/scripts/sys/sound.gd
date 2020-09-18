@@ -13,14 +13,15 @@ const DEFAULT_DATA := {
 	playlist_progress = 0,
 	playlist = "Eden"
 }
-var data := DEFAULT_DATA
+var data := DEFAULT_DATA.duplicate()
 
 func _ready():
 	Core.connect("reset", self, "_reset")
 	Core.emit_signal("system_ready", Core.scripts.core.system.SOUND, self)                ##### READY #####
 
 func _reset():
-	data = DEFAULT_DATA
+	Core.emit_signal("msg", "Reseting sound system database...", Core.DEBUG, meta)
+	data = DEFAULT_DATA.duplicate()
 
 func music_player_finished():
 	if data.playlist == "Eden":

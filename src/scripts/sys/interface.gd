@@ -12,7 +12,7 @@ const DEFAULT_DATA := {
 	
 }
 #warning-ignore:unused_class_variable
-var data := DEFAULT_DATA
+var data := DEFAULT_DATA.duplicate()
 
 func _ready(): #################################################################
 	Core.connect("reset", self, "_reset")
@@ -26,12 +26,14 @@ func _ready(): #################################################################
 func _process(_delta): #########################################################
 	if Core.get_parent().has_node("World/Interfaces"):
 		for entity in Core.get_parent().get_node("World/Interfaces/").get_children():
-			if entity.components.name_id == 'hud':
-				Core.scripts.interface.hud.process_hud(entity)
+			if entity.components.has("name_id"):
+				if entity.components.name_id == 'hud':
+					Core.scripts.interface.hud.process_hud(entity)
 
 
 func _reset():
-	data = DEFAULT_DATA
+	Core.emit_signal("msg", "Reseting interface system database...", Core.DEBUG, meta)
+	data = DEFAULT_DATA.duplicate()
 
 
 func _on_msg(message, level, script_meta): #####################################

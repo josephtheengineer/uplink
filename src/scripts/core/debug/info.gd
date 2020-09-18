@@ -9,32 +9,34 @@ const meta := {
 static func player_move_update(hud):
 	var stats = "World/Interfaces/" + str(hud.components.id) + "/Hud/HorizontalMain/VerticalMain/VerticalCenterContent/DebugStats/ClientInfo/"
 	
-	var player_id = Core.Client.data.subsystem.input.Link.data.player
-	if Core.get_parent().has_node("/root/World/Inputs/" + player_id):
-		var player = Core.get_parent().get_node("World/Inputs/" + str(player_id))
-		
-		var player_pos = player.get_node("Player").translation.round()
-		Core.get_parent().get_node(stats + "PlayerXYZ").text = "XYZ: " + str(player_pos)
-		
-		
-		var normal = Core.scripts.client.player.interact.get_looking_at_normal(player, OS.get_window_size() / 2)
-		var block_location = Core.scripts.client.player.interact.get_looking_at(player, OS.get_window_size() / 2)# - normal
-		
-		Core.get_parent().get_node(stats + "LookingXYZ").text = "Looking at: XYZ: " + str(block_location.round())
-		
-		var location = Core.scripts.chunk.tools.get_chunk(block_location)
-		Core.get_parent().get_node(stats + "LookingAtChunk").text = "Looking at chunk: XYZ: " + str(location.round())
-		
-		var orentation = Core.scripts.client.player.interact.get_orientation(player)
-		Core.get_parent().get_node(stats + "Orentation").text = "Orentation: " + str(orentation)
-		
-		chunk_info_update(hud, player_pos)
+	if Core.Client.data.subsystem.input.Link:
+		var player_id = Core.Client.data.subsystem.input.Link.data.player
+		if Core.get_parent().has_node("/root/World/Inputs/" + player_id):
+			var player = Core.get_parent().get_node("World/Inputs/" + str(player_id))
+			
+			var player_pos = player.get_node("Player").translation.round()
+			Core.get_parent().get_node(stats + "PlayerXYZ").text = "XYZ: " + str(player_pos)
+			
+			
+			var normal = Core.scripts.client.player.interact.get_looking_at_normal(player, OS.get_window_size() / 2)
+			var block_location = Core.scripts.client.player.interact.get_looking_at(player, OS.get_window_size() / 2)# - normal
+			
+			Core.get_parent().get_node(stats + "LookingXYZ").text = "Looking at: XYZ: " + str(block_location.round())
+			
+			var location = Core.scripts.chunk.tools.get_chunk(block_location)
+			Core.get_parent().get_node(stats + "LookingAtChunk").text = "Looking at chunk: XYZ: " + str(location.round())
+			
+			var orentation = Core.scripts.client.player.interact.get_orientation(player)
+			Core.get_parent().get_node(stats + "Orentation").text = "Orentation: " + str(orentation)
+			
+			chunk_info_update(hud, player_pos)
 
 static func action_mode_update(hud):
-	var player_id = Core.Client.data.subsystem.input.Link.data.player
-	if Core.get_parent().has_node("/root/World/Inputs/" + player_id):
-		var stats = "World/Interfaces/" + str(hud.components.id) + "/Hud/HorizontalMain/VerticalMain/VerticalCenterContent/DebugStats/ClientInfo/"
-		Core.get_parent().get_node(stats + "Mode").text = "Mode: " + Core.get_parent().get_node("World/Inputs/" + player_id).components.action_mode
+	if Core.Client.data.subsystem.input.Link:
+		var player_id = Core.Client.data.subsystem.input.Link.data.player
+		if Core.get_parent().has_node("/root/World/Inputs/" + player_id):
+			var stats = "World/Interfaces/" + str(hud.components.id) + "/Hud/HorizontalMain/VerticalMain/VerticalCenterContent/DebugStats/ClientInfo/"
+			Core.get_parent().get_node(stats + "Mode").text = "Mode: " + Core.get_parent().get_node("World/Inputs/" + player_id).components.action_mode
 
 static func frame_update(hud):
 	var stats = "World/Interfaces/" + str(hud.components.id) + "/Hud/HorizontalMain/VerticalMain/VerticalCenterContent/DebugStats/ClientInfo/"

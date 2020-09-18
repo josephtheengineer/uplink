@@ -100,6 +100,8 @@ static func discover_surrounding_chunks(center_chunk: Vector3, distance: int): #
 
 # once per chunk ###############################################################
 static func compile(node: Entity): #############################################
+	if Core.Client.data.subsystem.chunk.Link.data.mem_max:
+		return
 	var blocks_loaded = 0
 	Core.emit_signal("msg", "Compiling chunk...", Core.TRACE, meta)
 	#var mesh
@@ -134,53 +136,71 @@ static func compile(node: Entity): #############################################
 	
 	var voxel_data = Dictionary()
 	# draw an outline of voxels (for debuging mostly)
+#	for x in 16:
+#		for y in 16:
+#			for z in 16:
+#				if x == 0 and y == 0 or x == 0 and z == 0 or z == 0 and y == 0:
+#					voxel_data[Vector3(x*VSIZE, y*VSIZE, z*VSIZE)] = 1
+#				elif x == 15 and y == 15 or x == 15 and z == 15 or z == 15 and y == 15:
+#					voxel_data[Vector3(x*VSIZE, y*VSIZE, z*VSIZE)] = 1
+#				elif x == 15 and y == 0 or x == 15 and z == 0 or z == 15 and y == 0:
+#					voxel_data[Vector3(x*VSIZE, y*VSIZE, z*VSIZE)] = 1
+#				elif x == 0 and y == 15 or x == 0 and z == 15 or z == 0 and y == 15:
+#					voxel_data[Vector3(x*VSIZE, y*VSIZE, z*VSIZE)] = 1
+#				elif y == 15:
+#					voxel_data[Vector3(x*VSIZE, y*VSIZE, z*VSIZE)] = 1
 	for x in 16:
 		for y in 16:
 			for z in 16:
-				if x == 0 and y == 0 or x == 0 and z == 0 or z == 0 and y == 0:
+				if x == 0:
 					voxel_data[Vector3(x*VSIZE, y*VSIZE, z*VSIZE)] = 1
-				elif x == 15 and y == 15 or x == 15 and z == 15 or z == 15 and y == 15:
+				elif z == 0:
 					voxel_data[Vector3(x*VSIZE, y*VSIZE, z*VSIZE)] = 1
-				elif x == 15 and y == 0 or x == 15 and z == 0 or z == 15 and y == 0:
+				elif y == 0:
 					voxel_data[Vector3(x*VSIZE, y*VSIZE, z*VSIZE)] = 1
-				elif x == 0 and y == 15 or x == 0 and z == 15 or z == 0 and y == 15:
+				elif x == 15:
 					voxel_data[Vector3(x*VSIZE, y*VSIZE, z*VSIZE)] = 1
 				elif y == 15:
 					voxel_data[Vector3(x*VSIZE, y*VSIZE, z*VSIZE)] = 1
+	
+	var full_mesh = PoolVector3Array()
 	
 	for position in node.components.block_data.keys():
 		#var start = OS.get_ticks_msec()
 		if blocks_loaded >= BLOCK_LIMIT:
 			Core.emit_signal("msg", "Chunk contained more then " + str(BLOCK_LIMIT) + " blocks!", Core.ERROR, meta)
 			break
-		#if Core.scripts.chunk.geometry.can_be_seen(position, block_data).size() != 6:
-		#Core.emit_signal("msg", "Creating cube...", Core.TRACE, meta)
-		var mesh_arrays = Core.scripts.chunk.geometry.create_cube(position, 
-			voxel_data, node.components.block_data)
 		
-		var mesh = ArrayMesh.new()
+		var voxel_mesh = Core.VoxelMesh.new()
 		
+		var mesh_arrays = voxel_mesh.create_cube(position, 
+			voxel_data.keys(), voxel_data)
+		
+		voxel_mesh.free()
+		
+		
+		var mesh
 		if node.get_node("Chunk/MeshInstance").mesh:
 			mesh = node.get_node("Chunk/MeshInstance").mesh
+		else:
+			mesh = ArrayMesh.new()
 		
-		if mesh_arrays[Mesh.ARRAY_VERTEX]:
+		if mesh_arrays[Mesh.ARRAY_VERTEX].size() > 0:
 			mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, mesh_arrays)
 			mesh.surface_set_material(blocks_loaded, mat)
+			full_mesh.append_array(mesh_arrays[Mesh.ARRAY_VERTEX])
 		
-#		VERY SLOW (for some reason)
-#		var shape = ConcavePolygonShape.new()
-#		if node.get_node("Chunk/MeshInstance/StaticBody/Shape").shape:
-#			var faces = node.get_node("Chunk/MeshInstance/StaticBody/Shape").shape.get_faces()
-#			faces.append_array(mesh_arrays[Mesh.ARRAY_VERTEX])
-#			shape.set_faces(faces)
-#		else:
-#			shape.set_faces(mesh_arrays[Mesh.ARRAY_VERTEX])
-#		node.get_node("Chunk/MeshInstance/StaticBody/Shape").shape = shape
-#		/VERY SLOW
 		node.get_node("Chunk/MeshInstance").mesh = mesh
 		blocks_loaded += 1
 		Core.Client.data.blocks_loaded += 1
+		
 		#Core.emit_signal("msg", "compile(per block) took " + str(OS.get_ticks_msec()-start) + "ms", Core.TRACE, meta)
+	# VERY SLOW (for some reason, thats why it's only in chunk completion)
+	Core.scripts.chunk.manager.draw_chunk_highlight(node, Color(0, 0, 255))
+	var shape := ConcavePolygonShape.new()
+	shape.set_faces(full_mesh)
+	node.get_node("Chunk/MeshInstance/StaticBody/Shape").shape = shape
+	# /VERY SLOW
 	Core.emit_signal("msg", "Finished compiling!", Core.DEBUG, meta)
 
 # once per thread ##############################################################

@@ -66,10 +66,12 @@ const DEFAULT_DATA := {
 	host = {
 		ip = "localhost",
 		port = 8888
-	}
+	},
+	since_2gb_warn = -1,
+	since_3gb_warn = -1,
 }
 #warning-ignore:unused_class_variable
-var data := DEFAULT_DATA
+var data := DEFAULT_DATA.duplicate()
 
 const TOTAL_SYSTEMS := 7
 const REQUIRED_SYSTEMS := 7
@@ -95,11 +97,21 @@ func _process(_delta):
 	#Core.emit_signal("msg", "Client status: " + str(custom_multiplayer.network_peer.get_connection_status()), Core.INFO, meta)
 
 func _reset():
-	data = DEFAULT_DATA
+	Core.emit_signal("msg", "Terminating subsystems...", Core.DEBUG, meta)
+	data.subsystem.chunk.Link.queue_free()
+	data.subsystem.download.Link.queue_free()
+	data.subsystem.input.Link.queue_free()
+	data.subsystem.interface.Link.queue_free()
+	data.subsystem.sound.Link.queue_free()
+	Core.emit_signal("msg", "Reseting client system database...", Core.DEBUG, meta)
+	data = DEFAULT_DATA.duplicate()
+	Core.emit_signal("msg", "Booting subsystems...", Core.DEBUG, meta)
+	#Core.scripts.client.bootup.bring_systems_online()
+	#Core.scripts.client.bootup.check_systems()
 
 # make sure that the chunks that the player is in are loaded ###################
 #signal chunks_loaded
-func _on_world_loaded(): #######################################################	
+func _on_world_loaded(): #######################################################
 	Core.emit_signal("msg", "World loaded!", Core.INFO, meta)
 	
 	

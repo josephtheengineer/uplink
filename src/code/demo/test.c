@@ -67,11 +67,11 @@ godot_variant GDN_EXPORT some_test_procedure(void *data, godot_array *args) {
         godot_variant ret;
         godot_variant_new_int(&ret, 42);
 
-        godot_string s;
-        godot_string_name_new_data(&s, L"Hello World", 11);
-        godot_print(&s);
+        //godot_string s;
+        //godot_string_name_new_data(&s, L"Hello World", 11);
+        //godot_print(&s);
 
-        godot_string_destroy(&s);
+        //godot_string_destroy(&s);
 
         return ret;
 }

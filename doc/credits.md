@@ -19,7 +19,7 @@ Additional Programming
 
 Inspiration
 	Eden: Unity Builder
-		Danyadd#1044
+		Danyadd
 
 	Eden World Manipulator (Vuenctools Rebooted)
 		Jeremy

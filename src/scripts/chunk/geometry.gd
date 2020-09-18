@@ -2,11 +2,11 @@
 const meta := {
 	script_name = "chunk.geometry",
 	description = """
-		
+		Please see src/code/geometry.cpp for the updated version
 	"""
 }
 
-const SHOW_UNSEEN_SIDES = false
+const SHOW_UNSEEN_SIDES = true
 const BSIZE = 1.0         # Block size       (1)
 const VSIZE = BSIZE / 16  # Voxel size       (0.0625)
 const MVSIZE = VSIZE / 16 # Micro voxel size (0.00390625)

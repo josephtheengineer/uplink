@@ -31,7 +31,7 @@ const DEFAULT_DATA := {
 	}
 }
 #warning-ignore:unused_class_variable
-var data := DEFAULT_DATA
+var data := DEFAULT_DATA.duplicate()
 
 ################################################################################
 
@@ -49,7 +49,8 @@ func _process(_delta):
 
 
 func _reset():
-	data = DEFAULT_DATA
+	Core.emit_signal("msg", "Reseting server system database...", Core.DEBUG, meta)
+	data = DEFAULT_DATA.duplicate()
 
 func create_world(): ###########################################################
 	# Needs to create chunk data but not chunk render
