@@ -21,7 +21,7 @@ const DEFAULT_DATA := {
 	mem_max = false
 }
 #warning-ignore:unused_class_variable
-var data := DEFAULT_DATA.duplicate()
+var data := DEFAULT_DATA.duplicate(true)
 
 const RES_1 = 1         # 1    (1000mm) # Potato
 const RES_2 = 16        # 16   (62.5mm) # Toaster (Eden/Minecraft) (Mobile)
@@ -44,13 +44,12 @@ signal thread_completed
 func _ready(): #################################################################
 	#Core.emit_signal("function_started", "_ready()", meta)
 	Core.connect("reset", self, "_reset")
-	Core.connect("thread_completed", self, "_thread_completed")
+	#Core.connect("thread_completed", self, "_thread_completed")
 	Core.emit_signal("system_ready", Core.scripts.core.system.CHUNK, self)             ##### READY #####
 
 func _process(_delta):
-	#print(data.thread_busy)
 	if data.thread and not data.thread_busy:
-		if data.thread.is_active():
+		if data.thread.is_active() or data.thread_busy:
 			data.thread.wait_to_finish()
 		else:
 			Core.scripts.chunk.thread.start_chunk_thread()
@@ -60,8 +59,22 @@ func _reset():
 	data = DEFAULT_DATA.duplicate()
 
 
-func _chunk_thread_process(userdata: Dictionary): ##############################
-	Core.scripts.chunk.thread.discover_surrounding_chunks(Core.scripts.chunk.tools.get_chunk(userdata.player_position), 
-		userdata.render_distance)
-	Core.scripts.chunk.thread.process_chunks(userdata.chunks)
+func _chunk_thread_process(_data): ##################################################
+	# Create chunk nodes
+	Core.scripts.chunk.thread.discover_surrounding_chunks()
+	
+	# Render meshes for chunk nodes
+	Core.scripts.chunk.thread.process_chunks()
 	data.thread_busy = false
+
+func create(entity: Dictionary):
+	if entity.meta.system != "chunk":
+		Core.emit_signal("msg", "Chunk entity create called with incorrect system set", Core.WARN, meta)
+		return false
+	
+	if entity.meta.type == "chunk":
+		var node = Entity.new()
+		node.set_name(entity.meta.id)
+		node.components = entity
+		add_child(node)
+		Core.scripts.chunk.manager.generate_chunk_components(node)

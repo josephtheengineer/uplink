@@ -8,6 +8,6 @@ const meta := {
 
 static func attach(player: Entity): ##########################################################
 	Core.emit_signal("msg", "Attaching mouse to player..." + str(player), Core.TRACE, meta)
-	player.components.move_mode = "fly"
-	Core.Client.data.subsystem.input.Link.attach_mouse(player)
-	player.components.mouse_attached = true
+	player.components.position.mode = "fly"
+	Core.client.data.subsystem.input.Link.attach_mouse(player)
+	player.components.position.mouse_attached = true

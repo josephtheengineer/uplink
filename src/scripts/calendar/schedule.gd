@@ -8,7 +8,7 @@ const meta := {
 	"""
 }
 
-const TASKS_FOLDER = "user://tasks/"
+const TASKS_FOLDER = "user://task/"
 
 var path = "HBoxContainer/VBox/Dates"
 #var good_num_daily_effort = 4 # hours
@@ -16,7 +16,7 @@ var path = "HBoxContainer/VBox/Dates"
 var task_template = {
 	name = "Get a life",
 	time_allocation = "1h",
-	due_date = "5w",
+	due_date = "2020-12-20",
 	urgency = "M",
 	difficulty = "M",
 	enjoyability = "M",
@@ -25,11 +25,32 @@ var task_template = {
 	projects = ["catalyst", "calendar", "docs"],
 	notes = "",
 	recur = "no",
-	timeslot = "2d 10->11"
+	timeslot = "2020-12-20 10->11"
 }
 
-#func _ready():
-#	var tasks = []
+func _ready():
+	var tasks = []
+	
+	for task in Core.scripts.calendar.task.list_files_in_directory(Core.scripts.calendar.task.TASKS_FOLDER):
+		var task_data = Core.scripts.calendar.task.read_task(int(task.name))
+		if task_data:
+			tasks.append(task_data)
+	
+	var dates: Label = get_node(path)
+	var text = ""
+	
+	
+	var header := 0
+	for i in range(tasks.size()):
+		if "###" in tasks[i].name:
+			text +=  '\n' + tasks[i].name + '\n'
+			header += 1
+		else:
+			text += str(i-header) + ". " + tasks[i].due_date + ": " + tasks[i].name + '\n'
+	dates.text = text
+	
+	
+	
 #
 #	tasks.append(create_task(task_template, "### WEDNESDAY ###"))
 #	tasks.append(create_task(task_template, "projects: 201 (c#) & uplink"))
@@ -96,39 +117,3 @@ var task_template = {
 #	tasks.append(create_task(task_template, "infinity"))
 #
 #	tasks.append(create_task(task_template, "import tasks"))
-#
-#	var dates: Label = get_node(path)
-#	var text = ""
-#
-#	var header := 0
-#	for i in range(tasks.size()):
-#		if "###" in tasks[i].name:
-#			text +=  '\n' + tasks[i].name + '\n' #+ str(tasks[i]) + '\n'
-#			header += 1
-#		else:
-#			text += str(i-header) + ". " + tasks[i].name + '\n' #+ str(tasks[i]) + '\n'
-#	dates.text = text
-
-func create_task(task: Dictionary, name: String):
-	var dir = Directory.new()
-	if !dir.file_exists(TASKS_FOLDER):
-		dir.make_dir(TASKS_FOLDER)
-	for key in task.keys():
-		if !dir.file_exists(TASKS_FOLDER):
-			dir.make_dir(TASKS_FOLDER)
-
-func list_files_in_directory(path):
-	var files = []
-	var dir = Directory.new()
-	dir.open(path)
-	dir.list_dir_begin(true)
-	
-	while true:
-		var file = dir.get_next()
-		if file == "":
-			break
-		files.append(file)
-	
-	dir.list_dir_end()
-	
-	return files

@@ -16,7 +16,7 @@ const commands = [
 	"/host world_path port(default=8888) max_players(default=100) - host a server",
 	"/connect username host(default=127.0.0.1) port(default=8888) - connect to a server",
 	"/tp x y z - teleports the player can subsitute coord for ~",
-	"/full-reset - resets Uplink back to its default state",
+	"/reset - resets Uplink back to its default state",
 	"/break - executes a breakpoint",
 	"/quit - exits Uplink",
 	"/get-var system(Client, Server, Chunk, Download, Input, Interface, Sound) path(path.to.var)",
@@ -25,7 +25,7 @@ const commands = [
 
 
 func _ready():
-	var node = Core.get_node("/root/World/Systems/Input")
+	var node = Core.get_node("/root/World/Input")
 	node.connect("chat_input", self, "_chat_input")
 	msg("Welcome to Uplink! To start a demo sequence type /demo or for a list of commands type /help", meta)
 
@@ -46,7 +46,7 @@ func _chat_input(box: TextEdit, input: String):
 	msg("> " + input, meta)
 	
 	if input[0] != '/':
-		Core.Server.send_message(input)
+		Core.server.send_message(input)
 		return
 	
 	input = input.substr(1)
@@ -69,25 +69,41 @@ func _chat_input(box: TextEdit, input: String):
 		"demo":
 			Core.emit_signal("msg", "Running demo preset...", Core.INFO, meta)
 			msg("Running demo preset...", meta)
-			Core.get_parent().get_node("World/Interfaces/Hud/Hud/Background").visible = false
-			#reset()
+			Core.world.get_node("Interface/Hud/Hud/Background").visible = false
+			reset()
 			Core.emit_signal("system_process_start", "server.bootup")
 			Core.emit_signal("system_process_start", "client.connect")
 			Core.emit_signal("system_process_start", "client.spawn")
 		"voxel-editor":
 			Core.emit_signal("msg", "Opening voxel editor...", Core.INFO, meta)
 			msg("Opening voxel editor...", meta)
-			Core.get_parent().get_node("World/Interfaces/Hud/Hud/Background").visible = false
+			Core.world.get_node("Interface/Hud/Hud/Background").visible = false
 			reset()
+			
+			# Make the world generator generate 1 block only
+			Core.server.data.map.generator.single_voxel = true
+			
 			Core.emit_signal("system_process_start", "server.bootup")
 			Core.emit_signal("system_process_start", "client.connect")
 			Core.emit_signal("system_process_start", "client.spawn")
+			
+			# Get the set player from the input system
+			var player_name = Core.client.data.subsystem.input.Link.data.player
+			var player = Core.world.get_node("Input/" + player_name)
+			
+			# Set the edit mode on the player to voxels
+			player.components.action.resolution = 16 # RES_2
+			
+			# Tp the player to the correct position
+			player.get_node("Player").translation = Vector3(4, 8, 7)
+			
 		"test-world":
-			#reset()
+			Core.emit_signal("msg", "Opening test-world...", Core.INFO, meta)
+			reset()
 			#yield(get_tree().create_timer(2), "timeout")
-			Core.get_parent().get_node("World/Interfaces/Hud/Hud/Background").visible = false
-			Core.Server.data.map.path = "user://worlds/empty.eden"
-			Core.Server.data.map.seed = 0
+			Core.world.get_node("Interface/Hud/Hud/Background").visible = false
+			Core.server.data.map.path = "user://world/empty.eden"
+			Core.server.data.map.seed = 0
 			Core.emit_signal("system_process_start", "server.bootup")
 			Core.emit_signal("system_process_start", "client.connect")
 			Core.emit_signal("system_process_start", "client.spawn")
@@ -108,7 +124,7 @@ func _chat_input(box: TextEdit, input: String):
 			Core.emit_signal("system_process_start", "server.bootup")
 			
 		"connect": # connect(username, host=127.0.0.1, port=8888)
-			Core.get_parent().get_node("World/Interfaces/Hud/Hud/Background").visible = false
+			Core.world.get_node("Interface/Hud/Hud/Background").visible = false
 			var args = input.split(" ", false)
 			if args.size() < 2 or args.size() > 4:
 				invalid_command_usage(cmd)
@@ -133,7 +149,7 @@ func _chat_input(box: TextEdit, input: String):
 				invalid_command_usage(cmd)
 				return
 			var player_name = Core.Client.data.subsystem.input.Link.data.player
-			var player = Core.get_parent().get_node("World/Inputs/" + player_name)
+			var player = Core.world.get_node("Input/" + player_name)
 			var teleport_vector := Vector3()
 			
 			if args[1] == "~":
@@ -152,8 +168,8 @@ func _chat_input(box: TextEdit, input: String):
 				teleport_vector.x =  float(args[3])
 			
 			player.get_node("Player").translation = teleport_vector
-		"full-reset": # full-reset()
-			Core.get_parent().get_node("World/Interfaces/Hud/Hud/Background").visible = true
+		"reset": # full-reset()
+			Core.world.get_node("Interface/Hud/Hud/Background").visible = true
 			reset()
 		"break": # break()
 			breakpoint
@@ -178,10 +194,11 @@ func _chat_input(box: TextEdit, input: String):
 				invalid_command(cmd)
 
 func get_var(args: Array):
-	var sys = Core.get_parent().get_node("World/Systems/" + args[1])
-	var data = Core.scripts.dictionary.main.get_from_dict(sys.data, args[2].split("."))
-	msg(args[1] + ": " + args[2] + " = " + str(data), meta)
-	Core.emit_signal("msg", args[1] + ": " + args[2] + " = " + str(data), Core.INFO, meta)
+	var sys = Core.world.get_node(args[1])
+	if sys:
+		var data = Core.scripts.dictionary.main.get_from_dict(sys.data, args[2].split("."))
+		msg(args[1] + ": " + args[2] + " = " + str(data), meta)
+		Core.emit_signal("msg", args[1] + ": " + args[2] + " = " + str(data), Core.INFO, meta)
 
 func invalid_command(cmd: String):
 	msg("Invalid command " + cmd, meta)
@@ -199,13 +216,14 @@ func help():
 		Core.emit_signal("msg", cmd, Core.INFO, meta)
 
 func reset():
-	Core.emit_signal("msg", "Deleting entities...", Core.INFO, meta)
-	if Core.get_parent().has_node("World/Chunks"):
-		for c in Core.get_parent().get_node("World/Chunks").get_children():
+	Core.emit_signal("msg", "Deleting chunks...", Core.INFO, meta)
+	if Core.world.has_node("Chunk"):
+		for c in Core.world.get_node("Chunk").get_children():
 			remove_child(c)
 			c.queue_free()
-	if Core.get_parent().has_node("World/Inputs"):
-		for c in Core.get_parent().get_node("World/Inputs").get_children():
+	Core.emit_signal("msg", "Deleting players...", Core.INFO, meta)
+	if Core.world.has_node("Input"):
+		for c in Core.world.get_node("Input").get_children():
 			remove_child(c)
 			c.queue_free()
 	Core.emit_signal("msg", "Reseting system databases...", Core.INFO, meta)

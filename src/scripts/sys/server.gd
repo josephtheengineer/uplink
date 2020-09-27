@@ -7,6 +7,10 @@ const meta := {
 		
 	"""
 }
+
+const GEN_FLAT = 0
+const GEN_NATURAL = 1
+
 #warning-ignore:unused_class_variable
 const DEFAULT_DATA := {
 	online = false,
@@ -14,7 +18,11 @@ const DEFAULT_DATA := {
 	max_players = 100,
 	map = {
 		seed = 0,
-		path = "user://worlds/videogame-museum",
+		generator = {
+			single_voxel = false,
+			terrain_type = GEN_NATURAL
+		},
+		path = "user://world/videogame-museum",
 		name = "Videogame Museum",
 		last_location = Vector3(0, 0, 0),
 		home = {
@@ -31,7 +39,7 @@ const DEFAULT_DATA := {
 	}
 }
 #warning-ignore:unused_class_variable
-var data := DEFAULT_DATA.duplicate()
+var data := DEFAULT_DATA.duplicate(true)
 
 ################################################################################
 
@@ -50,7 +58,7 @@ func _process(_delta):
 
 func _reset():
 	Core.emit_signal("msg", "Reseting server system database...", Core.DEBUG, meta)
-	data = DEFAULT_DATA.duplicate()
+	data = DEFAULT_DATA.duplicate(true)
 
 func create_world(): ###########################################################
 	# Needs to create chunk data but not chunk render
@@ -74,45 +82,54 @@ func _peer_disconnected(id: int): ##############################################
 		Core.INFO, meta)
 
 const DEFAULT_PLAYER := {
-	name_id = "player",
-	type = "input",
-	id = 0,
-	position = Vector3(0, 100, 0),
-	velocity = Vector3(),
-	direction = Vector3(),
-	move_direction = null,
-	mouse_sensitivity = 0.3,
-	pressed = false,
-	move_mode = "walk",
-	mouse_attached = false,
+	meta = {
+		system = "input",
+		type = "player",
+		id = "0"
+	},
+	position = {
+		world = Vector3(0, 100, 0),
+		velocity = Vector3(),
+		direction = Vector3(),
+		move_direction = null,
+		mouse_sensitivity = 0.3,
+		pressed = false,
+		mode = "walk",
+		mouse_attached = false,
+		move_forward = false,
+	},
+	looking_at = {
+		block = Vector3(),
+		chunk = Vector3(),
+	},
+	action = {
+		mode = "nothing",
+		resolution = 1, # RES_1
+		cursor_pos = Vector3()
+	},
 	render_distance = 2,
-	move_forward = false,
-	action_mode = "nothing",
 	color = Color8(255, 0, 255),
-	looking_at_block = Vector3(),
-	looking_at_chunk = Vector3(),
-	cursor_pos = Vector3()
 }
 
 func spawn_player_at_default_pos(username: String):
 	Core.emit_signal("msg", "Spawning player at last known location: " 
-		+ str(Core.Server.data.map.last_location), Core.DEBUG, meta)
+		+ str(Core.server.data.map.last_location), Core.DEBUG, meta)
 	
-	var chunk_position = Core.scripts.chunk.tools.get_chunk(Core.Server.data.map.last_location)
+	var chunk_position = Core.scripts.chunk.tools.get_chunk(Core.server.data.map.last_location)
 	chunk_position.y = 0
-	spawn_player(Core.Server.data.map.last_location, username)
-	Core.scripts.client.player.main.attach(Core.get_parent().get_node("/root/World/Inputs/" + username))
+	spawn_player(Core.server.data.map.last_location, username)
+	Core.scripts.client.player.main.attach(Core.world.get_node("Input/" + username))
 	
 	Core.emit_signal("msg", "Chunk: " + str(chunk_position), Core.DEBUG, 
 		meta)
 
 func spawn_player(location: Vector3, username: String):
 	var player = DEFAULT_PLAYER
-	player.id = username
-	player.position = Vector3(location.x, 100, location.z)
+	player.meta.id = username
+	player.position.world = Vector3(location.x, 100, location.z)
 	
-	Core.scripts.core.manager.create(player)
-	Core.scripts.client.player.main.attach(Core.get_parent().get_node("/root/World/Inputs/" + username))
+	Core.world.get_node("Input").create(player)
+	Core.scripts.client.player.main.attach(Core.world.get_node("Input/" + username))
 
 func send_message(msg): #######################################################
 	Core.Client.rpc("send_data", msg)

@@ -9,8 +9,11 @@ const meta := {
 static func check():
 	# Check that folders are made
 	var dir := Directory.new()
-	if !dir.dir_exists("user://worlds"):
-		dir.make_dir("user://worlds")
+	if !dir.dir_exists("user://world"):
+		dir.make_dir("user://world")
 	
-	# Check if client.required_files are downloaded / created
+	for file in Core.client.data.subsystem.download.Link.data.required:
+		if not dir.file_exists("user://" + file.type + "/" + file.name):
+			Core.emit_signal("msg", file.type + " " + file.name + "does not exist", Core.WARN, meta)
+			Core.Client.data.subsystem.download.Link.download_file(file)
 	

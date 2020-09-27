@@ -59,7 +59,7 @@ const DEFAULT_DATA := {
 	blocks_loaded = 0,
 	blocks_found = 0,
 	chunk_index = [],
-	log_path = "user://logs/",
+	log_path = "user://log/",
 	diagnostics = {
 		progress = 0
 	},
@@ -71,11 +71,11 @@ const DEFAULT_DATA := {
 	since_3gb_warn = -1,
 }
 #warning-ignore:unused_class_variable
-var data := DEFAULT_DATA.duplicate()
+var data := DEFAULT_DATA.duplicate(true)
 
 const TOTAL_SYSTEMS := 7
 const REQUIRED_SYSTEMS := 7
-const DEFAULT_LOG_LOC := "user://logs/"
+const DEFAULT_LOG_LOC := "user://log/"
 const DEFAULT_HOST := "josephtheengineer.ddns.net"
 const DEFAULT_IP := "101.183.54.6"
 const DEFAULT_PORT := 8888
@@ -97,6 +97,11 @@ func _process(_delta):
 	#Core.emit_signal("msg", "Client status: " + str(custom_multiplayer.network_peer.get_connection_status()), Core.INFO, meta)
 
 func _reset():
+	pass
+	#Core.emit_signal("msg", "Reseting client system database...", Core.DEBUG, meta)
+	#data = DEFAULT_DATA.duplicate(true)
+
+func _reboot():
 	Core.emit_signal("msg", "Terminating subsystems...", Core.DEBUG, meta)
 	data.subsystem.chunk.Link.queue_free()
 	data.subsystem.download.Link.queue_free()
@@ -104,7 +109,7 @@ func _reset():
 	data.subsystem.interface.Link.queue_free()
 	data.subsystem.sound.Link.queue_free()
 	Core.emit_signal("msg", "Reseting client system database...", Core.DEBUG, meta)
-	data = DEFAULT_DATA.duplicate()
+	data = DEFAULT_DATA.duplicate(true)
 	Core.emit_signal("msg", "Booting subsystems...", Core.DEBUG, meta)
 	#Core.scripts.client.bootup.bring_systems_online()
 	#Core.scripts.client.bootup.check_systems()

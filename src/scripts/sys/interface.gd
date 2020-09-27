@@ -12,7 +12,7 @@ const DEFAULT_DATA := {
 	
 }
 #warning-ignore:unused_class_variable
-var data := DEFAULT_DATA.duplicate()
+var data := DEFAULT_DATA.duplicate(true)
 
 func _ready(): #################################################################
 	Core.connect("reset", self, "_reset")
@@ -24,16 +24,34 @@ func _ready(): #################################################################
 
 
 func _process(_delta): #########################################################
-	if Core.get_parent().has_node("World/Interfaces"):
-		for entity in Core.get_parent().get_node("World/Interfaces/").get_children():
-			if entity.components.has("name_id"):
-				if entity.components.name_id == 'hud':
-					Core.scripts.interface.hud.process_hud(entity)
+	for entity in get_children():
+		if entity.components.meta.type == 'hud':
+			Core.scripts.interface.hud.process_hud(entity)
 
 
 func _reset():
 	Core.emit_signal("msg", "Reseting interface system database...", Core.DEBUG, meta)
-	data = DEFAULT_DATA.duplicate()
+	data = DEFAULT_DATA.duplicate(true)
+
+
+func create(entity: Dictionary):
+	if entity.meta.system != "interface":
+		Core.emit_signal("msg", "Interface entity create called with incorrect system set", Core.WARN, meta)
+		return false
+	
+	if entity.meta.type == "tty":
+		var node = Entity.new()
+		node.set_name("0")
+		add_child(node)
+		get_node("0").components = entity
+		get_node("0").add_child(Core.scenes.tty.instance())
+	
+	if entity.meta.type == "hud":
+		var node = Entity.new()
+		node.set_name(entity.meta.id)
+		add_child(node)
+		get_node(str(entity.meta.id)).components = entity
+		get_node(str(entity.meta.id)).add_child(Core.scenes.hud.instance())
 
 
 func _on_msg(message, level, script_meta): #####################################
@@ -79,8 +97,13 @@ func _on_msg(message, level, script_meta): #####################################
 				var split = file_text[i]
 				split = split.split(" ", false)
 				if split.size() > 0:
-					if split[0] == "Info:" || split[0] == "Warn:" || split[0] == "Error:" || split[0] == "Fatal:":
-						label.add_text(file_text[i] + "\n")
+					if split[3] == "Info" || split[3] == "Warn" || split[3] == "Error" || split[3] == "Fatal":
+						var sub_level_string = Core.scripts.core.debug.msg.level_string(Core.ALL)
+						var sub_script_name = split[5]
+						var sub_message = ""
+						for index in range(7, split.size()):
+							sub_message += split[index] + " "
+						label.add_text(sub_level_string + " [ " + sub_script_name + " ] " + sub_message + "\n")
 			file.close()
 		if level <= Core.INFO:
 			label.add_text(level_string + " [ " + script_meta.script_name + " ] " + message + "\n")

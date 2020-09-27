@@ -20,7 +20,9 @@ const scripts := {
 		month = preload("res://src/scripts/calendar/month.gd"),
 		schedule = preload("res://src/scripts/calendar/schedule.gd"),
 		week = preload("res://src/scripts/calendar/week.gd"),
-		year = preload("res://src/scripts/calendar/year.gd")
+		year = preload("res://src/scripts/calendar/year.gd"),
+		new_task = preload("res://src/scripts/calendar/new_task.gd"),
+		task = preload("res://src/scripts/calendar/task.gd")
 	},
 	catalyst = {
 		main = preload("res://src/scripts/catalyst/main.gd")
@@ -113,6 +115,16 @@ const scripts := {
 	},
 }
 #warning-ignore:unused_class_variable
+const scenes = {
+	tty = preload("res://src/scenes/terminal/tty.tscn"),
+	hud = preload("res://src/scenes/hud/hud.tscn"),
+	player = preload("res://src/scenes/world/player.tscn")
+}
+#warning-ignore:unused_class_variable
+const lib = {
+	voxel = preload("res://src/code/voxel_mesh.gdns")
+}
+#warning-ignore:unused_class_variable
 var data := {
 	
 }
@@ -170,11 +182,11 @@ signal reset()
 ################################################################################
 
 #warning-ignore:unused_class_variable
-onready var Client: ClientSystem = get_node("/root/World/Systems/Client")
+onready var world: Node = get_parent().get_node("World")
 #warning-ignore:unused_class_variable
-onready var Server: ServerSystem = get_node("/root/World/Systems/Server")
+onready var client: ClientSystem = world.get_node("Client")
 #warning-ignore:unused_class_variable
-const VoxelMesh = preload("res://voxel_mesh.gdns")
+onready var server: ServerSystem = world.get_node("Server")
 
 var signals = [ "system_ready", "entity_loaded", "request_entity_unload", 
 		"app_ready", "request_scene_load", "scene_loaded", 
@@ -193,7 +205,6 @@ func _ready(): #################################################################
 
 func _process(delta):
 	scripts.core.memory.check()
-	scripts.core.files.check()
 
 
 func _on_system_ready(system, obj): ############################################
@@ -300,118 +311,7 @@ func _on_system_process(meta_script, step, start = false): #####################
 ################################################################################
 
 func _on_msg(message: String, level: int, meta: Dictionary):
-	var level_string = "All"
-	match level:
-		FATAL:
-			level_string = "Fatal"
-		ERROR:
-			level_string = "Error"
-		WARN:
-			level_string = " Warn"
-		INFO:
-			level_string = " Info"
-		DEBUG:
-			level_string = "Debug"
-		TRACE:
-			level_string = "Trace"
-		ALL:
-			level_string = "  All"
-	
-	#if meta.get_meta()
-	
-	if level < ALL:
-		print(level_string + " [ " + meta.script_name + " ] " + message)
-		
-	var file = File.new()
-	file.open(Client.data.log_path + "latest.txt", File.READ_WRITE)
-	file.seek_end()
-	file.store_string(level_string + ": " + message + '\n')
-	file.close()
-
-	if level == FATAL:
-		print("ERR FATAL received, terminating active processes")
-		Core.get_tree().quit()
-
-	#for id in Entity.get_entities_with("terminal"):
-	#	var components = Entity.objects[id].components
-	#	if Entity.get_component(id, "terminal.debug"):
-	#		components.terminal.text += level + ": " + message + '\n'
-	#		components.terminal.text_rendered = false
-
-	#for id in Entity.get_entities_with("hud"):
-	#	var components = Entity.objects[id].components
-	#	var label = get_node("/root/World/" + str(id) + "/Hud/HorizontalMain/VerticalMain/VerticalCenterContent/Chat/Content/Text/RichTextLabel")
-	#	if label:
-	#		label.text += level + ": " + message + '\n'
+	scripts.core.debug.msg.send(message, level, meta)
 
 func _on_system_ready_fancy(system: int, obj: Object): ########################
-	match system:
-		scripts.core.system.CHUNK:
-			if !obj:
-				emit_signal("msg", "Chunk System ready called with a null object", ERROR, meta)
-			elif Client.data.subsystem.chunk.online:
-				emit_signal("msg", "Chunk System ready called when already registered", WARN, meta)
-			else:
-				Client.data.subsystem.chunk.Link = obj
-				Client.data.subsystem.chunk.online = true
-				emit_signal("msg", "Chunk System ready.", INFO, meta)
-		scripts.core.system.CLIENT:
-			if !obj:
-				emit_signal("msg", "Client System ready called with a null object", ERROR, meta)
-			elif Client.data.online:
-				emit_signal("msg", "Client System ready called when already registered", WARN, meta)
-			else:
-				Client.data.online = true
-				emit_signal("msg", "Client System ready.", INFO, meta)
-		scripts.core.system.DOWNLOAD:
-			if !obj:
-				emit_signal("msg", "Download System ready called with a null object", ERROR, meta)
-			elif Client.data.subsystem.download.online:
-				emit_signal("msg", "Download System ready called when already registered", WARN, meta)
-			else:
-				Client.data.subsystem.download.Link = obj
-				Client.data.subsystem.download.online = true
-				emit_signal("msg", "Download System ready.", INFO, meta)
-		scripts.core.system.INPUT:
-			if !obj:
-				emit_signal("msg", "Input System ready called with a null object", ERROR, meta)
-			elif Client.data.subsystem.input.online:
-				emit_signal("msg", "Input System ready called when already registered", WARN, meta)
-			else:
-				Client.data.subsystem.input.Link = obj
-				Client.data.subsystem.input.online = true
-				emit_signal("msg", "Input System ready.", INFO, meta)
-		scripts.core.system.INTERFACE:
-			if !obj:
-				emit_signal("msg", "Interface System ready called with a null object", ERROR, meta)
-			elif Client.data.subsystem.interface.online:
-				emit_signal("msg", "Interface System ready called when already registered", WARN, meta)
-			else:
-				Client.data.subsystem.interface.Link = obj
-				Client.data.subsystem.interface.online = true
-				emit_signal("msg", "Interface System ready.", INFO, meta)
-		scripts.core.system.SERVER:
-			if !obj:
-				emit_signal("msg", "Server System ready called with a null object", ERROR, meta)
-			elif Server.data.online:
-				emit_signal("msg", "Server System ready called when already registered", WARN, meta)
-			else:
-				Server.data.online = true
-				emit_signal("msg", "Server System ready.", INFO, meta)
-		scripts.core.system.SOUND:
-			if !obj:
-				emit_signal("msg", "Sound System ready called with a null object", ERROR, meta)
-			elif Client.data.subsystem.sound.online:
-				emit_signal("msg", "Sound System ready called when already registered", WARN, meta)
-			else:
-				Client.data.subsystem.sound.Link = obj
-				Client.data.subsystem.sound.online = true
-				emit_signal("msg", "Sound System ready.", INFO, meta)
-		_:
-			if !obj:
-				emit_signal("msg", "Unknown system called ready with a null object", ERROR, meta)
-			else:
-				emit_signal("msg", "Unknown system bootup", WARN, meta)
-	emit_signal("msg", str(scripts.core.system.get_online_systems()) + " of " + str(Client.TOTAL_SYSTEMS) + " Systems online", INFO, meta)
-	if scripts.core.system.get_online_systems() == Client.TOTAL_SYSTEMS:
-		emit_signal("app_ready")
+	scripts.core.system.ready_fancy(system, obj)

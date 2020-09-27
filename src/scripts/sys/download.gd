@@ -4,6 +4,7 @@ class_name DownloadSystem
 const meta := {
 	script_name = "sys.download",
 	description = """
+		might be called sys.file in the future (more generic)
 		when you realise that after making the engine,
 		you still have to make the game
 	"""
@@ -19,15 +20,23 @@ const DEFAULT_DATA := {
 	direct_city_downloader = null,
 	map = {
 		seed = 0,
-		path = "res://worlds/direct_city.eden2",
+		path = "res://world/direct_city.eden2",
 		name = "direct_city.eden2"
 	},
-	required = {
-		
-	}
+	required = [
+		{
+			type = "world",
+			name = "direct_city",
+			format = "eden",
+			format_version = 2,
+			timestamp = "1600458467",
+			title = "direct city and dc empire 4'1",
+			url = "http://files.edengame.net/1600458467.eden"
+		}
+	]
 }
 #warning-ignore:unused_class_variable
-var data := DEFAULT_DATA.duplicate()
+var data := DEFAULT_DATA.duplicate(true)
 
 const EDEN2_SEARCH = "http://app.edengame.net/list2.php?search="
 const EDEN2_DOWNLOAD = "http://files.edengame.net/"
@@ -39,7 +48,7 @@ func _ready(): #################################################################
 
 func _reset():
 	Core.emit_signal("msg", "Reseting download system database...", Core.DEBUG, meta)
-	data = DEFAULT_DATA.duplicate()
+	data = DEFAULT_DATA.duplicate(true)
 
 
 func _on_fetch_data_request_completed(_result, _response_code, _headers, _body): ###
@@ -139,20 +148,20 @@ func fetch_data(): #############################################################
 	#download_world_client.queue_free()
 	#load_world()
 
-#func _process(delta):
+func _process(delta):
 	#if downloading_direct_city and OS.get_unix_time() - downloading_wait > 5:
 	#	Core.emit_signal("msg", "KB downloaded: " + str(direct_city_downloader.get_downloaded_bytes() * 0.001), Core.INFO, meta)
 	#	downloading_wait = OS.get_unix_time()
-	#	
-	#if downloading:
-	#	if OS.get_unix_time() - downloading_wait > 5:
-	#		Core.emit_signal("msg", "KB downloaded: " + str(download_world_client.get_downloaded_bytes() * 0.001), Core.INFO, meta)
-	#		downloading_wait = OS.get_unix_time()
-	#		
-	#		#if last_downloaded_bytes == download_world_client.get_downloaded_bytes() and last_downloaded_bytes != 0:
-	#			#_on_world_download_completed(downloaded_world_path)
-	#		
-	#		#last_downloaded_bytes = download_world_client.get_downloaded_bytes()
+		
+	if data.downloading:
+		if OS.get_unix_time() - data.downloading_wait > 5:
+			Core.emit_signal("msg", "KB downloaded: " + str(data.download_world_client.get_downloaded_bytes() * 0.001), Core.INFO, meta)
+			data.downloading_wait = OS.get_unix_time()
+			
+			#if last_downloaded_bytes == download_world_client.get_downloaded_bytes() and last_downloaded_bytes != 0:
+				#_on_world_download_completed(downloaded_world_path)
+			
+			#last_downloaded_bytes = download_world_client.get_downloaded_bytes()
 
 
 func search(): #################################################################
@@ -176,8 +185,8 @@ func search(): #################################################################
 
 
 func download_direct_city(): ###################################################
-	if File.new().file_exists("user://worlds/direct_city.eden2") == false:
-		var error = Directory.new().make_dir("user://worlds/")
+	if File.new().file_exists("user://world/direct_city.eden2") == false:
+		var error = Directory.new().make_dir("user://world/")
 		if error:
 			emit_signal("msg", "Failed to create worlds folder: " 
 				+ str(error), Core.WARN, meta)
@@ -185,7 +194,7 @@ func download_direct_city(): ###################################################
 		Core.emit_signal("msg", "Please wait, downloading Direct City...", Core.INFO, meta)
 		
 		var http = HTTPRequest.new()
-		http.set_download_file("user://worlds/direct_city.eden2")
+		http.set_download_file("user://world/direct_city.eden2")
 		http.connect("request_completed", self, "_on_direct_city_request_completed")
 		add_child(http)
 		Core.emit_signal("msg", "Connecting to http://josephtheengineer.ddns.net/eden/worlds/direct-city.eden2...", Core.DEBUG, meta)
@@ -200,29 +209,71 @@ func download_direct_city(): ###################################################
 func download_world_button(path: String): ##############################################
 	Core.emit_signal("msg", "Searching eden2 world database...", Core.INFO, meta)
 	#get_node("UI/WorldSharing/TopContainer2/Search/Search/SearchResults/Content").text = "Downloading..."
-	var error = Directory.new().make_dir("user://worlds/")
+	var error = Directory.new().make_dir("user://world/")
 	if error:
 		emit_signal("msg", "Failed to create worlds folder: " 
 			+ str(error), Core.WARN, meta)
 	
 	var http = HTTPRequest.new()
-	http.set_download_file("user://worlds/" + path)
-	http.connect("request_completed", self, "_on_world_download_completed", ["user://worlds/" + path])
+	http.set_download_file("user://world/" + path)
+	http.connect("request_completed", self, "_on_world_download_completed", ["user://world/" + path])
 	add_child(http)
 	Core.emit_signal("msg", "Downloading world " + EDEN2_DOWNLOAD + path, Core.DEBUG, meta)
 	http.request(EDEN2_DOWNLOAD + path, Array(), false)
 	data.download_world_client = http
 	data.downloading = true
 	
-	data.downloaded_world_path = "user://worlds/" + path
+	data.downloaded_world_path = "user://world/" + path
 	
 	Core.emit_signal("msg", "Body size: " + str(http.get_body_size()), Core.DEBUG, meta)
+
+
+func download_file(file: Dictionary): ##############################################
+	#Core.emit_signal("msg", "Searching eden2 world database...", Core.INFO, meta)
+	#get_node("UI/WorldSharing/TopContainer2/Search/Search/SearchResults/Content").text = "Downloading..."
+	#var error = Directory.new().make_dir("user://world/")
+	#if error:
+	#	emit_signal("msg", "Failed to create world folder: " 
+	#		+ str(error), Core.WARN, meta)
+	
+	var http = HTTPRequest.new()
+	http.set_download_file("user://" + file.type + "/" + file.name)
+	http.connect("request_completed", self, "_on_file_download_completed", [file])
+	add_child(http)
+	Core.emit_signal("msg", "Downloading world " + file.url, Core.INFO, meta)
+	http.request(file.url)
+	data.download_world_client = http
+	data.downloading = true
+	
+	data.downloaded_world_path = "user://" + file.type + "/" + file.name
+	
+	Core.emit_signal("msg", "Body size: " + str(http.get_body_size()), Core.DEBUG, meta)
+
+var http_error = [
+	"Request successful",
+	"Body size mismatch",
+	"Request failed while connecting",
+	"Request failed while resolving",
+	"Request failed due to connection (read/write) error",
+	"Request failed on SSL handshake",
+	"Request does not have a response (yet)",
+	"Request exceeded its maximum size limit, see body_size_limit",
+	"Request failed (currently unused)",
+	"HTTPRequest couldn't open the download file",
+	"HTTPRequest couldn't write to the download file",
+	"Request reached its maximum redirect limit, see max_redirects",
+	"Request timed out"
+]
+
+func _on_file_download_completed(result: int, response_code: int, headers: PoolStringArray, body: PoolByteArray, file: Dictionary):
+	Core.emit_signal("msg", file.url + " finished downloading! code: " + http_error[result], Core.INFO, meta)
+	data.downloading = false
 
 
 func _on_direct_city_request_completed(): ######################################
 	data.downloading_direct_city = false
 	Core.emit_signal("msg", "Loading direct city...", Core.INFO, meta)
-	data.map.path = "user://worlds/direct_city.eden2"
+	data.map.path = "user://world/direct_city.eden2"
 	data.map.name = "Direct City"
 	data.map.seed = 0
 	#load_world()

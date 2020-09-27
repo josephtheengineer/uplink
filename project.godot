@@ -232,6 +232,10 @@ open_chat={
  ]
 }
 
+[logging]
+
+file_logging/log_path="user://log/all"
+
 [rendering]
 
 quality/driver/driver_name="GLES2"

@@ -10,11 +10,11 @@ const meta := {
 #warning-ignore:unused_class_variable
 const DEFAULT_DATA := {
 	setup_chat_input = true,
-	input_path = "/root/World/Interfaces/Hud/Hud/HorizontalMain/VerticalMain/VerticalCenterContent/LeftPanel/TabContainer/Chat/TextEdit",
+	input_path = "Interface/Hud/Hud/HorizontalMain/VerticalMain/VerticalCenterContent/LeftPanel/TabContainer/Chat/TextEdit",
 	player = "default"
 }
 #warning-ignore:unused_class_variable
-var data := DEFAULT_DATA.duplicate()
+var data := DEFAULT_DATA.duplicate(true)
 
 signal chat_input(obj, input)
 
@@ -32,17 +32,17 @@ func _ready(): #################################################################
 
 func _reset():
 	Core.emit_signal("msg", "Reseting input system database...", Core.DEBUG, meta)
-	data = DEFAULT_DATA.duplicate()
+	data = DEFAULT_DATA.duplicate(true)
 
 func _chat_input():
-	var node: TextEdit = Core.get_node(data.input_path)
+	var node: TextEdit = Core.world.get_node(data.input_path)
 	emit_signal("chat_input", node, node.text)
 
 func _input(event: InputEvent): ############################################################	
-	if Core.get_parent().has_node("World/Inputs/" + data.player):
+	if has_node(data.player):
 		#if !Core.get_parent().has_node("World/Inputs/" + data.player).components.has("player"):
 		#	breakpoint
-		var Player = Core.get_parent().get_node("World/Inputs/" + data.player)
+		var Player = get_node(data.player)
 		var player_data = Player.components
 		
 		if player_data.mouse_attached:
@@ -51,19 +51,19 @@ func _input(event: InputEvent): ################################################
 		
 		if event.is_action_pressed("burn"):
 			Core.emit_signal("msg", "Changing action_mode to burn...", Core.INFO, meta)
-			player_data.action_mode = "burn"
+			player_data.action.mode = "burn"
 	
 		if event.is_action_pressed("mine"):
 			Core.emit_signal("msg", "Changing action_mode to mine...", Core.INFO, meta)
-			player_data.action_mode = "mine"
+			player_data.action.mode = "mine"
 		
 		if event.is_action_pressed("build"):
 			Core.emit_signal("msg", "Changing action_mode to build...", Core.INFO, meta)
-			player_data.action_mode = "build"
+			player_data.action.mode = "build"
 		
 		if event.is_action_pressed("paint"):
 			Core.emit_signal("msg", "Changing action_mode to paint...", Core.INFO, meta)
-			player_data.action_mode = "paint"
+			player_data.action.mode = "paint"
 		
 		if event.is_action_pressed("ui_cancel"):
 			Core.emit_signal("msg", "Cancel event received", Core.DEBUG, meta)
@@ -76,22 +76,22 @@ func _input(event: InputEvent): ################################################
 			Core.scripts.client.player.interact.action(Player, event.position)
 		Core.scripts.client.player.interact.update_looking_at_block(Player)
 	
-	if data.setup_chat_input and Core.has_node("/root/World/Interfaces/Hud"):
-		var error: int = Core.get_parent().get_node(data.input_path).connect("text_changed", self, "_chat_input")
+	if data.setup_chat_input and Core.world.has_node("Interface/Hud"):
+		var error: int = Core.world.get_node(data.input_path).connect("text_changed", self, "_chat_input")
 		if error:
 			Core.emit_signal("msg", "Error on binding to text_changed on _chat_input"
 				+ ": " + str(error), Core.WARN, meta)
 		data.setup_chat_input = false
 	
-	if Core.has_node("/root/World/Inputs/" + data.player):
-		var player: Entity = Core.get_node("/root/World/Inputs/" + data.player)
+	if has_node(data.player):
+		var player: Entity = get_node(data.player)
 		if event.is_action_pressed("fly"):
-			if player.components.move_mode == "walk":
+			if player.components.position.mode == "walk":
 				Core.emit_signal("msg", "Changing move_mode to fly...", Core.INFO, meta)
-				player.components.move_mode = "fly"
+				player.components.position.mode = "fly"
 			else:
 				Core.emit_signal("msg", "Changing move_mode to walk...", Core.INFO, meta)
-				player.components.move_mode = "walk"
+				player.components.position.mode = "walk"
 	
 	if event is InputEventScreenTouch:
 		pass
@@ -112,6 +112,19 @@ func _input(event: InputEvent): ################################################
 	if event.is_action_pressed("open_chat"):
 		Core.scripts.debug.panel.open_chat()
 
+func create(entity: Dictionary):
+	if entity.meta.system != "input":
+		Core.emit_signal("msg", "Input entity create called with incorrect system set", Core.WARN, meta)
+		return false
+	
+	if entity.meta.type == "player":
+		var node = Entity.new()
+		node.set_name(entity.meta.id)
+		add_child(node)
+		get_node(entity.meta.id).components = entity
+		get_node(entity.meta.id).add_child(Core.scenes.player.instance())
+		get_node(entity.meta.id + "/Player").translation = entity.position.world
+
 func detach_mouse(Player: Entity): ###########################################################
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	Player.components.mouse_attached = false
@@ -126,11 +139,11 @@ func _physics_process(delta): ##################################################
 #		if components.has("player"):
 #			connect("submit", components.text_input.object, components.text_input.method, [id])
 	if data.has("player"):
-		if Core.get_parent().has_node("World/Inputs/" + data.player):
-			var player_path = "/root/World/Inputs/" + data.player + "/" 
+		if has_node(data.player):
+			var player_path = data.player + "/" 
 			var node = get_node(player_path)
 			var capsule: CollisionShape = get_node(player_path + "Player/Capsule")
-			if node.components.move_mode == "walk":
+			if node.components.position.mode == "walk":
 				Core.scripts.client.player.move.walk(node, delta)
 				capsule.disabled = false
 			else:

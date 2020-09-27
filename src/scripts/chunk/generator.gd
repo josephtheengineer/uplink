@@ -46,6 +46,47 @@ static func generate_flat_terrain(): ###########################################
 	return chunk_data
 
 
+static func generate_box():
+	var voxel_data = Dictionary()
+	var VSIZE = Core.scripts.chunk.geometry.VSIZE
+	# draw an outline of voxels (for debuging mostly)
+#	for x in 16:
+#		for y in 16:
+#			for z in 16:
+#				if x == 0 and y == 0 or x == 0 and z == 0 or z == 0 and y == 0:
+#					voxel_data[Vector3(x*VSIZE, y*VSIZE, z*VSIZE)] = 1
+#				elif x == 15 and y == 15 or x == 15 and z == 15 or z == 15 and y == 15:
+#					voxel_data[Vector3(x*VSIZE, y*VSIZE, z*VSIZE)] = 1
+#				elif x == 15 and y == 0 or x == 15 and z == 0 or z == 15 and y == 0:
+#					voxel_data[Vector3(x*VSIZE, y*VSIZE, z*VSIZE)] = 1
+#				elif x == 0 and y == 15 or x == 0 and z == 15 or z == 0 and y == 15:
+#					voxel_data[Vector3(x*VSIZE, y*VSIZE, z*VSIZE)] = 1
+#				elif y == 15:
+#					voxel_data[Vector3(x*VSIZE, y*VSIZE, z*VSIZE)] = 1
+	for x in 16:
+		for y in 16:
+			for z in 16:
+				if x == 0:
+					voxel_data[Vector3(x, y, z)] = 1
+				elif z == 0:
+					voxel_data[Vector3(x, y, z)] = 1
+				elif y == 0:
+					voxel_data[Vector3(x, y, z)] = 1
+				elif x == 15:
+					voxel_data[Vector3(x, y, z)] = 1
+				elif y == 15:
+					voxel_data[Vector3(x, y, z)] = 1
+	return voxel_data
+
+
+static func single_voxel(): ####################################################
+	var chunk_data = Dictionary()
+	chunk_data[Vector3(8, 8, 8)] = {}
+	chunk_data[Vector3(8, 8, 8)].id = 8
+	chunk_data[Vector3(8, 8, 8)].voxels = generate_box()
+	return chunk_data
+
+
 static func generate_natural_terrain(noise): ###################################
 	var chunk_data = Dictionary()
 	var id = 0
@@ -117,3 +158,6 @@ static func generate_simple_terrain(): #########################################
 						#place_block(x, y, z, 2)
 	#place_block(2, 0, 0, 0)
 	#compile()
+
+static func text(string):
+	pass

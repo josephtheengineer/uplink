@@ -16,7 +16,7 @@
 [ext_resource path="res://src/scripts/input/chat.gd" type="Script" id=14]
 [ext_resource path="res://aux/assets/fonts/orbitron/Orbitron Light.otf" type="DynamicFontData" id=15]
 
-[sub_resource type="DynamicFont" id=3]
+[sub_resource type="DynamicFont" id=1]
 size = 14
 font_data = ExtResource( 15 )
 
@@ -49,19 +49,19 @@ __meta__ = {
 }
 
 [node name="VerticalMain" type="VBoxContainer" parent="HorizontalMain"]
-margin_right = 1716.0
+margin_right = 1920.0
 margin_bottom = 1084.0
 size_flags_horizontal = 7
 size_flags_vertical = 7
 
 [node name="TopMargin" type="Control" parent="HorizontalMain/VerticalMain"]
-margin_right = 1716.0
+margin_right = 1920.0
 margin_bottom = 50.0
 rect_min_size = Vector2( 0, 50 )
 
 [node name="VerticalCenterContent" type="HBoxContainer" parent="HorizontalMain/VerticalMain"]
 margin_top = 54.0
-margin_right = 1716.0
+margin_right = 1920.0
 margin_bottom = 526.0
 
 [node name="LeftMargin" type="Control" parent="HorizontalMain/VerticalMain/VerticalCenterContent"]
@@ -83,7 +83,7 @@ margin_bottom = 300.0
 rect_min_size = Vector2( 400, 300 )
 size_flags_horizontal = 4
 size_flags_vertical = 4
-custom_fonts/font = SubResource( 3 )
+custom_fonts/font = SubResource( 1 )
 tab_align = 0
 __meta__ = {
 "_edit_use_anchors_": false
@@ -112,7 +112,7 @@ margin_right = 400.0
 margin_bottom = 209.0
 size_flags_horizontal = 7
 size_flags_vertical = 7
-custom_fonts/font = SubResource( 3 )
+custom_fonts/font = SubResource( 1 )
 tab_align = 0
 __meta__ = {
 "_edit_use_anchors_": false
@@ -309,33 +309,34 @@ margin_bottom = 672.0
 
 [node name="Spacer" type="Control" parent="HorizontalMain/VerticalMain/VerticalCenterContent"]
 margin_left = 466.0
-margin_right = 1395.0
+margin_right = 1599.0
 margin_bottom = 472.0
 size_flags_horizontal = 3
 
 [node name="DebugStats" parent="HorizontalMain/VerticalMain/VerticalCenterContent" instance=ExtResource( 6 )]
-margin_left = 1399.0
-margin_right = 1716.0
+margin_left = 1603.0
 margin_bottom = 472.0
 
 [node name="Control" type="Control" parent="HorizontalMain/VerticalMain"]
 margin_top = 530.0
-margin_right = 1716.0
-margin_bottom = 726.0
+margin_right = 1920.0
+margin_bottom = 1030.0
 size_flags_vertical = 3
 
 [node name="Navbox" parent="HorizontalMain/VerticalMain" instance=ExtResource( 7 )]
+visible = false
 margin_top = 730.0
 margin_right = 1716.0
 margin_bottom = 1030.0
 
 [node name="BottomMargin" type="Control" parent="HorizontalMain/VerticalMain"]
 margin_top = 1034.0
-margin_right = 1716.0
+margin_right = 1920.0
 margin_bottom = 1084.0
 rect_min_size = Vector2( 0, 50 )
 
 [node name="Toolbox" parent="HorizontalMain" instance=ExtResource( 8 )]
+visible = false
 margin_bottom = 1084.0
 size_flags_horizontal = 1
 size_flags_vertical = 1

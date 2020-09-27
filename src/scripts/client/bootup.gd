@@ -16,7 +16,7 @@ const meta := {
 # systems bootup ###############################################################
 static func bring_systems_online():
 	Core.emit_signal("system_process", meta, "bring_systems_online", true)
-	Core.scripts.core.debug.msg.init(Core.Client.data.log_path)
+	Core.scripts.core.debug.msg.init(Core.client.data.log_path)
 	Core.scripts.core.system.setup()
 	
 	# Wait for nodes to init (wait until there is an idle frame)
@@ -37,7 +37,7 @@ static func create_chunk_system(): #############################################
 	var node = Node.new()
 	node.set_name("Chunk")
 	node.set_script(load("res://src/scripts/sys/chunk.gd"))
-	Core.get_node("/root/World/Systems").add_child(node)
+	Core.get_node("/root/World").add_child(node)
 
 
 static func create_download_system(): ##########################################
@@ -45,7 +45,7 @@ static func create_download_system(): ##########################################
 	var node = Node.new()
 	node.set_name("Download")
 	node.set_script(load("res://src/scripts/sys/download.gd"))
-	Core.get_node("/root/World/Systems").add_child(node)
+	Core.get_node("/root/World").add_child(node)
 
 
 static func create_input_system(): #############################################
@@ -53,7 +53,7 @@ static func create_input_system(): #############################################
 	var node = Node.new()
 	node.set_name("Input")
 	node.set_script(load("res://src/scripts/sys/input.gd"))
-	Core.get_node("/root/World/Systems").add_child(node)
+	Core.get_node("/root/World").add_child(node)
 
 
 static func create_interface_system(): #########################################
@@ -61,7 +61,7 @@ static func create_interface_system(): #########################################
 	var node = Node.new()
 	node.set_name("Interface")
 	node.set_script(load("res://src/scripts/sys/interface.gd"))
-	Core.get_node("/root/World/Systems").add_child(node)
+	Core.get_node("/root/World").add_child(node)
 
 
 static func create_sound_system(): #############################################
@@ -69,7 +69,7 @@ static func create_sound_system(): #############################################
 	var node = Node.new()
 	node.set_name("Sound")
 	node.set_script(load("res://src/scripts/sys/sound.gd"))
-	Core.get_node("/root/World/Systems").add_child(node)
+	Core.get_node("/root/World").add_child(node)
 ################################################################################
 
 
@@ -78,6 +78,7 @@ static func create_sound_system(): #############################################
 static func check_systems():####################################################
 	Core.emit_signal("system_process", meta, "check_systems", true)
 	Core.scripts.core.system.check_systems()
+	Core.scripts.core.files.check()
 	Core.emit_signal("msg", "App ready!", Core.INFO, meta)
 	Core.emit_signal("system_process", meta, "check_systems")
 ################################################################################
@@ -95,7 +96,7 @@ static func run_diagnostics(): #################################################
 # remove tty, create hud #######################################################
 static func load_interface():
 	Core.emit_signal("system_process", meta, "load_interface", true)
-	Core.get_parent().get_node("World/Interfaces/0").free()
+	Core.world.get_node("Interface/0").free()
 	Core.scripts.interface.hud.create()
 	Core.emit_signal("system_process", meta, "load_interface")
 ################################################################################

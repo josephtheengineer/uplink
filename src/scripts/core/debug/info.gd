@@ -7,66 +7,66 @@ const meta := {
 }
 
 static func player_move_update(hud):
-	var stats = "World/Interfaces/" + str(hud.components.id) + "/Hud/HorizontalMain/VerticalMain/VerticalCenterContent/DebugStats/ClientInfo/"
-	
-	if Core.Client.data.subsystem.input.Link:
-		var player_id = Core.Client.data.subsystem.input.Link.data.player
-		if Core.get_parent().has_node("/root/World/Inputs/" + player_id):
-			var player = Core.get_parent().get_node("World/Inputs/" + str(player_id))
+	if Core.client.data.subsystem.input.Link:
+		var player_id = Core.client.data.subsystem.input.Link.data.player
+		if Core.world.has_node("Input/" + player_id):
+			var player = Core.world.get_node("Input/" + str(player_id))
 			
-			var player_pos = player.get_node("Player").translation.round()
-			Core.get_parent().get_node(stats + "PlayerXYZ").text = "XYZ: " + str(player_pos)
+			var player_pos = player.get_node("Player").translation.floor()
+			set_text(hud, "ClientInfo/PlayerXYZ", "XYZ: " + str(player_pos))
 			
 			
 			var normal = Core.scripts.client.player.interact.get_looking_at_normal(player, OS.get_window_size() / 2)
 			var block_location = Core.scripts.client.player.interact.get_looking_at(player, OS.get_window_size() / 2)# - normal
 			
-			Core.get_parent().get_node(stats + "LookingXYZ").text = "Looking at: XYZ: " + str(block_location.round())
+			set_text(hud, "ClientInfo/LookingAtVoxel", "Looking at voxel: XYZ: " + str((block_location-block_location.floor())*16))
+			
+			set_text(hud, "ClientInfo/LookingAtBlock", "Looking at block: XYZ: " + str(block_location.floor()))
 			
 			var location = Core.scripts.chunk.tools.get_chunk(block_location)
-			Core.get_parent().get_node(stats + "LookingAtChunk").text = "Looking at chunk: XYZ: " + str(location.round())
+			set_text(hud, "ClientInfo/LookingAtChunk", "Looking at chunk: XYZ: " + str(location.floor()))
 			
 			var orentation = Core.scripts.client.player.interact.get_orientation(player)
-			Core.get_parent().get_node(stats + "Orentation").text = "Orentation: " + str(orentation)
+			set_text(hud, "ClientInfo/Orentation", "Orentation: " + str(orentation))
 			
 			chunk_info_update(hud, player_pos)
 
 static func action_mode_update(hud):
-	if Core.Client.data.subsystem.input.Link:
-		var player_id = Core.Client.data.subsystem.input.Link.data.player
-		if Core.get_parent().has_node("/root/World/Inputs/" + player_id):
-			var stats = "World/Interfaces/" + str(hud.components.id) + "/Hud/HorizontalMain/VerticalMain/VerticalCenterContent/DebugStats/ClientInfo/"
-			Core.get_parent().get_node(stats + "Mode").text = "Mode: " + Core.get_parent().get_node("World/Inputs/" + player_id).components.action_mode
+	if Core.client.data.subsystem.input.Link:
+		var player_id = Core.client.data.subsystem.input.Link.data.player
+		if Core.world.has_node("Input/" + player_id):
+			set_text(hud, "ClientInfo/Mode", "Mode: " + Core.world.get_node("Input/" + player_id).components.action.mode)
 
 static func frame_update(hud):
-	var stats = "World/Interfaces/" + str(hud.components.id) + "/Hud/HorizontalMain/VerticalMain/VerticalCenterContent/DebugStats/ClientInfo/"
-	
-	Core.get_parent().get_node(stats + "Entities").text = "Entities: " + str(Core.Client.data.total_entities) + " | Players: " + str(Core.Client.data.total_players)
-	Core.get_parent().get_node(stats + "AllBlocksLoaded").text = "Blocks Loaded: " + str(Core.Client.data.blocks_loaded)
-	Core.get_parent().get_node(stats + "BlocksFound").text = "Blocks Found: " + str(Core.Client.data.blocks_found)
-	Core.get_parent().get_node(stats + "FPS").text = "FPS: " + str(Performance.get_monitor(Performance.TIME_FPS))
+	set_text(hud, "ClientInfo/Entities", "Entities: "             + str(Core.client.data.total_entities) + " | Players: " + str(Core.client.data.total_players))
+	set_text(hud, "ClientInfo/AllBlocksLoaded", "Blocks Loaded: " + str(Core.client.data.blocks_loaded)                                                        )
+	set_text(hud, "ClientInfo/BlocksFound", "Blocks Found: "      + str(Core.client.data.blocks_found)                                                         )
+	set_text(hud, "ClientInfo/FPS", "FPS: "                       + str(Performance.get_monitor(Performance.TIME_FPS))                                         )
 
 static func world_stats_update(hud):
-	var stats = "World/Interfaces/" + str(hud.components.id) + "/Hud/HorizontalMain/VerticalMain/VerticalCenterContent/DebugStats/WorldStats/"
+	set_text(hud, "WorldStats/WorldName", "== " + Core.server.data.map.name + " ==")
+	set_text(hud, "WorldStats/WorldPath",         Core.server.data.map.path        )
 	
-	Core.get_parent().get_node(stats + "WorldName").text = "== " + Core.Server.data.map.name + " =="
-	Core.get_parent().get_node(stats + "WorldPath").text = Core.Server.data.map.path
-	
-	Core.get_parent().get_node(stats + "TotalChunks").text = "Total Chunks: " + str(Core.Server.data.map.total_chunks)
-	Core.get_parent().get_node(stats + "ChunksCache").text = "Chunk Cache: " + str(Core.Server.data.map.chunks_cache_size)
+	set_text(hud, "WorldStats/TotalChunks", "Total Chunks: " + str(Core.server.data.map.total_chunks)     )
+	set_text(hud, "WorldStats/ChunksCache", "Chunk Cache: "  + str(Core.server.data.map.chunks_cache_size))
 	#Core.get_parent().get_node(stats + "ChunksLoaded").text = "Chunks Loaded: " + str(Core.get_parent().get_node("World/Chunks").get_child_count())
-	Core.get_parent().get_node(stats + "Seed").text = "Seed: " + str(Core.Server.data.map.seed)
+	set_text(hud, "WorldStats/Seed", "Seed: " + str(Core.server.data.map.seed))
 	
 
 static func chunk_info_update(hud, player_pos):
-	var stats = "World/Interfaces/" + str(hud.components.id) + "/Hud/HorizontalMain/VerticalMain/VerticalCenterContent/DebugStats/ChunkInfo/"
-	
 	var chunk_loc = Core.scripts.chunk.tools.get_chunk(player_pos)
-	if Core.get_parent().has_node("World/Chunks"):
-		if Core.get_parent().get_node("World/Chunks").has_node(str(chunk_loc)):
-			var chunk = Core.get_parent().get_node("World/Chunks/" + str(chunk_loc))
-			
-			Core.get_parent().get_node(stats + "ChunkXYZ").text = "XYZ: " + str(chunk.components.position)
-			Core.get_parent().get_node(stats + "ChunkAddress").text = "== Chunk: " + str(chunk.components.address) + " =="
-			Core.get_parent().get_node(stats + "BlocksLoaded").text = "Blocks Loaded: " + str(chunk.components.blocks_loaded)
-			#Core.get_parent().get_node(stats + "Blocks").text = "Blocks: " + Core.Client.action_mode
+	if Core.world.get_node("Chunk").has_node(str(chunk_loc)):
+		var chunk = Core.world.get_node("Chunk/" + str(chunk_loc))
+		
+		set_text(hud, "ChunkInfo/ChunkXYZ",     "XYZ: "           + str(chunk.components.position.world)       )
+		set_text(hud, "ChunkInfo/ChunkAddress", "== Chunk: "      + str(chunk.components.position.address) + " ==")
+		set_text(hud, "ChunkInfo/BlocksLoaded", "Blocks Loaded: " + str(chunk.components.mesh.blocks_loaded)  )
+		#Core.get_parent().get_node(stats + "Blocks").text = "Blocks: " + Core.Client.action_mode
+	else:
+		set_text(hud, "ChunkInfo/ChunkXYZ",     "XYZ: "           + str(chunk_loc))
+		set_text(hud, "ChunkInfo/ChunkAddress", "== Chunk: "      + "N/A" + " ==" )
+		set_text(hud, "ChunkInfo/BlocksLoaded", "Blocks Loaded: " + "N/A"         )
+
+static func set_text(hud: Entity, key: String, value: String):
+	var label: Label = Core.world.get_node("Interface/" + str(hud.components.meta.id) + "/Hud/HorizontalMain/VerticalMain/VerticalCenterContent/DebugStats/" + key)
+	label.text = value

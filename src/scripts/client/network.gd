@@ -14,25 +14,25 @@ static func join_server(_nickname: String, address: String): ###################
 		port = address.rsplit(":")[1]
 	
 	if host == null or host == "":
-		host = Core.Client.DEFAULT_HOST
+		host = Core.client.DEFAULT_HOST
 	if port == null or host == "":
-		port = Core.Client.DEFAULT_PORT
+		port = Core.client.DEFAULT_PORT
 	
 	# Create new MultiplayerAPI so that client and server can run on the same scene
-	Core.Client.custom_multiplayer = MultiplayerAPI.new()
-	Core.Client.custom_multiplayer.set_root_node(Core.Server)
+	Core.client.custom_multiplayer = MultiplayerAPI.new()
+	Core.client.custom_multiplayer.set_root_node(Core.server)
 	
 	var network = NetworkedMultiplayerENet.new()
-	network.connect("connection_failed", Core.Client, "_on_connection_failed")
-	network.connect("connection_succeeded", Core.Client, "_on_connection_succeeded")
+	network.connect("connection_failed", Core.client, "_on_connection_failed")
+	network.connect("connection_succeeded", Core.client, "_on_connection_succeeded")
 	
 	Core.emit_signal("msg", "Connecting to host " + str(host) + ":" + str(port), Core.INFO, meta)
 	Core.emit_signal("msg", "Client code: " + str(network.create_client(host, int(port))), Core.INFO, meta)
-	Core.Client.custom_multiplayer.network_peer = network
+	Core.client.custom_multiplayer.network_peer = network
 	
 	Core.emit_signal("msg", "Client status: " + str(network.get_connection_status()), Core.INFO, meta)
 	
-	var error = Core.Client.multiplayer.connect("network_peer_packet", Core.Client, "_on_packet_received")
+	var error = Core.client.multiplayer.connect("network_peer_packet", Core.client, "_on_packet_received")
 	if error:
 		Core.emit_signal("msg", "Error on binding to network_peer_packet: " 
 			+ str(error), Core.WARN, meta)

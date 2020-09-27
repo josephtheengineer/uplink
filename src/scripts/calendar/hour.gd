@@ -24,7 +24,13 @@ const MARGIX_Y = 50
 
 func _process(_delta):
 	var title: Button = get_node("HBoxContainer/VBox/Header/Title")
-	title.text = str(OS.get_time())
+	title.text =  "UTC:  " + str(OS.get_time().hour) + " : " + str(OS.get_time().minute) + " : " + str(OS.get_time().second)
+	
+	var title_local: Button = get_node("HBoxContainer/VBox/HeaderLocal/Title")
+	var hour = OS.get_time().hour + 10
+	if hour > 24:
+		hour -= 24
+	title_local.text = "Local:  " + str(hour) + " : " + str(OS.get_time().minute) + " : " + str(OS.get_time().second)
 
 #func start_timer():
 #	var timer = Timer.new()

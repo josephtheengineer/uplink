@@ -8,15 +8,20 @@ const meta := {
 
 const keyword = "eden"
 
+const DEFAULT_TTY = {
+	meta = {
+		system = "interface",
+		type = "tty",
+		id = 0
+	},
+	debug = true,
+	text = ""
+}
+
 static func run(signal_link, meta_data, name):
 	randomize()
-	var tty = Dictionary()
-	tty.name_id = "tty"
-	tty.type = "interface"
-	tty.debug = true
-	tty.text = ""
-	
-	var id = Core.scripts.core.manager.create(tty)
+	var tty = DEFAULT_TTY.duplicate(true)
+	var id = Core.client.data.subsystem.interface.Link.create(tty)
 	Core.emit_signal("msg", "Staring tty on id " + str(id), Core.INFO, meta)
 	
 	var timer = Timer.new()
@@ -29,9 +34,9 @@ static func run(signal_link, meta_data, name):
 static func _update_terminal(signal_link, meta_data, name):
 	#Core.emit_signal("msg", "Update called!", Core.DEBUG, meta)
 	#timer.wait_time = rand_range(0, 1)
-	match Core.Client.data.diagnostics.progress:
+	match Core.client.data.diagnostics.progress:
 		0:
-			Core.emit_signal("msg", "Welcome to " + Core.Client.data.version, Core.INFO, meta)
+			Core.emit_signal("msg", "Welcome to " + Core.client.data.version, Core.INFO, meta)
 		1:
 			Core.emit_signal("msg", "Please submit bug reports to joseph@theengineer.life or #dev at discord.me/EdenUniverseBuilder", Core.INFO, meta)
 		2:
@@ -113,7 +118,7 @@ static func _update_terminal(signal_link, meta_data, name):
 			#show_text(id, components, "Type '" + keyword +"' to continue: ")
 			#OS.show_virtual_keyboard()
 			#create_text_input()
-	Core.Client.data.diagnostics.progress+=1
+	Core.client.data.diagnostics.progress+=1
 
 #static func create_text_input():
 #	var text_input = Dictionary()

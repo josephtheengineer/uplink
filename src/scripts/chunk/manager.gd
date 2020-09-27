@@ -6,6 +6,42 @@ const meta := {
 	"""
 }
 
+const DEFAULT_CHUNK = {
+	meta = {
+		system = "chunk",
+		type = "chunk",
+		id = str(Vector3(0, 0, 0))
+	},
+	position = {
+		world = Vector3(0, 0, 0),
+		address = 0
+	},
+	mesh = {
+		rendered = false,
+		vertices = Array(),
+		blocks = Dictionary(),
+		blocks_loaded = 0
+	},
+	generator = {
+		seed = 0
+	}
+}
+
+const DEFAULT_VOXEL = {
+	material = "example"
+}
+
+const EXAMPLE_MATERIAL = {
+	name = "example",
+	color = Color(0, 0, 0),  # the color & properties
+	mass = 1,                # the weight of the voxel
+	supports = 1*3           # the amount of mass the voxel can hold together
+}
+
+const DEFAULT_BLOCK = {
+	#Vector3(0, 0, 0) = DEFAULT_VOXEL
+}
+
 static func create_chunk(position: Vector3): ##########################################
 	Core.emit_signal("msg", "Creating chunk " + str(position) + "...", 
 		Core.DEBUG, meta)
@@ -13,30 +49,14 @@ static func create_chunk(position: Vector3): ###################################
 	var chunk_data = Core.scripts.eden.world_decoder.get_chunk_data(position)
 	
 	if !chunk_data:
-		chunk_data = generate_terrain(Core.Server.data.map.seed, position)
+		chunk_data = generate_terrain(0, position)
 	
-	#if !chunk_data:
-		#return
+	var chunk = DEFAULT_CHUNK.duplicate(true)
+	chunk.meta.id = str(position)
+	chunk.position.world = position
+	chunk.mesh.blocks = chunk_data
 	
-	var chunk = Dictionary()
-	chunk.name_id = "chunk"
-	chunk.type = "chunk"
-	chunk.id = position
-	chunk.rendered = false
-	chunk.position = position
-	chunk.address = 0
-	chunk.gen_seed = 0
-	chunk.block_data = chunk_data
-	chunk.blocks_loaded = 0
-	chunk.mesh = null
-	chunk.vertex_data = Array()
-	chunk.shape = null
-	chunk.materials = Dictionary()
-	chunk.entities = Dictionary()
-	chunk.object = null
-	chunk.method = null
-	
-	Core.scripts.core.manager.create(chunk)
+	Core.client.data.subsystem.chunk.Link.create(chunk)
 	
 	if !chunk_data:
 		return false
@@ -48,11 +68,11 @@ static func generate_chunk_components(node: Entity): ###########################
 	var chunk = Spatial.new()
 	chunk.name = "Chunk"
 	
-	if !node.components.block_data:
-		var pos = node.components.position
+	if !node.components.mesh.blocks:
+		var pos = node.components.position.world
 		chunk.translation = Vector3(pos.x * 16, pos.y * 16, pos.z * 16)
-		node.components.rendered = true
-		Core.Client.data.chunk_index.append(pos)
+		node.components.mesh.rendered = true
+		Core.client.data.chunk_index.append(pos)
 		return
 	
 	var line = ImmediateGeometry.new()
@@ -76,20 +96,13 @@ static func generate_chunk_components(node: Entity): ###########################
 	collision_shape.name = "Shape"
 	body.add_child(collision_shape)
 	
-	Core.Client.data.blocks_found += node.components.block_data.size()
+	Core.client.data.blocks_found += node.components.mesh.blocks.size()
 	
-	var pos = node.components.position
+	var pos = node.components.position.world
 	chunk.translation = Vector3(pos.x * 16, pos.y * 16, pos.z * 16)
-	Core.Client.data.chunk_index.append(pos)
+	Core.client.data.chunk_index.append(pos)
 	
 	node.call_deferred("add_child", chunk)
-	
-	if node.components.object != null or node.components.method != null:
-		var error = Core.connect("rendered", node.components.object, node.components.method)
-		if error:
-			Core.emit_signal("msg", "Error on binding to rendered signal on chunk: " + str(error), Core.WARN, meta)
-		Core.emit_signal("rendered")
-		
 
 static func draw_chunk_highlight(node: Entity, color: Color):
 	var m = SpatialMaterial.new()
@@ -104,23 +117,25 @@ static func draw_chunk_highlight(node: Entity, color: Color):
 	line.set_material_override(m)
 	line.begin(Mesh.PRIMITIVE_LINES)
 	for point in Core.scripts.chunk.geometry.BOX_HIGHLIGHT:
-		line.add_vertex(point*Core.scripts.chunk.geometry.CSIZE + (node.components.position*16) + Vector3(0, -1, 0))
+		line.add_vertex(point*Core.scripts.chunk.geometry.CSIZE + (node.components.position.world*16) + Vector3(0, -1, 0))
 	line.end()
 
-static func destroy_chunk(_position: Vector3): #########################################
-	Core.emit_signal("msg", "Destroying a chunk is not implemented yet!", 
-		Core.WARN, meta)
-	#var chunk = Dictionary()
-	#var list = Entity.get_entities_with("chunk")
-	#for entity in list.values():
-	#	if entity.components.position == position:
-	#		Entity.destory(entity.id)
+static func destroy_chunk(chunk: Entity): #########################################
+	chunk.queue_free()
+	Core.client.data.blocks_loaded -= chunk.components.mesh.blocks_loaded
+	Core.client.data.blocks_found -= chunk.components.mesh.blocks.size()
 
-static func generate_terrain(map_seed: int, position: Vector3): #######################
+static func generate_terrain(chunk_seed: int, position: Vector3): #######################
 	var noise = Core.scripts.chunk.generator.generate_noise()
-	if map_seed == 0:
-		if position.y == 1 and position.x == 1 and position.z == 1:
-			return Core.scripts.chunk.generator.generate_flat_terrain()
-	else:
-		if position.y == 0:
-			return Core.scripts.chunk.generator.generate_natural_terrain(noise)
+	
+	if Core.server.data.map.generator.single_voxel:
+		if position.x == 0 and position.y == 0 and position.z == 0:
+			return Core.scripts.chunk.generator.single_voxel()
+		else:
+			return Dictionary()
+	
+	if Core.server.data.map.generator.terrain_type == Core.server.GEN_FLAT:
+		return Core.scripts.chunk.generator.generate_flat_terrain()
+	
+	elif Core.server.data.map.generator.terrain_type == Core.server.GEN_NATURAL:
+		return Core.scripts.chunk.generator.generate_natural_terrain(noise)

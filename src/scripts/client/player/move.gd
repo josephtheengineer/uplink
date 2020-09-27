@@ -42,9 +42,9 @@ static func walk(player: Entity, delta: float): ################################
 	
 	direction = direction.normalized()
 	
-	player.components.velocity.y += GRAVITY * delta
+	player.components.position.velocity.y += GRAVITY * delta
 	
-	var temp_velocity = player.components.velocity
+	var temp_velocity = player.components.position.velocity
 	temp_velocity.y = 0
 	
 	var speed
@@ -65,15 +65,15 @@ static func walk(player: Entity, delta: float): ################################
 	# calcuate a portion of the distance to go
 	temp_velocity = temp_velocity.linear_interpolate(target, acceleration * delta)
 	
-	player.components.velocity.x = temp_velocity.x
-	player.components.velocity.z = temp_velocity.z
+	player.components.position.velocity.x = temp_velocity.x
+	player.components.position.velocity.z = temp_velocity.z
 	
 	# move
 	var body: KinematicBody = player.get_node("Player")
-	player.components.velocity = body.move_and_slide(player.components.velocity, Vector3(0, 1, 0))
+	player.components.velocity = body.move_and_slide(player.components.position.velocity, Vector3(0, 1, 0))
 	
 	if Input.is_action_just_pressed("jump"):
-		player.components.velocity.y = JUMP_HEIGHT
+		player.components.position.velocity.y = JUMP_HEIGHT
 
 
 
@@ -109,9 +109,9 @@ static func fly(player: Entity, delta: float): #################################
 static func look(player: Entity, event): #######################################
 	var head = player.get_node("Player/Head")
 	
-	head.rotation_degrees.y += -event.relative.x * player.components.mouse_sensitivity
+	head.rotation_degrees.y += -event.relative.x * player.components.position.mouse_sensitivity
 	
-	var change = -event.relative.y * player.components.mouse_sensitivity
+	var change = -event.relative.y * player.components.position.mouse_sensitivity
 	#if change + camera_angle < 90 and change + camera_angle > -90:
 	#	camera_angle += change
 	head.rotation_degrees.x += change

@@ -12,7 +12,7 @@ var mode = "none"
 var index = 0
 
 func _ready():
-	var node = Core.get_node("/root/World/Systems/Input")
+	var node = Core.get_node("/root/World/Input")
 	node.connect("chat_input", self, "_chat_input")
 
 func msg(message: String, _meta: Dictionary):

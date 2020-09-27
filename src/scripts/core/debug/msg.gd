@@ -6,7 +6,7 @@ const meta := {
 	"""
 }
 
-const log_loc = "user://logs/"
+const log_loc = "user://log/"
 
 static func init(_client_log_loc):
 	#var log_loc = client_log_loc
@@ -20,3 +20,38 @@ static func init(_client_log_loc):
 	if error:
 		Core.emit_signal("msg", "Event msg failed to bind", Core.WARN, meta)
 		print("Warn: Event msg failed to bind")
+
+static func level_string(level: int):
+	match level:
+		Core.FATAL:
+			return "Fatal"
+		Core.ERROR:
+			return "Error"
+		Core.WARN:
+			return " Warn"
+		Core.INFO:
+			return " Info"
+		Core.DEBUG:
+			return "Debug"
+		Core.TRACE:
+			return "Trace"
+		Core.ALL:
+			return "  All"
+
+static func send(message: String, level: int, meta: Dictionary):
+	var level_string = level_string(level)
+	
+	if level < Core.ALL:
+		print(level_string + " [ " + meta.script_name + " ] " + message)
+		
+	var file = File.new()
+	file.open(Core.client.data.log_path + "latest.txt", File.READ_WRITE)
+	file.seek_end()
+	var date = str(OS.get_date().year) + "-" + str(OS.get_date().month) + "-" + str(OS.get_date().day)
+	var time = str(OS.get_time().hour) + ":" + str(OS.get_time().minute) + ":" + str(OS.get_time().second) 
+	file.store_string(date + " " + time + " | " + level_string + " [ " + meta.script_name + " ] " + message + '\n')
+	file.close()
+	
+	if level == Core.FATAL:
+		print("ERR FATAL received, terminating active processes")
+		Core.get_tree().quit()

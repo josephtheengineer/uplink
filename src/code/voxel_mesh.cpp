@@ -53,7 +53,7 @@ godot::Dictionary VoxelMesh::can_be_seen(
 ) const {
 	godot::Dictionary dict;
 	for (int i = 0; i < SURROUNDING_BLOCKS_SIZE; i++) {
-		if(voxel_data.has(position+SURROUNDING_BLOCKS[i]*VSIZE)) {
+		if(voxel_data.has(position+SURROUNDING_BLOCKS[i])) {
 			dict[SURROUNDING_BLOCKS[i]] = false;
 		} else {
 			dict[SURROUNDING_BLOCKS[i]] = true;
@@ -94,19 +94,17 @@ godot::Array VoxelMesh::create_cube(
 	verts.resize(num_verts);
 	
 	for (int i = 0; i < num_voxels; i++) {
-		Vector3 voxel_position = voxel_positions[i];
+		Vector3 voxel_position = position + ((Vector3)voxel_positions[i]/Vector3(16, 16, 16)) + Vector3(0, VSIZE, 0);
 		Vector2 uv_offset = Vector2(-0.5, -0.5);
 		//if (floor(rand_range(0, 3)) == 1)
 		//	uv_offset = Vector2(0, 0)
-		godot::Dictionary sides_to_render = can_be_seen(voxel_position, voxel_data);
-		create_voxel(position+voxel_position, uv_offset, sides_to_render, &normals, &uvs, &verts);
+		create_voxel(voxel_position, uv_offset, can_be_seen(voxel_positions[i], voxel_data), &normals, &uvs, &verts);
 	}
 	
 	mesh_arrays[Mesh::ARRAY_NORMAL] = normals;
 	mesh_arrays[Mesh::ARRAY_TEX_UV] = uvs;
 	mesh_arrays[Mesh::ARRAY_VERTEX] = verts;
 
-	//Core.emit_signal("msg", "create_cube() took " + str(OS.get_ticks_msec()-start) + "ms", Core.TRACE, meta)
 	return mesh_arrays;
 }
 
@@ -118,8 +116,7 @@ void VoxelMesh::create_voxel(
 		godot::PoolVector2Array *uvs,
 		godot::PoolVector3Array *verts
 ) const {
-	Mesh mesh = Mesh();
-	if(sides_to_render[Vector3(0, 1, 0)] || SHOW_UNSEEN_SIDES) { // up
+	if(sides_to_render[Vector3(0, 1, 0)]) { // up
 		for(int i = 0; i < VERT_SIZE; i++) {
 			normals->append(Vector3(0, 1, 0));
 			uvs->append(HPLANE_UVS[i] + uv_offset);
@@ -127,10 +124,8 @@ void VoxelMesh::create_voxel(
 		}
 	}
 
-	if(sides_to_render[Vector3(0, -1, 0)] || SHOW_UNSEEN_SIDES) { // down
-		int i = VERT_SIZE;
-		for(int index = 0; index < VERT_SIZE; index++) {
-			i--;
+	if(sides_to_render[Vector3(0, -1, 0)]) { // down
+		for(int i = VERT_SIZE-1; i >= 0; i--) {
 			normals->append(Vector3(0, -1, 0));
 			uvs->append(HPLANE_UVS[i] + uv_offset);
 			verts->append(HPLANE_VERTICES[i] + position + Vector3(0, -VSIZE, 0));
@@ -138,7 +133,7 @@ void VoxelMesh::create_voxel(
 	}
 
 
-	if(sides_to_render[Vector3(0, 0, 1)] || SHOW_UNSEEN_SIDES) { // west
+	if(sides_to_render[Vector3(0, 0, 1)]) { // west
 		for(int i = 0; i < VERT_SIZE; i++) {
 			normals->append(Vector3(0, 0, 1));
 			uvs->append(VPLANE_UVS[i] + uv_offset);
@@ -146,17 +141,15 @@ void VoxelMesh::create_voxel(
 		}
 	}
 
-	if(sides_to_render[Vector3(0, 0, -1)] || SHOW_UNSEEN_SIDES) { // east
-		int i = VERT_SIZE;
-		for(int index = 0; index < VERT_SIZE; index++) {
-			i--;
+	if(sides_to_render[Vector3(0, 0, -1)]) { // east
+		for(int i = VERT_SIZE-1; i >= 0; i--) {
 			normals->append(Vector3(0, 0, -1));
 			uvs->append(VPLANE_UVS[i] + uv_offset);
 			verts->append(VPLANE_VERTICES[i] + position + Vector3(0, 0, 0));
 		}
 	}
 
-	if(sides_to_render[Vector3(-1, 0, 0)] || SHOW_UNSEEN_SIDES) { // north
+	if(sides_to_render[Vector3(-1, 0, 0)]) { // north
 		for(int i = 0; i < VERT_SIZE; i++) {
 			normals->append(Vector3(-1, 0, 0));
 			uvs->append(VPLANE_UVS2[i] + uv_offset);
@@ -164,15 +157,11 @@ void VoxelMesh::create_voxel(
 		}
 	}
 
-	if(sides_to_render[Vector3(1, 0, 0)] || SHOW_UNSEEN_SIDES) { // south
-		int i = VERT_SIZE;
-		for(int index = 0; index < VERT_SIZE; index++) {
-			i--;
+	if(sides_to_render[Vector3(1, 0, 0)]) { // south
+		for(int i = VERT_SIZE-1; i >= 0; i--) {
 			normals->append(Vector3(1, 0, 0));
 			uvs->append(VPLANE_UVS2[i] + uv_offset);
 			verts->append(VPLANE_VERTICES2[i] + position + Vector3(VSIZE, 0, 0));
 		}
 	}
-
-	//Core.emit_signal("msg", "create_voxel() took " + str(OS.get_ticks_msec()-start) + "ms", Core.TRACE, meta)
 }

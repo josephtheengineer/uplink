@@ -6,13 +6,16 @@ const meta := {
 	"""
 }
 
+const DEFAULT_HUD = {
+	meta = {
+		system = "interface",
+		type = "hud",
+		id = "Hud"
+	}
+}
+
 static func create(): #################################################################
-	var hud = Dictionary()
-	hud.name_id = "hud"
-	hud.type = "interface"
-	hud.id = "Hud"
-	
-	Core.scripts.core.manager.create(hud)
+	Core.client.data.subsystem.interface.Link.create(DEFAULT_HUD.duplicate(true))
 
 static func process_hud(hud): #########################################################
 	if hud:

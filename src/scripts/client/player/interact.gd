@@ -27,20 +27,20 @@ static func update_looking_at_block(Player: Entity): ###########################
 #
 #	var location = Core.scripts.chunk.tools.get_chunk(block_location)
 	
-	Player.components.cursor_pos = OS.get_window_size() / 2
-	Player.components.looking_at_block = get_looking_at(Player, Player.components.cursor_pos)
-	Player.components.looking_at_chunk = Core.scripts.chunk.tools.get_chunk(Player.components.looking_at_block)
+	Player.components.action.cursor_pos = OS.get_window_size() / 2
+	Player.components.looking_at.block = get_looking_at(Player, Player.components.action.cursor_pos)
+	Player.components.looking_at.chunk = Core.scripts.chunk.tools.get_chunk(Player.components.looking_at.block)
 
 static func action(player: Entity, position: Vector2): ##########################
 	Core.emit_signal("msg", "Modifing block in position: " + str(position), Core.DEBUG, meta)
 	
-	if player.components.action_mode == "burn":
+	if player.components.action.mode == "burn":
 		pass
-	elif player.components.action_mode == "mine":
+	elif player.components.action.mode == "mine":
 		Core.emit_signal("system_process_start", "client.break_block")
-	elif player.components.action_mode == "build":
+	elif player.components.action.mode == "build":
 		Core.emit_signal("system_process_start", "client.place_block")
-	elif player.components.action_mode == "paint":
+	elif player.components.action.mode == "paint":
 		pass
 
 static func get_orientation(player: Entity): ###################################
@@ -84,10 +84,14 @@ static func get_looking_at(player: Entity, position: Vector2): #################
 	
 	var result = space_state.intersect_ray(build_origin, build_normal, [], 1)
 	
+	if Core.has_node("DebugLookingAtLine"):
+		Core.get_node("DebugLookingAtLine").free()
+	
+	if Core.has_node("BlockHighlight"):
+		Core.get_node("BlockHighlight").free()
+	
 	if result:
 		var line = ImmediateGeometry.new()
-		if Core.has_node("DebugLookingAtLine"):
-			Core.get_node("DebugLookingAtLine").free()
 		line.begin(Mesh.PRIMITIVE_LINES)
 		line.set_color(Color(1, 0, 0))
 		line.add_vertex(player.get_node("Player").translation)
@@ -99,19 +103,18 @@ static func get_looking_at(player: Entity, position: Vector2): #################
 		var block_location = result.position
 		var normal = result.normal
 		
-		if player.components.action_mode == "build":
+		if player.components.action.mode == "build":
 			block_location += apply_normal_positive(normal)
 		else:
 			block_location += apply_normal_negitive(normal)
-		block_location = Vector3(floor(block_location.x), floor(block_location.y), floor(block_location.z))
+		var res = player.components.action.resolution
+		block_location = Vector3(round_to_sub_grid(block_location.x, res), round_to_sub_grid(block_location.y, res), round_to_sub_grid(block_location.z, res))
 		
 		line = ImmediateGeometry.new()
-		if Core.has_node("BlockHighlight"):
-			Core.get_node("BlockHighlight").free()
 		line.begin(Mesh.PRIMITIVE_LINES)
 		line.set_color(Color(1, 0, 0))
 		for point in Core.scripts.chunk.geometry.BOX_HIGHLIGHT:
-			line.add_vertex(point + block_location + Vector3(0, -1, 0))
+			line.add_vertex((point / res) + block_location + Vector3(0, -1, 0))
 		line.end()
 		line.name = "BlockHighlight"
 		Core.add_child(line)
@@ -119,6 +122,10 @@ static func get_looking_at(player: Entity, position: Vector2): #################
 		return block_location
 	else:
 		return Vector3(0, 0, 0)
+
+static func round_to_sub_grid(num: float, size: float):
+	return floor(num * size + size/100) / size
+	
 
 static func apply_normal_negitive_broken(normal: Vector3):
 	var location = Vector3()

@@ -33,7 +33,7 @@ static func load_player_spawn_chunks(): ########################################
 		#Core.emit_signal("msg", "Error on binding to chunks_loaded"
 		#	+ ": " + str(err), Core.WARN, meta)
 	
-	var player = Core.get_parent().get_node("World/Inputs").get_children()[0].get_node("Player")
+	var player = Core.world.get_node("Input").get_children()[0].get_node("Player")
 	
 	var tools = Core.scripts.chunk.tools
 	var player_chunk = tools.get_chunk(player.translation)

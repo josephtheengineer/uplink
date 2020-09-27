@@ -20,7 +20,7 @@ static func load_world():
 	
 	Core.emit_signal("msg", "Loading world...", Core.INFO, meta)
 	Core.scripts.eden.world_decoder.load_world()
-	Core.scripts.chunk.manager.create_chunk(Vector3(0, 0, 0))
+	#Core.scripts.chunk.manager.create_chunk(Vector3(0, 0, 0))
 	
 	Core.emit_signal("system_process", meta, "load_world")
 
@@ -30,15 +30,15 @@ static func accept_connections():
 	Core.emit_signal("msg", "Creating server...", Core.INFO, meta)
 	
 	# Create new MultiplayerAPI so that client and server can run on the same scene
-	Core.Server.custom_multiplayer = MultiplayerAPI.new()
-	Core.Server.custom_multiplayer.set_root_node(Core.Client)
+	Core.server.custom_multiplayer = MultiplayerAPI.new()
+	Core.server.custom_multiplayer.set_root_node(Core.client)
 	
 	var network = NetworkedMultiplayerENet.new()
-	network.connect("peer_connected", Core.Server, "_peer_connected")
-	network.connect("peer_disconnected", Core.Server, "_peer_disconnected")
-	var error = network.create_server(Core.Server.data.port, Core.Server.data.max_players)
+	network.connect("peer_connected", Core.server, "_peer_connected")
+	network.connect("peer_disconnected", Core.server, "_peer_disconnected")
+	var error = network.create_server(Core.server.data.port, Core.server.data.max_players)
 	Core.emit_signal("msg", "Server start code: " + str(error), Core.INFO, meta)
-	Core.Server.custom_multiplayer.network_peer = network
+	Core.server.custom_multiplayer.network_peer = network
 	#network.refuse_new_connections = false
 	#network.connect("connected_to_server", Core.Server, "_peer_disconnected")
 	#network.connect("connection_failed", Core.Server, "_peer_disconnected")

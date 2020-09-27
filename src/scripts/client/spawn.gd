@@ -13,8 +13,8 @@ const meta := {
 
 static func request_spawn():
 	Core.emit_signal("system_process", meta, "request_spawn", true)
-	Core.Client.data.players.append(Core.Client.data.subsystem.input.Link.data.player)
-	Core.Server.spawn_player_at_default_pos(Core.Client.data.subsystem.input.Link.data.player)
+	Core.client.data.players.append(Core.client.data.subsystem.input.Link.data.player)
+	Core.server.spawn_player_at_default_pos(Core.client.data.subsystem.input.Link.data.player)
 	Core.emit_signal("system_process", meta, "request_spawn")
 
 static func start_chunk_thread():

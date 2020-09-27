@@ -14,13 +14,13 @@ const meta := {
 
 static func find_server():
 	Core.emit_signal("system_process", meta, "find_server", true)
-	Core.Client.data.server_ip = "localhost"
+	Core.client.data.server_ip = "localhost"
 	Core.emit_signal("system_process", meta, "find_server")
 
 static func connect_to_server():
 	Core.emit_signal("system_process", meta, "connect_to_server", true)
-	Core.scripts.client.network.join_server(Core.Client.data.subsystem.input.Link.data.player, Core.Client.data.host.ip + ":" + str(Core.Client.data.host.port))
-	yield(Core.Client.custom_multiplayer.network_peer, "connection_succeeded")
+	Core.scripts.client.network.join_server(Core.client.data.subsystem.input.Link.data.player, Core.client.data.host.ip + ":" + str(Core.client.data.host.port))
+	yield(Core.client.custom_multiplayer.network_peer, "connection_succeeded")
 	Core.emit_signal("system_process", meta, "connect_to_server")
 
 static func register_world_metadata():
