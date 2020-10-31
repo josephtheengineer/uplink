@@ -40,9 +40,10 @@ static func level_string(level: int):
 
 static func send(message: String, level: int, meta: Dictionary):
 	var level_string = level_string(level)
+	var elapsed = OS.get_ticks_msec()
 	
 	if level < Core.ALL:
-		print(level_string + " [ " + meta.script_name + " ] " + message)
+		print(str(elapsed) + " " + level_string + " [ " + meta.script_name + " ] " + message)
 		
 	var file = File.new()
 	file.open(Core.client.data.log_path + "latest.txt", File.READ_WRITE)

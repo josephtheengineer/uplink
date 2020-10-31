@@ -28,8 +28,7 @@ static func start_chunk_thread(): ##############################################
 			chunk_system.data.thread_busy = false
 			return
 	else:
-		Core.emit_signal("msg", "Multithreading has been turnend off, game will be very slow when loading chunks!", Core.WARN, meta)
-		Core.Client.data.subsystem.chunk.Link._chunk_thread_process()
+		Core.client.data.subsystem.chunk.Link._chunk_thread_process({})
 
 # once per thread ##############################################################
 static func discover_surrounding_chunks(): #####################################
@@ -112,14 +111,74 @@ static func discover_surrounding_chunks(): #####################################
 static func compile(node: Entity): #############################################
 	node.get_node("Chunk/MeshInstance").mesh = null
 	node.get_node("Chunk/MeshInstance/StaticBody/Shape").shape = null
-	#if Core.client.data.subsystem.chunk.Link.data.mem_max:
-		#return
-	#Core.emit_signal("msg", "Compiling chunk...", Core.TRACE, meta)
-	#var mesh
-	#var block_data_ext = block_data
 	
-	#mat.albedo_color = Color(1, 0, 0, 1)
+	var mat = create_atlas()
 	
+	var full_mesh = PoolVector3Array()
+	for position in node.components.mesh.blocks.keys():
+		if node.components.mesh.blocks_loaded >= BLOCK_LIMIT:
+			Core.emit_signal("msg", "Chunk contained more then " + str(BLOCK_LIMIT) + " blocks!", Core.ERROR, meta)
+			#break
+		
+		var mesh_arrays := create_cube_mesh(node, position)
+		add_verts_to_chunk(node, mesh_arrays, mat)
+		full_mesh.append_array(mesh_arrays[Mesh.ARRAY_VERTEX])
+	
+	create_chunk_shape(node, full_mesh)
+	
+	var empty_points := 0
+	for point in full_mesh:
+		if point == Vector3(0, 0, 0):
+			empty_points+=1
+	Core.emit_signal("msg", "Verts: " + str(full_mesh.size()), Core.INFO, meta)
+	Core.emit_signal("msg", "Empty points: " + str(empty_points), Core.INFO, meta)
+
+
+static func create_chunk_shape(node: Entity, full_mesh: PoolVector3Array) -> void:
+	Core.scripts.chunk.manager.draw_chunk_highlight(node, Color(0, 0, 255))
+	var shape := ConcavePolygonShape.new()
+	shape.set_faces(full_mesh)
+	node.get_node("Chunk/MeshInstance/StaticBody/Shape").shape = shape
+
+
+static func create_cube_mesh(node: Entity, position: Vector3) -> Array:
+	var voxel_data = Dictionary()
+	if node.components.mesh.blocks[position].has("voxels"):
+		voxel_data = node.components.mesh.blocks[position].voxels
+	else:
+		voxel_data = Core.scripts.chunk.generator.generate_box()
+	
+	var voxel_mesh = Core.lib.voxel.new()
+	
+	var mesh_arrays = voxel_mesh.create_cube (
+		position+Vector3(0, -1, 0),
+		voxel_data.keys(),
+		voxel_data,
+		Core.scripts.chunk.geometry.VSIZE
+	)
+	
+	return mesh_arrays
+
+
+static func add_verts_to_chunk(node: Entity, mesh_arrays: Array, mat: SpatialMaterial) -> void:
+	var mesh = ArrayMesh.new()
+	if node.get_node("Chunk/MeshInstance").mesh:
+		mesh = node.get_node("Chunk/MeshInstance").mesh
+	else:
+		mesh = ArrayMesh.new()
+	
+	if mesh_arrays[Mesh.ARRAY_VERTEX].size() > 0:
+		mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, mesh_arrays)
+		mesh.surface_set_material(0, mat)
+		
+		node.get_node("Chunk/MeshInstance").mesh = mesh
+		node.components.mesh.blocks_loaded += 1
+		Core.client.data.blocks_loaded += 1
+	else:
+		Core.emit_signal("msg", "Mesh arrays contained no verts!", Core.WARN, meta)
+
+
+static func create_atlas() -> SpatialMaterial:
 	# create atlas
 	var image_texture = ImageTexture.new()
 	var dynamic_image = Image.new()
@@ -142,59 +201,8 @@ static func compile(node: Entity): #############################################
 	
 	var mat = SpatialMaterial.new()
 	mat.albedo_texture = image_texture
-	
-	var VSIZE = Core.scripts.chunk.geometry.VSIZE
-	
-	var full_mesh = PoolVector3Array()
-	var i = 0
-	for position in node.components.mesh.blocks.keys():
-		#var start = OS.get_ticks_msec()
-		if node.components.mesh.blocks_loaded >= BLOCK_LIMIT:
-			Core.emit_signal("msg", "Chunk contained more then " + str(BLOCK_LIMIT) + " blocks!", Core.ERROR, meta)
-			break
-		
-		var voxel_data = Dictionary()
-		if node.components.mesh.blocks[position].has("voxels"):
-			voxel_data = node.components.mesh.blocks[position].voxels
-		else:
-			Core.emit_signal("msg", "Block did not contain any voxels!", Core.WARN, meta)
-			break
-		
-		var voxel_mesh = Core.lib.voxel.new()
-		#var start2 = OS.get_ticks_msec()
-		var mesh_arrays = voxel_mesh.create_cube(position+Vector3(0, -1, 0), 
-			voxel_data.keys(), voxel_data)
-		#Core.emit_signal("msg", "voxel_mesh(per block) took " + str(OS.get_ticks_msec()-start2) + "ms", Core.TRACE, meta)
-		
-		voxel_mesh.free()
-		
-		var mesh
-		if node.get_node("Chunk/MeshInstance").mesh:
-			mesh = node.get_node("Chunk/MeshInstance").mesh
-		else:
-			mesh = ArrayMesh.new()
-		
-		if mesh_arrays[Mesh.ARRAY_VERTEX].size() > 0:
-			mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, mesh_arrays)
-			mesh.surface_set_material(i, mat)
-			i += 1
-			full_mesh.append_array(mesh_arrays[Mesh.ARRAY_VERTEX])
-			
-			node.get_node("Chunk/MeshInstance").mesh = mesh
-			#node.components.mesh.blocks_loaded += 1
-			#Core.client.data.blocks_loaded += 1
-		
-		#Core.emit_signal("msg", "compile(per block) took " + str(OS.get_ticks_msec()-start) + "ms", Core.TRACE, meta)
-	if !full_mesh.size() > 0:
-		node.get_node("Chunk/MeshInstance").mesh = null
-		node.get_node("Chunk/MeshInstance/StaticBody/Shape").shape = null
-	# VERY SLOW (for some reason, thats why it's only in chunk completion)
-	Core.scripts.chunk.manager.draw_chunk_highlight(node, Color(0, 0, 255))
-	var shape := ConcavePolygonShape.new()
-	shape.set_faces(full_mesh)
-	node.get_node("Chunk/MeshInstance/StaticBody/Shape").shape = shape
-	# /VERY SLOW
-	#Core.emit_signal("msg", "Finished compiling!", Core.DEBUG, meta)
+	return mat
+
 
 # once per thread ##############################################################
 static func process_chunks(): ##################################################

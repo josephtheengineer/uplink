@@ -17,7 +17,7 @@ const meta := {
 static func bring_systems_online():
 	Core.emit_signal("system_process", meta, "bring_systems_online", true)
 	Core.scripts.core.debug.msg.init(Core.client.data.log_path)
-	Core.scripts.core.system.setup()
+	Core.scripts.core.system_manager.setup()
 	
 	# Wait for nodes to init (wait until there is an idle frame)
 	yield(Core.get_tree(), "idle_frame")
@@ -36,40 +36,40 @@ static func create_chunk_system(): #############################################
 	Core.emit_signal("msg", "Creating chunk system...", Core.DEBUG, meta)
 	var node = Node.new()
 	node.set_name("Chunk")
-	node.set_script(load("res://src/scripts/sys/chunk.gd"))
-	Core.get_node("/root/World").add_child(node)
+	node.set_script(load("res://src/scripts/chunk/system.gd"))
+	Core.world.add_child(node)
 
 
 static func create_download_system(): ##########################################
 	Core.emit_signal("msg", "Creating download system...", Core.DEBUG, meta)
 	var node = Node.new()
 	node.set_name("Download")
-	node.set_script(load("res://src/scripts/sys/download.gd"))
-	Core.get_node("/root/World").add_child(node)
+	node.set_script(load("res://src/scripts/download/system.gd"))
+	Core.world.add_child(node)
 
 
 static func create_input_system(): #############################################
 	Core.emit_signal("msg", "Creating input system...", Core.DEBUG, meta)
 	var node = Node.new()
 	node.set_name("Input")
-	node.set_script(load("res://src/scripts/sys/input.gd"))
-	Core.get_node("/root/World").add_child(node)
+	node.set_script(load("res://src/scripts/input/system.gd"))
+	Core.world.add_child(node)
 
 
 static func create_interface_system(): #########################################
 	Core.emit_signal("msg", "Creating interface system...", Core.DEBUG, meta)
 	var node = Node.new()
 	node.set_name("Interface")
-	node.set_script(load("res://src/scripts/sys/interface.gd"))
-	Core.get_node("/root/World").add_child(node)
+	node.set_script(load("res://src/scripts/interface/system.gd"))
+	Core.world.add_child(node)
 
 
 static func create_sound_system(): #############################################
 	Core.emit_signal("msg", "Creating sound system...", Core.DEBUG, meta)
 	var node = Node.new()
 	node.set_name("Sound")
-	node.set_script(load("res://src/scripts/sys/sound.gd"))
-	Core.get_node("/root/World").add_child(node)
+	node.set_script(load("res://src/scripts/sound/system.gd"))
+	Core.world.add_child(node)
 ################################################################################
 
 
@@ -77,7 +77,7 @@ static func create_sound_system(): #############################################
 ################################################################################
 static func check_systems():####################################################
 	Core.emit_signal("system_process", meta, "check_systems", true)
-	Core.scripts.core.system.check_systems()
+	Core.scripts.core.system_manager.check_systems()
 	Core.scripts.core.files.check()
 	Core.emit_signal("msg", "App ready!", Core.INFO, meta)
 	Core.emit_signal("system_process", meta, "check_systems")

@@ -19,7 +19,7 @@ static func load_world():
 		#Entity.destory(id)
 	
 	Core.emit_signal("msg", "Loading world...", Core.INFO, meta)
-	Core.scripts.eden.world_decoder.load_world()
+	Core.scripts.chunk.eden.world_decoder.load_world()
 	#Core.scripts.chunk.manager.create_chunk(Vector3(0, 0, 0))
 	
 	Core.emit_signal("system_process", meta, "load_world")

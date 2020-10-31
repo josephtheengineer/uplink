@@ -18,8 +18,8 @@ static func play_sound():
 	var audio = load("res://aux/assets/sounds/game/block_break_generic_1_v2.ogg")
 	audio.loop = false
 	music_player.stream = audio
-	music_player.connect("finished", Core.Client, "_stop_player", [music_player])
-	Core.Client.add_child(music_player)
+	music_player.connect("finished", Core.client, "_stop_player", [music_player])
+	Core.client.add_child(music_player)
 	music_player.play()
 	Core.emit_signal("system_process", meta, "play_sound")
 

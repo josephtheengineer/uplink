@@ -48,6 +48,7 @@ static func break_voxel(chunk: Entity, block_location: Vector3, location: Vector
 	Core.emit_signal("msg", "Removing voxel from block location " 
 		+ str(location), Core.INFO, meta)
 	
-	if chunk.components.mesh.blocks[block_location].voxels.has(location):
-		chunk.components.mesh.blocks[block_location].voxels.erase(location)
-		chunk.components.mesh.rendered = false
+	if  chunk.components.mesh.blocks.has(block_location):
+		if chunk.components.mesh.blocks[block_location].voxels.has(location):
+			chunk.components.mesh.blocks[block_location].voxels.erase(location)
+			chunk.components.mesh.rendered = false

@@ -1,0 +1,123 @@
+#!python
+import os, subprocess
+
+def sys_exec(args):
+    proc = subprocess.Popen(args, stdout=subprocess.PIPE)
+    (out, err) = proc.communicate()
+    return out.rstrip("\r\n").lstrip()
+
+march_android_switcher = {
+    "arm": "armv7-a",
+    "arm64": "armv8-a",
+    "x86": "i686",
+    "x86_64": "x86-64"
+}
+
+# Local dependency paths, adapt them to your setup
+godot_bin_path = ARGUMENTS.get("godotbinpath", os.getenv("GODOT_BIN_PATH", "/usr/bin/godot"))
+
+# Local dependency paths, adapt them to your setup
+godot_headers_path = "../../../aux/headers/"
+cpp_bindings_path = "../../../aux/cpp/"
+cpp_library = "libgodot-cpp"
+
+target = ARGUMENTS.get("target", "debug")
+platform = ARGUMENTS.get("p", ARGUMENTS.get("platform", "osx"))
+ndk_path = ARGUMENTS.get("ndk-path", "../../../aux/android/")
+android_api = ARGUMENTS.get("android-api", "21")
+android_abi = ARGUMENTS.get("android-abi", "arm")
+ndk_toolchain = ARGUMENTS.get("ndk-toolchain", "/tmp/android-" + android_api + "-" + android_abi + "-toolchain")
+
+# This makes sure to keep the session environment variables on windows,
+# that way you can run scons in a vs 2017 prompt and it will find all the required tools
+env = Environment()
+if platform == "windows":
+    env = Environment(ENV = os.environ)
+elif platform == "ios":
+    SDK_MIN_VERSION = "8.0"
+    # we could do better to automatically find the right sdk version
+    SDK_VERSION = "12.1"
+    IOS_PLATFORM_SDK = sys_exec(["xcode-select", "-p"]) + "/Platforms"
+    env["CXX"] = sys_exec(["xcrun", "-sdk", "iphoneos", "-find", "clang++"])
+elif platform == "android":
+    suffix = "/bin/"
+    if android_abi == "arm":
+        suffix += "arm-linux-androideabi"
+        ranlib = ndk_toolchain + "/arm-linux-androideabi/bin/ranlib"
+    elif android_abi == "arm64":
+        suffix += "aarch64-linux-android"
+        ranlib = ndk_toolchain + "/aarch64-linux-android/bin/ranlib"
+    elif android_abi == "x86":
+        suffix += "i686-linux-android"
+        ranlib = ndk_toolchain + "/i686-linux-android/bin/ranlib"
+    elif android_abi == "x86_64":
+        suffix += "x86_64-linux-android"
+        ranlib = ndk_toolchain + "/x86_64-linux-android/bin/ranlib"
+    env["AR"] = ndk_toolchain + suffix + "-ar"
+    env["AS"] = ndk_toolchain + suffix + "-as"
+    env["CC"] = ndk_toolchain + suffix + "-clang"
+    env["CXX"] = ndk_toolchain + suffix + "-clang++"
+    env["LD"] = ndk_toolchain + suffix + "-ld"
+    env["STRIP"] = ndk_toolchain + suffix + "-strip"
+    #env["RANLIB"] = ranlib
+
+if ARGUMENTS.get("use_llvm", "no") == "yes" and platform != "ios" and platform != "android":
+    env["CXX"] = "clang++"
+
+def add_sources(sources, directory):
+    for file in os.listdir(directory):
+        if file.endswith('.cpp'):
+            sources.append(directory + '/' + file)
+
+if platform == "osx":
+    env.Append(CCFLAGS = ['-g','-O3', '-std=c++14', '-arch', 'x86_64'])
+    env.Append(LINKFLAGS = ['-arch', 'x86_64', '-framework', 'Cocoa', '-Wl,-undefined,dynamic_lookup'])
+elif platform == "ios":
+    env.Append(CCFLAGS = ['-g','-O3', '-std=c++11', '-arch', 'arm64', '-arch', 'armv7', '-arch', 'armv7s', '-isysroot', '%s/iPhoneOS.platform/Developer/SDKs/iPhoneOS%s.sdk' % (IOS_PLATFORM_SDK, SDK_VERSION) , '-miphoneos-version-min=%s' % SDK_MIN_VERSION])
+    env.Append(LINKFLAGS = ['-arch', 'arm64', '-arch', 'armv7', '-arch', 'armv7s', '-isysroot', '%s/iPhoneOS.platform/Developer/SDKs/iPhoneOS%s.sdk' % (IOS_PLATFORM_SDK, SDK_VERSION) , '-miphoneos-version-min=%s' % SDK_MIN_VERSION, '-Wl,-undefined,dynamic_lookup'])
+elif platform == "android":
+    #env.Append(CCFLAGS = ['-march=armv7-a', '-Wl'])
+    march = march_android_switcher.get(android_abi, "Invalid android architecture")
+    env.Append(CCFLAGS = ['-fPIE', '-fPIC', '-mfpu=neon', '-march=' + march])
+    env.Append(LDFLAGS = ['-pie', '-Wl'])
+elif platform == "linux":
+    env.Append(CCFLAGS = ['-fPIC', '-g','-O3', '-std=c++14'])
+elif platform == "windows":
+    if target == "debug":
+        env.Append(CCFLAGS = ['-EHsc', '-D_DEBUG', '/MDd'])
+    else:
+        env.Append(CCFLAGS = ['-O2', '-EHsc', '-DNDEBUG', '/MD'])
+
+# make sure our binding library is properly includes
+env.Append(CPPPATH=['.', godot_headers_path, cpp_bindings_path + 'include/', cpp_bindings_path + 'include/core/', cpp_bindings_path + 'include/gen/'])
+env.Append(LIBPATH=[cpp_bindings_path + 'bin/'])
+env.Append(LIBS=[cpp_library])
+
+sources = []
+add_sources(sources, "../../../src/code")
+
+if ARGUMENTS.get("generate_bindings", "no") == "yes":
+    # TODO Generating the API should be done only if the Godot build is more recent than the JSON file
+    json_api_file = 'godot_api.json'
+
+    subprocess.call([godot_bin_path, '--gdnative-generate-json-api', json_api_file])
+
+    # actually create the bindings here
+
+    #import binding_generator
+
+
+    #binding_generator.generate_bindings(json_api_file)
+
+#add_sources(sources, "../../../src")
+
+#TODO : add arch in name for android output
+pattern = '../../../bin/android/libgodot-cpp.%s'
+if platform == "android":
+    pattern += '.' + march_android_switcher.get(android_abi, "Invalid android architecture")
+elif platform != "android" or platform != "ios":
+    pattern += '.64'
+pattern += '.a'
+library = env.StaticLibrary(target=pattern % platform, source=sources)
+Default(library)
+

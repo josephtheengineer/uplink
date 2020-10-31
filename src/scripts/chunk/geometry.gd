@@ -66,13 +66,13 @@ static func can_be_seen(position: Vector3, voxel_data: Dictionary):
 	#print("Surrounding voxels: " + str(num_surrounding_voxels))
 	return num_surrounding_voxels
 
-#static func block_can_be_seen(position: Vector3, block_data: Dictionary):
-#	var num_surrounding_blocks = [ ]
-#
-#	for surrounding_position in SURROUNDING_BLOCKS:
-#		if block_data.has(position + surrounding_position):
-#			num_surrounding_blocks.append(surrounding_position)
-#	return num_surrounding_blocks
+static func block_can_be_seen(position: Vector3, block_data: Array):
+	var num_surrounding_blocks = [ ]
+
+	for surrounding_position in SURROUNDING_BLOCKS:
+		if block_data.has(position + surrounding_position):
+			num_surrounding_blocks.append(surrounding_position)
+	return num_surrounding_blocks
 
 # once per block ###############################################################
 static func create_cube(position: Vector3, voxel_data: Dictionary, block_data: Dictionary):

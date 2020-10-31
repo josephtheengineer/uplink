@@ -10,54 +10,12 @@ config_version=4
 
 _global_script_classes=[ {
 "base": "Node",
-"class": "ChunkSystem",
-"language": "GDScript",
-"path": "res://src/scripts/sys/chunk.gd"
-}, {
-"base": "Node",
-"class": "ClientSystem",
-"language": "GDScript",
-"path": "res://src/scripts/sys/client.gd"
-}, {
-"base": "Node",
-"class": "DownloadSystem",
-"language": "GDScript",
-"path": "res://src/scripts/sys/download.gd"
-}, {
-"base": "Node",
 "class": "Entity",
 "language": "GDScript",
 "path": "res://src/scripts/core/entity/main.gd"
-}, {
-"base": "Node",
-"class": "InputSystem",
-"language": "GDScript",
-"path": "res://src/scripts/sys/input.gd"
-}, {
-"base": "Node",
-"class": "InterfaceSystem",
-"language": "GDScript",
-"path": "res://src/scripts/sys/interface.gd"
-}, {
-"base": "Node",
-"class": "ServerSystem",
-"language": "GDScript",
-"path": "res://src/scripts/sys/server.gd"
-}, {
-"base": "Node",
-"class": "SoundSystem",
-"language": "GDScript",
-"path": "res://src/scripts/sys/sound.gd"
 } ]
 _global_script_class_icons={
-"ChunkSystem": "",
-"ClientSystem": "",
-"DownloadSystem": "",
-"Entity": "",
-"InputSystem": "",
-"InterfaceSystem": "",
-"ServerSystem": "",
-"SoundSystem": ""
+"Entity": ""
 }
 
 [application]
@@ -66,11 +24,11 @@ config/name="uplink"
 run/main_scene="res://src/scenes/world/world.tscn"
 boot_splash/image="res://aux/assets/textures/ui/icons/splash2.png"
 boot_splash/bg_color=Color( 0, 0, 0, 1 )
-config/icon="res://aux/assets/textures/ui/icons/splash2.png"
+config/icon="res://aux/assets/textures/fireworks_side.png"
 
 [autoload]
 
-Core="*res://src/scripts/sys/core.gd"
+Core="*res://src/scripts/core/system.gd"
 
 [buffer]
 

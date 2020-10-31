@@ -1,14 +1,16 @@
-[entry]
-
-X11.64="res://bin/x11/libgdvoxelmesh.so"
-
-[dependencies]
-
-X11.64=[  ]
-
 [general]
 
 singleton=false
 load_once=true
 symbol_prefix="godot_"
 reloadable=true
+
+[entry]
+
+Android.armeabi-v7a="res://bin/android/libgodot-cpp.android.armv7-a.a"
+X11.64="res://bin/x11/libgdvoxelmesh.so"
+
+[dependencies]
+
+Android.armeabi-v7a=[  ]
+X11.64=[  ]

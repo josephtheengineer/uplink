@@ -79,6 +79,38 @@ static func generate_box():
 	return voxel_data
 
 
+static func generate_block():
+	var voxel_data = Dictionary()
+	var VSIZE = Core.scripts.chunk.geometry.VSIZE
+	# draw an outline of voxels (for debuging mostly)
+#	for x in 16:
+#		for y in 16:
+#			for z in 16:
+#				if x == 0 and y == 0 or x == 0 and z == 0 or z == 0 and y == 0:
+#					voxel_data[Vector3(x*VSIZE, y*VSIZE, z*VSIZE)] = 1
+#				elif x == 15 and y == 15 or x == 15 and z == 15 or z == 15 and y == 15:
+#					voxel_data[Vector3(x*VSIZE, y*VSIZE, z*VSIZE)] = 1
+#				elif x == 15 and y == 0 or x == 15 and z == 0 or z == 15 and y == 0:
+#					voxel_data[Vector3(x*VSIZE, y*VSIZE, z*VSIZE)] = 1
+#				elif x == 0 and y == 15 or x == 0 and z == 15 or z == 0 and y == 15:
+#					voxel_data[Vector3(x*VSIZE, y*VSIZE, z*VSIZE)] = 1
+#				elif y == 15:
+#					voxel_data[Vector3(x*VSIZE, y*VSIZE, z*VSIZE)] = 1
+	for x in 16:
+		for y in 16:
+			for z in 16:
+				voxel_data[Vector3(x, y, z)] = 1
+	return voxel_data
+
+
+static func generate_small_box():
+	var voxel_data = Dictionary()
+	var VSIZE = Core.scripts.chunk.geometry.VSIZE
+	
+	voxel_data[Vector3(16/2, 16/2, 16/2)] = 1
+	return voxel_data
+
+
 static func single_voxel(): ####################################################
 	var chunk_data = Dictionary()
 	chunk_data[Vector3(8, 8, 8)] = {}

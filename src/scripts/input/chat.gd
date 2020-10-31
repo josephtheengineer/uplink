@@ -4,7 +4,10 @@ const meta := {
 	script_name = "input.chat",
 	type = "impure",
 	description = """
-		
+		syntax:
+		> system command function var1=value1 var2=value2
+		Core.system.path.to.function({var1=value1, var2=value2})
+		Core.cmd(system command function var1=value1 var2=value2)
 	"""
 }
 

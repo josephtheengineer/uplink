@@ -1,0 +1,301 @@
+commit 7ebf88ed480781f041aae934576049c489963155
+Author: josephtheengineer <joseph@theengineer.life>
+Date:   Sun Sep 27 23:57:54 2020 +0000
+
+    feature: voxel editor + reset now works + change node structure
+
+commit 5e607e21cb3d057c93c7c89ba987a1af62879462
+Author: josephtheengineer <joseph@theengineer.life>
+Date:   Fri Sep 18 11:14:15 2020 +0000
+
+    fix: moved geometry.gd to c++ (voxel_mesh)
+
+commit 68d4b0a72160871a11d9da347647f3ec2204714c
+Author: josephtheengineer <joseph@theengineer.life>
+Date:   Mon Sep 14 14:20:04 2020 +0000
+
+    fix: make loading faster (surfacetool -> arraymesh)
+
+commit 1bcdc7fb0efae2cc43edcc016ee82c6c5b35b9ef
+Author: josephtheengineer <joseph@theengineer.life>
+Date:   Thu Sep 10 02:47:17 2020 +0000
+
+    feature: add voxels + implement texture atlas
+
+commit 59ed127f61e2475f87a275879021c05100969124
+Author: josephtheengineer <joseph@theengineer.life>
+Date:   Thu Aug 27 07:23:43 2020 +0000
+
+    feature: all scripts are now loaded in core
+
+commit a641c30fd5721b1d9adffaa1d5d80dd2c2c4b21d
+Author: josephtheengineer <joseph@theengineer.life>
+Date:   Wed Aug 26 03:16:17 2020 +0000
+
+    style: move scripts and scenes into categorised folders
+
+commit 8454c4b89121698e1f65488125830367939a5a54
+Author: josephtheengineer <joseph@theengineer.life>
+Date:   Wed May 27 10:51:13 2020 +1000
+
+    docs: update readme and contributing
+
+commit ccd3b4aba213ba4c100ab136211eadf9578e2329
+Author: josephtheengineer <joseph@theengineer.life>
+Date:   Thu May 14 10:27:22 2020 +1000
+
+    feature: add to info/credits
+
+commit bdedd4c6ad32c12975c6b1919c400942bd2f056f
+Author: josephtheengineer <joseph@theengineer.life>
+Date:   Wed May 6 22:25:40 2020 +1000
+
+    docs: add videogame museum from asset repo to readme
+
+commit a2321e2f0cab373cb2e870e83aed29691d6c8510
+Author: josephtheengineer <joseph@theengineer.life>
+Date:   Wed May 6 21:53:58 2020 +1000
+
+    refactor: fix godot warnings
+    
+    - Changed vars to static type
+    - Changed script_name to a constant
+    - Wrapped lines at 80 characters
+    - Add reference to the official godot style guide
+    - Refacor core.gd to use a for loop to connect
+      signals
+    - Client and Server scripts are now propper
+      classes
+
+commit 63626d30d87df608b57ad373b37845b5ad822fa4
+Author: josephtheengineer <joseph@theengineer.life>
+Date:   Wed May 6 13:43:47 2020 +1000
+
+    feature: Created chunk / region map window
+    
+    - Renamed region_tile_map.gd to ui_tile_map.gd
+    - Added new tab Region Map
+    - Turned fog on by default
+
+commit 6e0b13ceec9712579b4f88643b7fc64286a86ae8
+Author: josephtheengineer <joseph@theengineer.life>
+Date:   Mon May 4 16:04:39 2020 +1000
+
+    feature: add the world map to show world regions
+    
+    - Add new tab to the chat area
+    - Add new regions dictonary to the server
+    - The chat log display window now works again
+
+commit 050c17722ba5d78ef6910b5d3a3291a12212673d
+Author: JosephTheEngineer <joseph@theengineer.life>
+Date:   Wed Apr 8 08:58:08 2020 +1000
+
+    docs: add instructions to sync a fork after merge
+
+commit 09f071af16a17302d42b02028135218960bcf06d
+Author: josephtheengineer <joseph@theengineer.life>
+Date:   Tue Apr 7 18:07:08 2020 +1000
+
+    docs: fix typo .gd to .md
+
+commit 449bc3e64a1accda07d262c98f260b57227a316b
+Author: josephtheengineer <joseph@theengineer.life>
+Date:   Tue Apr 7 18:01:44 2020 +1000
+
+    docs: create pull request guidelines
+    
+    - Move commit and pull request guidelines to
+      style_guide
+
+commit ee2d5787a38969ff8b7e3051e8066ab5cd9fdf40
+Author: josephtheengineer <joseph@theengineer.life>
+Date:   Tue Apr 7 17:45:07 2020 +1000
+
+    docs: create commit guidelines
+    
+    - Move components into seperate docs folder
+
+commit 623b0827d5d053914d46c99a9493137a75ecff6d
+Author: josephtheengineer <joseph@theengineer.life>
+Date:   Tue Apr 7 17:21:43 2020 +1000
+
+    fix: client system error print
+
+commit 8ed0017f00a5213d3fda37179135321fddaead11
+Author: josephtheengineer <joseph@theengineer.life>
+Date:   Fri Mar 27 13:27:25 2020 +1000
+
+    feature: add tab container to chat window area
+
+commit 022eaa28bb5f94712cc5daa40de838e119dd5f68
+Author: JosephTheEngineer <joseph@theengineer.life>
+Date:   Wed Mar 18 10:22:25 2020 +1000
+
+    docs: update README.md
+
+commit 4b8ab2fcbe02bd02962cfeb4732e3d89b62a0fcf
+Author: josephtheengineer <joseph@theengineer.life>
+Date:   Wed Mar 18 10:15:42 2020 +1000
+
+    performance: chunk loading on a seperate thread
+    
+    - Chunk loading is now seperate from the main
+            thread, increasing fps during chunk
+            loading
+    - Optimized read_int to increase speed at which
+            the game reads from worlds
+
+commit 0a55b412aa9cb4833f0f0b28bb65e2a23ed6b7b5
+Author: josephtheengineer <joseph@theengineer.life>
+Date:   Tue Mar 17 21:28:34 2020 +1000
+
+    feature: stop player from falling into the void
+    
+    - Prevent the player from falling before
+            any chunks have loaded
+    - Also fix various warnings
+
+commit 721b7af2042de96e1a2577ed5f5c5454de63130f
+Author: josephtheengineer <joseph@theengineer.life>
+Date:   Tue Mar 17 20:25:24 2020 +1000
+
+    feature: add script names to debug log
+    
+    - The debug log now has a reference to the
+            script via the obj parameter
+    - The debug log now uses script_name var for
+            eaiser debugging
+    - The debug log now uses constants for log level
+
+commit bfac076e1c33740bafe23067c4df41541afde9ba
+Author: josephtheengineer <joseph@theengineer.life>
+Date:   Mon Mar 16 10:14:40 2020 +1000
+
+    fix: world loading
+    
+    - Remove minus 4000 calcuation
+    - Improve lighting
+
+commit f5302adeb66f46c9aa6cd2a768d8622c63688241
+Author: josephtheengineer <joseph@theengineer.life>
+Date:   Sun Mar 15 16:49:33 2020 +1000
+
+    refactor: fix various warnings
+
+commit 7bfb17f42499c4fa7ebaefe5384e71ff24509040
+Author: josephtheengineer <joseph@theengineer.life>
+Date:   Thu Feb 20 08:05:46 2020 +1000
+
+    refactor: start refactoring eden_world_decoder.gd
+
+commit 3bdfd42cffc61aebdd1b595141c0aea2ab5bab6a
+Author: josephtheengineer <joseph@theengineer.life>
+Date:   Tue Feb 18 06:50:31 2020 +1000
+
+    feature: world uncompression work
+
+commit b146b1c8b3150536d03dff94f29bcb96eeddd3f2
+Author: JosephTheEngineer <joseph@theengineer.life>
+Date:   Tue Jan 28 16:50:50 2020 +1000
+
+    docs: update LICENSE.md
+
+commit 5ef474ac224a23543d02e287a18d6ce0c4621a4b
+Author: josephtheengineer <joseph@theengineer.life>
+Date:   Tue Jan 28 19:19:48 2020 +1000
+
+    fix: get HUD debug info working
+    
+    - The chat window now displays logs
+    - The on screen debug info now works
+
+commit 74057ab52d4ac73aa996ec410dc41a46e100a19b
+Author: josephtheengineer <joseph@theengineer.life>
+Date:   Tue Jan 28 15:15:14 2020 +1000
+
+    fix: get GUI to work on bootup
+    
+    - Create features/hud.gd
+    - Update features/debug_info.gd to new structure
+    - Get position infomation updating correctly on the HUD
+
+commit cbf6a5e53a49c28bdfdb8468fd7d80646ae4ab69
+Author: josephtheengineer <joseph@theengineer.life>
+Date:   Mon Jan 27 19:59:14 2020 +1000
+
+    fix: camera movement
+    
+    - .rotate() does extra calcuation when moving the mouse causing errors
+    - Change head.rotate() to head.rotation_angle.x += to fix this issue
+
+commit 9f5728441bf727d0082cdad37661dce2d24ba2f9
+Author: josephtheengineer <joseph@theengineer.life>
+Date:   Mon Jan 27 08:39:20 2020 +1000
+
+    fix: fixed chunk processing
+    
+    - The chunk system now loads chunks
+    - The player camera now moves with the mouse
+    - Fixed broken icon
+
+commit 020a2cc8b2da7698a4cc3c63248c1bf48c58a13e
+Author: josephtheengineer <joseph@theengineer.life>
+Date:   Tue Jan 14 17:45:58 2020 +1000
+
+    fix: get player and chunk entities working again
+    
+    - Add System to the end of system ref because
+            Input (system) and Godot Inputclass
+            names collide
+
+commit 78fb02fc343ab720f4ed2c32a119d03d79d915cd
+Author: josephtheengineer <joseph@theengineer.life>
+Date:   Tue Jan 14 13:38:21 2020 +1000
+
+    fix: get file loading working
+    
+    - Added refrences to Systems via the Client System
+            eg. Chunk system can be called using Core.Client.Chunk
+
+commit 0efcae0500eb901226574d05d6875787e3ba3df6
+Author: josephtheengineer <joseph@theengineer.life>
+Date:   Tue Jan 14 12:27:18 2020 +1000
+
+    docs: update link
+
+commit fc9d3499faefb74cc0af006d00debd006ed0bf37
+Author: josephtheengineer <joseph@theengineer.life>
+Date:   Tue Jan 14 12:25:39 2020 +1000
+
+    docs: update README.md
+    
+    - Change name from Eden: Universe Builder to Uplink
+
+commit e5fd6964c56f5dbbc94a9289dd75f2fa5bd91d4d
+Author: josephtheengineer <joseph@theengineer.life>
+Date:   Tue Jan 14 12:11:32 2020 +1000
+
+    refactor: logging is now a signal renamed Events
+    
+    - Changed loging Debug.msg(message, level) to be signal based
+            Core.emit_signal("msg", message, level)
+    - Renamed autoload Events to Core
+    - Added Client System and Server System references to Core
+    - Diagnostics now works on app bootup
+
+commit e87cb0e5c8918ef2d00326fb40dfc5af47a2b04c
+Author: josephtheengineer <joseph@theengineer.life>
+Date:   Mon Jan 13 21:04:07 2020 +1000
+
+    fix: app bootup
+    
+    The client now starts all other systems
+    The app now checks if all systems are online
+    The log storage location is now able to be changed
+
+commit 28ff52c4b57d057b75fc04932bf637310d27a979
+Author: josephtheengineer <joseph@theengineer.life>
+Date:   Sun Jan 5 17:58:43 2020 +1000
+
+    git: initial commit

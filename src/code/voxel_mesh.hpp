@@ -38,39 +38,39 @@ public:
 
 	static const int VERT_SIZE = 6;
 	const Vector2 VPLANE_UVS[VERT_SIZE] = {
-		Vector2(0, VSIZE), Vector2(VSIZE, VSIZE),
-		Vector2(0, 0), Vector2(VSIZE, 0), 
-		Vector2(0, 0), Vector2(VSIZE, VSIZE)
+		Vector2(0, 1), Vector2(1, 1),
+		Vector2(0, 0), Vector2(1, 0), 
+		Vector2(0, 0), Vector2(1, 1)
 	};
 
 	const Vector3 VPLANE_VERTICES[VERT_SIZE] = {
-		Vector3(0, 0, 0), Vector3(VSIZE, 0, 0),
-		Vector3(0, -VSIZE, 0), Vector3(VSIZE, -VSIZE, 0),
-		Vector3(0, -VSIZE, 0), Vector3(VSIZE, 0, 0)
+		Vector3(0, 0, 0), Vector3(1, 0, 0),
+		Vector3(0, -1, 0), Vector3(1, -1, 0),
+		Vector3(0, -1, 0), Vector3(1, 0, 0)
 	};
 
 	const Vector2 VPLANE_UVS2[VERT_SIZE] = {
-		Vector2(0, VSIZE), Vector2(VSIZE, VSIZE),
-		Vector2(0, 0), Vector2(VSIZE, 0),
-		Vector2(0, 0), Vector2(VSIZE, VSIZE)
+		Vector2(0, 1), Vector2(1, 1),
+		Vector2(0, 0), Vector2(1, 0),
+		Vector2(0, 0), Vector2(1, 1)
 	};
 
 	const Vector3 VPLANE_VERTICES2[VERT_SIZE] = {
-		Vector3(0, 0, 0), Vector3(0, 0, VSIZE),
-		Vector3(0, -VSIZE, 0), Vector3(0, -VSIZE, VSIZE),
-		Vector3(0, -VSIZE, 0), Vector3(0, 0, VSIZE)
+		Vector3(0, 0, 0), Vector3(0, 0, 1),
+		Vector3(0, -1, 0), Vector3(0, -1, 1),
+		Vector3(0, -1, 0), Vector3(0, 0, 1)
 	};
 
 	const Vector2 HPLANE_UVS[VERT_SIZE] = {
-		Vector2(0, 0), Vector2(VSIZE, 0),
-		Vector2(0, VSIZE), Vector2(VSIZE, VSIZE), 
-		Vector2(0, VSIZE), Vector2(VSIZE, 0)
+		Vector2(0, 0), Vector2(1, 0),
+		Vector2(0, 1), Vector2(1, 1), 
+		Vector2(0, 1), Vector2(1, 0)
 	};
 
 	const Vector3 HPLANE_VERTICES[VERT_SIZE] = {
 		Vector3(0, 0, 0), Vector3(VSIZE, 0, 0),
-		Vector3(0, 0, VSIZE), Vector3(VSIZE, 0, VSIZE),
-		Vector3(0, 0, VSIZE), Vector3(VSIZE, 0, 0)
+		Vector3(0, 0, 1), Vector3(1, 0, 1),
+		Vector3(0, 0, 1), Vector3(1, 0, 0)
 	};
 
 	static void _register_methods();
@@ -82,17 +82,44 @@ public:
 
 	void _process(float delta);
 	
-	godot::Dictionary can_be_seen(Vector3 position, Dictionary voxel_data) const;
-	godot::Dictionary block_can_be_seen(Vector3 position, Dictionary block_data) const;
-	godot::Array create_cube(Vector3 position, Array voxel_positions, Dictionary voxel_data) const;
+	godot::Dictionary can_be_seen (
+		Vector3 position,
+		Dictionary voxel_data,
+		int *num
+	) const;
+	
+	godot::Dictionary block_can_be_seen (
+		Vector3 position,
+		Dictionary block_data
+	) const;
+	
+	godot::Array create_cube (
+		Vector3 position,
+		Array voxel_positions,
+		Dictionary voxel_data,
+		int resolution
+	) const;
 	
 	void create_voxel(
 		godot::Vector3 position,
 		godot::Vector2 uv_offset,
 		godot::Dictionary sides_to_render,
+		int *index,
 		godot::PoolVector3Array *normals,
 		godot::PoolVector2Array *uvs,
-		godot::PoolVector3Array *verts	
+		godot::PoolVector3Array *verts,
+		Vector3 size	
+	) const;
+
+	godot::PoolVector3Array find_corner_pairs (
+		godot::PoolVector3Array vertices        	
+	) const;
+
+	void construct_mesh_from_corners (
+		godot::PoolVector3Array corner_verts,
+		godot::PoolVector3Array *normals,
+		godot::PoolVector2Array *uvs,
+		godot::PoolVector3Array *verts
 	) const;
 };
 

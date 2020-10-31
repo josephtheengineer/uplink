@@ -46,7 +46,7 @@ static func create_chunk(position: Vector3): ###################################
 	Core.emit_signal("msg", "Creating chunk " + str(position) + "...", 
 		Core.DEBUG, meta)
 	
-	var chunk_data = Core.scripts.eden.world_decoder.get_chunk_data(position)
+	var chunk_data = Core.scripts.chunk.eden.world_decoder.get_chunk_data(position)
 	
 	if !chunk_data:
 		chunk_data = generate_terrain(0, position)

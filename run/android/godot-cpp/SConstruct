@@ -1,0 +1,119 @@
+#!python
+import os, subprocess
+
+def sys_exec(args):
+    proc = subprocess.Popen(args, stdout=subprocess.PIPE)
+    (out, err) = proc.communicate()
+    return out.rstrip("\r\n").lstrip()
+
+march_android_switcher = {
+    "arm": "armv7-a",
+    "arm64": "armv8-a",
+    "x86": "i686",
+    "x86_64": "x86-64"
+}
+
+target = ARGUMENTS.get("target", "debug")
+platform = ARGUMENTS.get("p", ARGUMENTS.get("platform", "osx"))
+ndk_path = ARGUMENTS.get("ndk-path", "../../../aux/android/")
+android_api = ARGUMENTS.get("android-api", "21")
+android_abi = ARGUMENTS.get("android-abi", "arm")
+ndk_toolchain = ARGUMENTS.get("ndk-toolchain", "/tmp/android-" + android_api + "-" + android_abi + "-toolchain")
+dynamic = ARGUMENTS.get("dynamic", "no")
+
+# This makes sure to keep the session environment variables on windows,
+# that way you can run scons in a vs 2017 prompt and it will find all the required tools
+env = Environment()
+if platform == "windows":
+    env = Environment(ENV = os.environ)
+elif platform == "ios":
+    SDK_MIN_VERSION = "8.0"
+    # we could do better to automatically find the right sdk version
+    SDK_VERSION = "12.1"
+    IOS_PLATFORM_SDK = sys_exec(["xcode-select", "-p"]) + "/Platforms"
+    env["CXX"] = sys_exec(["xcrun", "-sdk", "iphoneos", "-find", "clang++"])
+elif platform == "android":
+    suffix = "/bin/"
+    if android_abi == "arm":
+        suffix += "arm-linux-androideabi"
+        #ranlib = ndk_toolchain + "/arm-linux-androideabi/bin/ranlib"
+    elif android_abi == "arm64":
+        suffix += "aarch64-linux-android"
+        #ranlib = ndk_toolchain + "/aarch64-linux-android/bin/ranlib"
+    elif android_abi == "x86":
+        suffix += "i686-linux-android"
+        #ranlib = ndk_toolchain + "/i686-linux-android/bin/ranlib"
+    elif android_abi == "x86_64":
+        suffix += "x86_64-linux-android"
+        #ranlib = ndk_toolchain + "/x86_64-linux-android/bin/ranlib"
+    env["AR"] =  "/tmp/android-21-arm-toolchain/arm-linux-androideabi/bin/ar"
+    env["AS"] = "/tmp/android-21-arm-toolchain/arm-linux-androideabi/bin/as"
+    #env["CC"] = ndk_toolchain + suffix + "-clang"
+    env["CC"] = "/tmp/android-21-arm-toolchain/bin/clang"
+    env["CXX"] = "/tmp/android-21-arm-toolchain/bin/clang++"
+    env["LD"] = "/tmp/android-21-arm-toolchain/bin/ld"
+    env["STRIP"] = "/tmp/android-21-arm-toolchain/bin/strip"
+    env["RANLIB"] = "/tmp/android-21-arm-toolchain/arm-linux-androideabi/bin/ranlib"
+
+if ARGUMENTS.get("use_llvm", "no") == "yes" and platform != "ios":
+    env["CXX"] = "clang++"
+
+if platform != "ios":
+    env.Append(CXXFLAGS = '-mavx2')
+
+def add_sources(sources, directory):
+    if os.path.isdir(directory):
+        for file in os.listdir(directory):
+            if file.endswith('.cpp'):
+                sources.append(directory + '/' + file)
+    else:
+        sources.append(directory)
+
+if platform == "osx":
+    env.Append(CCFLAGS = ['-g','-O3', '-std=c++14', '-arch', 'x86_64'])
+    env.Append(LINKFLAGS = ['-arch', 'x86_64', '-framework', 'Cocoa', '-Wl,-undefined,dynamic_lookup'])
+elif platform == "ios":
+    env.Append(CCFLAGS = ['-g','-O3', '-std=c++11', '-arch', 'arm64', '-arch', 'armv7', '-arch', 'armv7s', '-isysroot', '%s/iPhoneOS.platform/Developer/SDKs/iPhoneOS%s.sdk' % (IOS_PLATFORM_SDK, SDK_VERSION) , '-miphoneos-version-min=%s' % SDK_MIN_VERSION])
+    env.Append(LINKFLAGS = ['-arch', 'arm64', '-arch', 'armv7', '-arch', 'armv7s', '-isysroot', '%s/iPhoneOS.platform/Developer/SDKs/iPhoneOS%s.sdk' % (IOS_PLATFORM_SDK, SDK_VERSION) , '-miphoneos-version-min=%s' % SDK_MIN_VERSION, '-Wl,-undefined,dynamic_lookup'])
+elif platform == "android":
+    march = "armv7-a" #march_android_switcher.get(android_abi, "Invalid android architecture")
+    env.Append(CCFLAGS = ['-fPIE', '-fPIC', '-mfpu=neon', '-march=' + march])
+    env.Append(LDFLAGS = ['-pie', '-Wl'])
+elif platform == "linux":
+    env.Append(CCFLAGS = ['-fPIC', '-g','-O3', '-std=c++14'])
+elif platform == "windows":
+    if target == "debug":
+        env.Append(CCFLAGS = ['-EHsc', '-D_DEBUG', '/MDd'])
+    else:
+        env.Append(CCFLAGS = ['-O2', '-EHsc', '-DNDEBUG', '/MD'])
+
+#env.Append(CPPPATH=['.'])
+#
+#sources = []
+#add_sources(sources, '.')
+
+if(platform != "android"):
+    env.Append(CPPPATH=['.'])
+else:
+    env.Append(CPPPATH=['.', ndk_path + 'sources/android/cpufeatures/'])
+    #env.Append(CPPPATH=['.', ndk_path + 'sources/android/cpufeatures/', ndk_path + 'build/cxx-stl/gnu-libstdc++/lib'])
+    #env.Append(LIBPATH=[ndk_path + 'build/cxx-stl/gnu-libstdc++/lib'])
+
+sources = []
+add_sources(sources, '.')
+if platform == "android":
+    #add_sources(sources, ndk_path + 'sources/android/cpufeatures/cpu-features.h')
+    add_sources(sources, ndk_path + 'sources/android/cpufeatures/cpu-features.c')
+
+pattern = 'bin/libcryptopp.%s'
+if platform == "android":
+    pattern += '.' + march_android_switcher.get(android_abi, "Invalid android architecture")
+elif platform != "android" or platform != "ios":
+    pattern += '.64'
+if dynamic == "no":
+    pattern += '.a'
+    library = env.StaticLibrary(target=pattern % platform, source=sources)
+else:
+    pattern += '.so'
+    library = env.SharedLibrary(target=pattern % platform, source=sources)
+Default(library)

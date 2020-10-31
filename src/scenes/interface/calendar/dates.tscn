@@ -1,0 +1,38 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Control
+var script_name := \"dates\"
+
+#onready var NodeGrid := preload(\"res://scripts/features/node_grid.gd\").new()
+#
+#var row
+#var system_date = OS.get_date()
+#var sel_year = system_date.year
+#var sel_month = system_date.month
+#var sel_day = system_date.day
+#
+#var months_days = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+#
+#func remove_children():
+#	for c in get_children():
+#		remove_child(c)
+#		c.queue_free()
+#
+#func display_month(month: int):
+#	NodeGrid.display_grid(self, NodeGrid, 1, months_days[month])
+#
+#func display_year(month: int):
+#	NodeGrid.display_grid(self, self, 1, months_days[month])
+#
+#func create_element(text: int):
+#	return NodeGrid.display_grid(self, NodeGrid, 1, months_days[text])
+"
+
+[node name="Dates" type="VBoxContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
