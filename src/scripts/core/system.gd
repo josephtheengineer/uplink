@@ -66,6 +66,7 @@ const scripts := {
 	input = {
 		chat = preload("res://src/scripts/input/chat.gd"),
 		other = preload("res://src/scripts/input/other.gd"),
+		cli = preload("res://src/scripts/input/cli.gd"),
 		system = preload("res://src/scripts/input/system.gd")
 	},
 	interface = {

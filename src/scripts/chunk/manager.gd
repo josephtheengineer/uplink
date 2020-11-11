@@ -10,7 +10,10 @@ const DEFAULT_CHUNK = {
 	meta = {
 		system = "chunk",
 		type = "chunk",
-		id = str(Vector3(0, 0, 0))
+		id = str(Vector3(0, 0, 0)),
+		seen = false,
+		in_range = false,
+		blocked = false
 	},
 	position = {
 		world = Vector3(0, 0, 0),
@@ -18,6 +21,8 @@ const DEFAULT_CHUNK = {
 	},
 	mesh = {
 		rendered = false,
+		disabled = false,
+		detailed = false,
 		vertices = Array(),
 		blocks = Dictionary(),
 		blocks_loaded = 0
@@ -42,7 +47,7 @@ const DEFAULT_BLOCK = {
 	#Vector3(0, 0, 0) = DEFAULT_VOXEL
 }
 
-static func create_chunk(position: Vector3): ##########################################
+static func create_chunk(position: Vector3): #################
 	Core.emit_signal("msg", "Creating chunk " + str(position) + "...", 
 		Core.DEBUG, meta)
 	
@@ -80,6 +85,10 @@ static func generate_chunk_components(node: Entity): ###########################
 	node.add_child(line)
 	draw_chunk_highlight(node, Color(255, 255, 255))
 	
+	var bline = ImmediateGeometry.new()
+	bline.name = "BlockHighlight"
+	node.add_child(bline)
+	
 	var mesh_instance = MeshInstance.new()
 	mesh_instance.name = "MeshInstance"
 	chunk.add_child(mesh_instance)
@@ -116,8 +125,23 @@ static func draw_chunk_highlight(node: Entity, color: Color):
 	line.clear()
 	line.set_material_override(m)
 	line.begin(Mesh.PRIMITIVE_LINES)
-	for point in Core.scripts.chunk.geometry.BOX_HIGHLIGHT:
+	for point in Core.scripts.chunk.geometry.BOX_HIGHLIGHT_NO_OVERLAP:
 		line.add_vertex(point*Core.scripts.chunk.geometry.CSIZE + (node.components.position.world*16) + Vector3(0, -1, 0))
+	line.end()
+
+static func draw_block_highlight(node: Entity, position: Vector3, color: Color):
+	var m = SpatialMaterial.new()
+	#m.flags_use_point_size = true
+	#m.params_point_size = 1
+	m.vertex_color_use_as_albedo = true
+	m.flags_unshaded = true
+	m.albedo_color = color
+	
+	var line = node.get_node("BlockHighlight")
+	line.set_material_override(m)
+	line.begin(Mesh.PRIMITIVE_LINES)
+	for point in Core.scripts.chunk.geometry.BOX_HIGHLIGHT:
+		line.add_vertex(point*Core.scripts.chunk.geometry.BSIZE + (node.components.position.world*16) + position + Vector3(0, -1, 0))
 	line.end()
 
 static func destroy_chunk(chunk: Entity): #########################################

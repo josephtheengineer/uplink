@@ -19,6 +19,7 @@ static func request_spawn():
 
 static func start_chunk_thread():
 	Core.emit_signal("system_process", meta, "start_chunk_thread", true)
-	Core.scripts.chunk.thread.start_chunk_thread()
-	Core.scripts.chunk.helper.load_player_spawn_chunks()
+	Core.scripts.chunk.thread.start_discover_thread()
+	Core.scripts.chunk.thread.start_process_thread()
+	#Core.scripts.chunk.helper.load_player_spawn_chunks()
 	Core.emit_signal("system_process", meta, "start_chunk_thread")

@@ -131,4 +131,4 @@ func spawn_player(location: Vector3, username: String):
 	Core.scripts.client.player.main.attach(Core.world.get_node("Input/" + username))
 
 func send_message(msg): #######################################################
-	Core.Client.rpc("send_data", msg)
+	Core.client.rpc("send_data", msg)

@@ -42,6 +42,32 @@ const BOX_HIGHLIGHT = [
 	Vector3(0, 1, 1), Vector3(1, 1, 1)  # ^------
 ]
 
+const BOX_HIGHLIGHT_NO_OVERLAP = [
+	Vector3(0, 0, 0), Vector3(0.999, 0, 0), # ______
+	
+	Vector3(0.999, 0, 0), Vector3(0.999, 0.999, 0), #      |
+	
+	Vector3(0, 0.999, 0), Vector3(0, 0, 0), # |
+	
+	Vector3(0, 0, 0.999), Vector3(0.999, 0, 0.999), # ------
+	
+	Vector3(0.999, 0, 0.999), Vector3(0.999, 0.999, 0.999), #       |
+	
+	Vector3(0, 0.999, 0.999), Vector3(0, 0, 0.999), # |
+	
+	Vector3(0, 0.999, 0), Vector3(0, 0.999, 0.999), # ^/
+	
+	Vector3(0, 0, 0), Vector3(0, 0, 0.999), # /
+	
+	Vector3(0.999, 0.999, 0), Vector3(0.999, 0.999, 0.999), #      ^/
+	
+	Vector3(0.999, 0, 0), Vector3(0.999, 0, 0.999), #        /
+	
+	Vector3(0, 0.999, 0), Vector3(0.999, 0.999, 0), # ^______
+	
+	Vector3(0, 0.999, 0.999), Vector3(0.999, 0.999, 0.999)  # ^------
+]
+
 # for voxels
 const vplane_uvs = [ Vector2(0, VSIZE), Vector2(VSIZE, VSIZE), Vector2(0, 0), Vector2(VSIZE, 0), Vector2(0, 0), Vector2(VSIZE, VSIZE) ]
 const vplane_vertices = [ Vector3(0, 0, 0), Vector3(VSIZE, 0, 0), Vector3(0, -VSIZE, 0), Vector3(VSIZE, -VSIZE, 0), Vector3(0, -VSIZE, 0), Vector3(VSIZE, 0, 0) ]

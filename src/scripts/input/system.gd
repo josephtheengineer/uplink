@@ -10,7 +10,8 @@ const meta := {
 const DEFAULT_DATA := {
 	setup_chat_input = true,
 	input_path = "Interface/Hud/Hud/HorizontalMain/VerticalMain/VerticalCenterContent/LeftPanel/TabContainer/Chat/TextEdit",
-	player = "default"
+	player = "default",
+	history_line = 0
 }
 #warning-ignore:unused_class_variable
 var data := DEFAULT_DATA.duplicate(true)
@@ -110,6 +111,44 @@ func _input(event: InputEvent): ################################################
 		Core.scripts.debug.panel.open_core_analysis()
 	if event.is_action_pressed("open_chat"):
 		Core.scripts.debug.panel.open_chat()
+	
+	if event.is_action_pressed("ui_up"):
+		data.history_line += 1
+		print(data.history_line)
+		if data.history_line >= 0:
+			var file = File.new()
+			file.open(Core.client.data.cmd_history_file, File.READ_WRITE)
+			var history = file.get_as_text().split("\n", false)
+			history.invert()
+			if data.history_line < history.size():
+				var next_text = history[data.history_line-1]
+				Core.world.get_node(data.input_path).text = next_text
+			else:
+				data.history_line = history.size()
+			file.close()
+		else:
+			data.history_line = 0
+	if event.is_action_pressed("ui_down"):
+		data.history_line -= 1
+		print(data.history_line)
+		if data.history_line >= 0:
+			var file = File.new()
+			file.open(Core.client.data.cmd_history_file, File.READ_WRITE)
+			var history = file.get_as_text().split("\n", false)
+			history.invert()
+			if data.history_line < history.size():
+				var next_text = history[data.history_line-1]
+				Core.world.get_node(data.input_path).text = next_text
+			else:
+				data.history_line = history.size()
+			file.close()
+		else:
+			data.history_line = 0
+	if event.is_action_pressed("ui_focus_next"):
+		pass
+		#Core.world.get_node(data.input_path).text = data.last_text
+	if event.is_action_pressed("ui_cancel"):
+		Core.world.get_node(data.input_path).text = ""
 
 func create(entity: Dictionary):
 	if entity.meta.system != "input":

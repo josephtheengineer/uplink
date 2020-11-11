@@ -81,10 +81,8 @@ size_flags_horizontal = 0
 size_flags_vertical = 0
 
 [node name="TabContainer" type="TabContainer" parent="HorizontalMain/VerticalMain/VerticalCenterContent/LeftPanel"]
-margin_left = -1.0
-margin_top = -1.0
-margin_right = 499.0
-margin_bottom = 399.0
+margin_right = 500.0
+margin_bottom = 400.0
 rect_min_size = Vector2( 500, 400 )
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -266,6 +264,7 @@ margin_top = 313.0
 margin_right = 492.0
 margin_bottom = 363.0
 rect_min_size = Vector2( 0, 50 )
+caret_blink = true
 
 [node name="WorldMap" parent="HorizontalMain/VerticalMain/VerticalCenterContent/LeftPanel/TabContainer" instance=ExtResource( 11 )]
 visible = false

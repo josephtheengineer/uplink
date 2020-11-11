@@ -32,9 +32,10 @@ func _ready():
 	var tasks = []
 	
 	for task in Core.scripts.interface.calendar.task.list_files_in_directory(Core.scripts.interface.calendar.task.TASKS_FOLDER):
-		var task_data = Core.scripts.interface.calendar.task.read_task(int(task.name))
-		if task_data:
-			tasks.append(task_data)
+		var task_data = { id = int(task.name) }
+		Core.scripts.interface.calendar.task.read(task_data)
+		if task_data.task:
+			tasks.append(task_data.task)
 	
 	var dates: Label = get_node(path)
 	var text = ""

@@ -23,12 +23,114 @@ const task_template := {
 	timeslot = "2d 10->11"
 }
 
-static func sort_ascending_time(a, b):
-	if a[0] < b[0]:
-		return true
-	return false
+# interface.calendar.task.list #################################################
+const list_meta := {
+	func_name = "interface.calendar.task.list",
+	description = """
+		List all tasks
+	""",
+		task = "" }
+static func list(args := list_meta) -> void: ########################
+	Core.emit_signal(
+		"msg", "Tasks: ",
+		Core.INFO, meta )
+	
+	var tasks = []
+	
+	var f = Core.scripts.interface.calendar.task.list_files_in_directory(
+		Core.scripts.interface.calendar.task.TASKS_FOLDER )
+	
+	for task in f:
+		var task_data = Core.scripts.interface.calendar.task.read_task(
+			int(task.name) )
+		if task_data:
+			tasks.append(task_data)
+	
+	var text = ""
+	var header := 0
+	for i in range(tasks.size()):
+		if "###" in tasks[i].name:
+			text +=  '\n' + tasks[i].name + '\n'
+			header += 1
+		else:
+			text += (str(i-header) + ". "
+			+ tasks[i].due_date + ": " + tasks[i].name + '\n' )
+	
+	Core.emit_signal("msg", text, Core.INFO, meta)
+# ^ interface.calendar.task.list ###############################################
 
-static func read_task(id: int):
+
+
+# interface.calendar.task.create_task ##########################################
+const create_task_meta := {
+	func_name = "interface.calendar.task.create_task",
+	description = """
+		Creates a new task
+	""",
+		task = task_template }
+static func create_task(args := create_task_meta) -> void: #####################
+	var files = list_files_in_directory(TASKS_FOLDER)
+	var id := 0
+	for file in files:
+		if int(file) > id:
+			id = int(file)
+	id += 1
+	
+	var dir = Directory.new()
+	if !dir.file_exists(TASKS_FOLDER):
+		dir.make_dir(TASKS_FOLDER)
+	
+	if !dir.file_exists(TASKS_FOLDER + str(id)):
+		dir.make_dir(TASKS_FOLDER + str(id))
+	
+	for key in args.task.keys():
+		var file = File.new()
+		if args.task[key] is Array:
+			dir.make_dir(TASKS_FOLDER + str(id) + "/" + key)
+			var index = 0
+			for value in args.task[key]:
+				file.open(
+					TASKS_FOLDER + str(id) + "/" + key +
+					"/" + str(index), File.WRITE )
+				file.store_string(value + "\n")
+				file.close()
+				index += 1
+		else:
+			file.open(
+				TASKS_FOLDER + str(id) + "/" + key, File.WRITE )
+			file.store_string(str(args.task[key]) + "\n")
+			file.close()
+# ^ interface.calendar.task.create_task ########################################
+
+
+
+# interface.calendar.task.sort_ascending_time ##################################
+const sort_ascending_time_meta := {
+	func_name = "interface.calendar.task.sort_ascending_time",
+	description = """
+		Sorts a and b ascending
+	""",
+		a = 0,
+		b = 0,
+		highest_number = "" }
+static func sort_ascending_time(args := create_task_meta) -> void: #############
+	if args.a[0] < args.b[0]:
+		args.highest_number = "b"
+		return
+	args.highest_number = "a"
+	return
+# ^ interface.calendar.task.sort_ascending_time ################################
+
+
+# interface.calendar.task.read #################################################
+const read_meta := {
+	func_name = "iinterface.calendar.task.read",
+	description = """
+		Reads a task folder into a dictionary
+	""",
+		id = 0,
+		task = {} }
+static func read(args := create_task_meta) -> void: ############################
 	var task = task_template.duplicate(true)
 	var dir = Directory.new()
 	#if !dir.file_exists(TASKS_FOLDER):
@@ -39,27 +141,46 @@ static func read_task(id: int):
 	#	breakpoint
 	#	return false
 	
-	for file in list_files_in_directory(TASKS_FOLDER + str(id)):
+	for file in list_files_in_directory(TASKS_FOLDER + str(args.id)):
 		if file.is_dir:
-			for sub_file in list_files_in_directory(TASKS_FOLDER + str(id) + file.name):
+			for sub_file in list_files_in_directory(
+				TASKS_FOLDER + str(args.id) + "/" + file.name ):
+				
 				var f = File.new()
-				var err = f.open(TASKS_FOLDER + str(id) + "/" + file.name + "/" + sub_file.name, File.READ)
+				var path = (TASKS_FOLDER + str(args.id) + "/"
+					+ file.name + "/" + sub_file.name)
+				
+				var err = f.open(path, File.READ)
 				if err:
-					Core.emit_signal("msg", "Error when opening task file: " + str(err), Core.WARN, meta)
+					Core.emit_signal(
+						"msg", 
+						"Error when opening task "
+						+ path + ": " + str(err),
+						Core.WARN, meta )
 				else:
 					task[file.name][int(sub_file.name)] = f.get_as_text().replace("\n", "")
 					f.close()
 		else:
 			var f = File.new()
-			f.open(TASKS_FOLDER + str(id) + "/" + file.name, File.READ)
+			f.open( TASKS_FOLDER + str(args.id) + "/" 
+				+ file.name, File.READ )
+			
 			task[file.name] = f.get_as_text().replace("\n", "")
 			f.close()
-	return task
+	args.task = task
+	return
+# ^ interface.calendar.task.read ###############################################
+
+
 
 static func list_files_in_directory(path):
 	var files = []
 	var dir := Directory.new()
-	dir.open(path)
+	var err = dir.open(path)
+	if err:
+		Core.emit_signal("msg", "Error when opening folder " + path + ": " + str(err), Core.WARN, meta)
+		return false
+	
 	dir.list_dir_begin(true)
 	
 	while true:
@@ -76,36 +197,8 @@ static func list_files_in_directory(path):
 	
 	return files
 
+
+
 static func delete_task(id: int):
 	var dir := Directory.new()
 	dir.remove(TASKS_FOLDER + str(id))
-
-static func create_task(task: Dictionary):
-	var files = list_files_in_directory(TASKS_FOLDER)
-	var id := 0
-	for file in files:
-		if int(file) > id:
-			id = int(file)
-	id += 1
-	
-	var dir = Directory.new()
-	if !dir.file_exists(TASKS_FOLDER):
-		dir.make_dir(TASKS_FOLDER)
-	
-	if !dir.file_exists(TASKS_FOLDER + str(id)):
-		dir.make_dir(TASKS_FOLDER + str(id))
-	
-	for key in task.keys():
-		var file = File.new()
-		if task[key] is Array:
-			dir.make_dir(TASKS_FOLDER + str(id) + "/" + key)
-			var index = 0
-			for value in task[key]:
-				file.open(TASKS_FOLDER + str(id) + "/" + key + "/" + str(index), File.WRITE)
-				file.store_string(value + "\n")
-				file.close()
-				index += 1
-		else:
-			file.open(TASKS_FOLDER + str(id) + "/" + key, File.WRITE)
-			file.store_string(str(task[key]) + "\n")
-			file.close()

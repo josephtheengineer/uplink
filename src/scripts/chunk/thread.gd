@@ -10,25 +10,46 @@ const MULTITHREADING = true
 const BLOCK_LIMIT = 16*16*16
 
 # once per thread ##############################################################
-static func start_chunk_thread(): ##############################################
+static func start_discover_thread(): ###########################################
 	#Core.emit_signal("msg", "Starting chunk thread...", Core.TRACE, meta)
 	# the chunk process requires player data and other settings
 	
-	if not Core.client.data.subsystem.chunk.Link.data.thread:
-		Core.client.data.subsystem.chunk.Link.data.thread = Thread.new()
+	if not Core.client.data.subsystem.chunk.Link.data.discover.thread:
+		Core.client.data.subsystem.chunk.Link.data.discover.thread = Thread.new()
 	
 	var _data = {}
 	var chunk_system = Core.client.data.subsystem.chunk.Link
 	if MULTITHREADING:
-		chunk_system.data.thread_busy = true
-		var error: int = chunk_system.data.thread.start(chunk_system, "_chunk_thread_process", _data)
+		chunk_system.data.discover.busy = true
+		var error: int = chunk_system.data.discover.thread.start(chunk_system, "_discover_surrounding_chunks")
 		if error:
 			Core.emit_signal("msg", "Error starting chunk thread: " 
 					+ str(error), Core.WARN, meta)
-			chunk_system.data.thread_busy = false
+			chunk_system.data.discover.busy = false
 			return
 	else:
-		Core.client.data.subsystem.chunk.Link._chunk_thread_process({})
+		discover_surrounding_chunks()
+
+# once per thread ##############################################################
+static func start_process_thread(): ############################################
+	#Core.emit_signal("msg", "Starting chunk thread...", Core.TRACE, meta)
+	# the chunk process requires player data and other settings
+	
+	if not Core.client.data.subsystem.chunk.Link.data.process.thread:
+		Core.client.data.subsystem.chunk.Link.data.process.thread = Thread.new()
+	
+	var _data = {}
+	var chunk_system = Core.client.data.subsystem.chunk.Link
+	if MULTITHREADING:
+		chunk_system.data.process.busy = true
+		var error: int = chunk_system.data.process.thread.start(chunk_system, "_process_chunks")
+		if error:
+			Core.emit_signal("msg", "Error starting chunk thread: " 
+					+ str(error), Core.WARN, meta)
+			chunk_system.data.process.busy = false
+			return
+	else:
+		process_chunks()
 
 # once per thread ##############################################################
 static func discover_surrounding_chunks(): #####################################
@@ -73,6 +94,22 @@ static func discover_surrounding_chunks(): #####################################
 		#print(str(chunk))
 		if !Core.world.get_node("Chunk").has_node(str(chunk)):
 			chunks_to_create.append(chunk)
+		else:
+			var chunk_node = Core.world.get_node("Chunk").get_node(str(chunk))
+			if !chunk_node.components.meta.in_range:
+				chunk_node.components.meta.in_range = true
+				Core.scripts.chunk.manager.draw_chunk_highlight(chunk_node, Color(0, 1, 0))
+	
+	
+	for chunk in Core.world.get_node("Chunk").get_children():
+		if !surrounding_chunks.has(chunk.components.position.world):
+			if chunk.components.meta.in_range:
+				chunk.components.meta.in_range = false
+				if chunk.components.mesh.rendered:
+					Core.scripts.chunk.manager.draw_chunk_highlight(chunk, Color(0, 0, 0))
+				else:
+					Core.scripts.chunk.manager.draw_chunk_highlight(chunk, Color(255, 255, 255))
+	
 	
 	#for chunk in Core.world.get_node("Chunk").get_children():
 		#if not chunk.components.position.world in surrounding_chunks:
@@ -106,6 +143,7 @@ static func discover_surrounding_chunks(): #####################################
 #				Core.Client.blocks_found -= Entity.get_component(id, "chunk.block_data").size()
 #			Core.emit_signal("msg", "Destroyed chunk" + str(pos), Core.DEBUG, meta)
 #			Entity.destory(id)
+	
 
 # once per chunk ###############################################################
 static func compile(node: Entity): #############################################
@@ -120,11 +158,12 @@ static func compile(node: Entity): #############################################
 			Core.emit_signal("msg", "Chunk contained more then " + str(BLOCK_LIMIT) + " blocks!", Core.ERROR, meta)
 			#break
 		
-		var mesh_arrays := create_cube_mesh(node, position)
-		add_verts_to_chunk(node, mesh_arrays, mat)
-		full_mesh.append_array(mesh_arrays[Mesh.ARRAY_VERTEX])
+		Core.scripts.chunk.manager.draw_block_highlight(node, position, Color(255, 255, 255))
+		#var mesh_arrays := create_cube_mesh(node, position)
+		#add_verts_to_chunk(node, mesh_arrays, mat)
+		#full_mesh.append_array(mesh_arrays[Mesh.ARRAY_VERTEX])
 	
-	create_chunk_shape(node, full_mesh)
+	#create_chunk_shape(node, full_mesh)
 	
 	var empty_points := 0
 	for point in full_mesh:
@@ -212,7 +251,7 @@ static func process_chunks(): ##################################################
 		return false
 	for node in Core.scripts.core.manager.get_entities_with("Chunk"):
 		#Core.emit_signal("msg", "Checking rendered state..." + str(node.components.mesh), Core.TRACE, meta)
-		if node.components.mesh.rendered == false:
+		if node.components.mesh.rendered == false and node.components.meta.in_range: # and node.components.mesh.detailed:
 			update_pending_blocks(node)
 
 # once per chunk ###############################################################

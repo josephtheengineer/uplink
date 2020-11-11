@@ -59,6 +59,7 @@ const DEFAULT_DATA := {
 	blocks_found = 0,
 	chunk_index = [],
 	log_path = "user://log/",
+	cmd_history_file = "user://cmd_history.txt",
 	diagnostics = {
 		progress = 0
 	},

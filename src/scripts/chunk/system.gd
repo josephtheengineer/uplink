@@ -14,8 +14,14 @@ const DEFAULT_DATA := {
 		chunk_addresses = Dictionary(),
 		chunk_metadata = Array()
 	},
-	thread_busy = false,
-	thread = null,
+	discover = {
+		busy = false,
+		thread = null
+	},
+	process = {
+		busy = false,
+		thread = null
+	},
 	destroyer_of_chunks = false,
 	mem_max = false
 }
@@ -49,24 +55,38 @@ func _ready(): #################################################################
 	Core.emit_signal("system_ready", Core.scripts.core.system_manager.CHUNK, self)             ##### READY #####
 
 func _process(_delta):
-	if data.thread and not data.thread_busy:
-		if data.thread.is_active() or data.thread_busy:
-			data.thread.wait_to_finish()
+	if data.discover.thread and not data.discover.busy:
+		if data.discover.thread.is_active() or data.discover.busy:
+			data.discover.thread.wait_to_finish()
 		else:
-			Core.scripts.chunk.thread.start_chunk_thread()
+			Core.scripts.chunk.thread.start_discover_thread()
+	
+	if data.process.thread and not data.process.busy:
+		if data.process.thread.is_active() or data.process.busy:
+			data.process.thread.wait_to_finish()
+		else:
+			Core.scripts.chunk.thread.start_process_thread()
 
 func _reset():
 	Core.emit_signal("msg", "Reseting chunk system database...", Core.DEBUG, meta)
 	data = DEFAULT_DATA.duplicate()
 
 
-func _chunk_thread_process(_data): ##################################################
-	# Create chunk nodes
+#func _chunk_thread_process(_data): ##################################################
+#	# Create chunk nodes
+#	Core.scripts.chunk.thread.discover_surrounding_chunks()
+#
+#	# Render meshes for chunk nodes
+#	Core.scripts.chunk.thread.process_chunks()
+#	data.thread_busy = false
+
+func _discover_surrounding_chunks(_data):
 	Core.scripts.chunk.thread.discover_surrounding_chunks()
-	
-	# Render meshes for chunk nodes
+	data.discover.busy = false
+
+func _process_chunks(_data):
 	Core.scripts.chunk.thread.process_chunks()
-	data.thread_busy = false
+	data.process.busy = false
 
 func create(entity: Dictionary):
 	if entity.meta.system != "chunk":
