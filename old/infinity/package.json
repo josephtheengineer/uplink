@@ -13,7 +13,7 @@
     "chalk": "^2.3.2",
     "chart.js": "^2.7.2",
     "discord.js": "^11.3.2",
-    "electron": "^2.0.0",
+    "electron": "^7.2.4",
     "materialize-css": "^1.0.0-beta",
     "winston": "^2.4.1"
   }
