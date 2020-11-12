@@ -103,12 +103,13 @@ static func discover_surrounding_chunks(): #####################################
 	
 	for chunk in Core.world.get_node("Chunk").get_children():
 		if !surrounding_chunks.has(chunk.components.position.world):
-			if chunk.components.meta.in_range:
-				chunk.components.meta.in_range = false
-				if chunk.components.mesh.rendered:
-					Core.scripts.chunk.manager.draw_chunk_highlight(chunk, Color(0, 0, 0))
-				else:
-					Core.scripts.chunk.manager.draw_chunk_highlight(chunk, Color(255, 255, 255))
+			#if chunk.components.meta.in_range:
+			#	chunk.components.meta.in_range = false
+			#	if chunk.components.mesh.rendered:
+			#		Core.scripts.chunk.manager.draw_chunk_highlight(chunk, Color(0, 0, 0))
+			#	else:
+			#		Core.scripts.chunk.manager.draw_chunk_highlight(chunk, Color(255, 255, 255))
+			Core.scripts.chunk.manager.destroy_chunk(chunk)
 	
 	
 	#for chunk in Core.world.get_node("Chunk").get_children():
@@ -157,13 +158,13 @@ static func compile(node: Entity): #############################################
 		if node.components.mesh.blocks_loaded >= BLOCK_LIMIT:
 			Core.emit_signal("msg", "Chunk contained more then " + str(BLOCK_LIMIT) + " blocks!", Core.ERROR, meta)
 			#break
-		
-		Core.scripts.chunk.manager.draw_block_highlight(node, position, Color(255, 255, 255))
-		#var mesh_arrays := create_cube_mesh(node, position)
-		#add_verts_to_chunk(node, mesh_arrays, mat)
-		#full_mesh.append_array(mesh_arrays[Mesh.ARRAY_VERTEX])
+		if Core.scripts.chunk.geometry.block_can_be_seen(position, node.components.mesh.blocks.keys()).size() != 6:
+			Core.scripts.chunk.manager.draw_block_highlight(node, position, Color(255, 255, 255))
+		var mesh_arrays := create_cube_mesh(node, position)
+		add_verts_to_chunk(node, mesh_arrays, mat)
+		full_mesh.append_array(mesh_arrays[Mesh.ARRAY_VERTEX])
 	
-	#create_chunk_shape(node, full_mesh)
+	create_chunk_shape(node, full_mesh)
 	
 	var empty_points := 0
 	for point in full_mesh:
@@ -185,7 +186,7 @@ static func create_cube_mesh(node: Entity, position: Vector3) -> Array:
 	if node.components.mesh.blocks[position].has("voxels"):
 		voxel_data = node.components.mesh.blocks[position].voxels
 	else:
-		voxel_data = Core.scripts.chunk.generator.generate_box()
+		voxel_data = Core.scripts.chunk.generator.single_voxel()
 	
 	var voxel_mesh = Core.lib.voxel.new()
 	

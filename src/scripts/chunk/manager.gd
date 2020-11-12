@@ -145,7 +145,7 @@ static func draw_block_highlight(node: Entity, position: Vector3, color: Color):
 	line.end()
 
 static func destroy_chunk(chunk: Entity): #########################################
-	chunk.queue_free()
+	chunk.call_deferred("queue_free")
 	Core.client.data.blocks_loaded -= chunk.components.mesh.blocks_loaded
 	Core.client.data.blocks_found -= chunk.components.mesh.blocks.size()
 
