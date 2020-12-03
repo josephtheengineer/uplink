@@ -186,15 +186,15 @@ static func create_cube_mesh(node: Entity, position: Vector3) -> Array:
 	if node.components.mesh.blocks[position].has("voxels"):
 		voxel_data = node.components.mesh.blocks[position].voxels
 	else:
-		voxel_data = Core.scripts.chunk.generator.single_voxel()
+		voxel_data = Core.scripts.chunk.generator.generate_block()
 	
-	var voxel_mesh = Core.lib.voxel.new()
+	var voxel_mesh = Core.scripts.chunk.geometry
 	
 	var mesh_arrays = voxel_mesh.create_cube (
 		position+Vector3(0, -1, 0),
-		voxel_data.keys(),
 		voxel_data,
-		Core.scripts.chunk.geometry.VSIZE
+		node.components.mesh.blocks
+		#Core.scripts.chunk.geometry.VSIZE
 	)
 	
 	return mesh_arrays

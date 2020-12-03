@@ -25,10 +25,10 @@ static func play_sound():
 
 static func modify_chunk():
 	Core.emit_signal("system_process", meta, "modify_chunk", true)
-	var player_name = Core.Client.data.subsystem.input.Link.data.player
-	var player = Core.get_parent().get_node("World/Inputs/" + player_name)
-	var chunk_location = player.components.looking_at_chunk
-	var block_location = player.components.looking_at_block
+	var player_name = Core.client.data.subsystem.input.Link.data.player
+	var player = Core.get_parent().get_node("World/Input/" + player_name)
+	var chunk_location = player.components.looking_at.chunk
+	var block_location = player.components.looking_at.block
 	
 	var final_pos = Core.scripts.chunk.tools.get_local_chunk_pos(block_location, chunk_location)
 	Core.emit_signal("msg", "Placing block at local " + str(chunk_location) + " pos " + str(final_pos), Core.DEBUG, meta)
