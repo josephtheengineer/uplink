@@ -149,24 +149,24 @@ margin_right = 1920.0
 margin_bottom = 395.0
 
 [node name="WorldName" type="Label" parent="WorldStats"]
-margin_left = 1694.0
+margin_left = 1705.0
 margin_right = 1920.0
 margin_bottom = 19.0
 size_flags_horizontal = 8
 custom_fonts/font = ExtResource( 1 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-text = "== JTE's Test World =="
+text = "== Unknown World =="
 align = 2
 
 [node name="WorldPath" type="Label" parent="WorldStats"]
-margin_left = 1681.0
+margin_left = 1757.0
 margin_top = 23.0
 margin_right = 1920.0
 margin_bottom = 42.0
 size_flags_horizontal = 8
 custom_fonts/font = ExtResource( 1 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-text = "/data/test_world.eden2"
+text = "unknown.eden2"
 align = 2
 
 [node name="TotalChunks" type="Label" parent="WorldStats"]

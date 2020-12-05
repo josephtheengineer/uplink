@@ -134,6 +134,7 @@ static func launch_voxel_editor(args := launch_voxel_editor_meta) -> void: #####
 	Core.emit_signal("msg", "Opening voxel editor...", Core.INFO, meta)
 	Core.world.get_node("Interface/Hud/Hud/Background").visible = false
 	Core.scripts.input.cli.reset()
+	Core.world.get_node("Interface/Hud/Hud/Background").visible = false
 	
 	# Make the world generator generate 1 block only
 	Core.server.data.map.generator.single_voxel = true
@@ -350,3 +351,130 @@ static func invalid_command(args := invalid_command_meta) -> void: #############
 		"msg", "Invalid command " + args.cmd,
 		Core.WARN, meta )
 # ^ input.cli.invalid_command ##################################################
+
+
+
+# input.cli.single_block_test ####################################################
+const single_block_test_meta := {
+	func_name = "input.cli.single_block_test",
+	description = """
+		Tests the engine for a single block generation
+	"""
+		}
+static func single_block_test(args := single_block_test_meta) -> void: #############
+	Core.emit_signal("msg", "RUNNING SINGLE BLOCK TEST FUNCTIONS...", Core.INFO, meta)
+	Core.world.get_node("Interface/Hud/Hud/Background").visible = false
+	Core.scripts.input.cli.reset()
+	Core.world.get_node("Interface/Hud/Hud/Background").visible = false
+	
+	# Make the world generator generate 1 block only
+	Core.server.data.map.generator.single_voxel = true
+	
+	Core.emit_signal("system_process_start", "server.bootup")
+	Core.emit_signal("system_process_start", "client.connect")
+	Core.emit_signal("system_process_start", "client.spawn")
+	
+	# Get the set player from the input system
+	var player_name = Core.client.data.subsystem.input.Link.data.player
+	var player = Core.world.get_node("Input/" + player_name)
+	
+	# Set the edit mode on the player to voxels
+	player.components.action.resolution = 16 # RES_2
+	
+	# Tp the player to the correct position
+	player.get_node("Player").translation = Vector3(0, 0, 0)
+	Core.scripts.chunk.manager.create_chunk(Vector3(0, 0, 0))
+	
+	Core.emit_signal("msg", "PROCESSING SINGLE BLOCK TEST DATA...", Core.INFO, meta)
+	Core.emit_signal("msg", "Testing chunk data...", Core.INFO, meta)
+	
+	if Core.world.has_node("Chunk/(0, 0, 0)"):
+		Core.emit_signal("msg", "✓ Chunk exists: YES", Core.INFO, meta)
+	else:
+		Core.emit_signal("msg", "- Chunk exists: NO", Core.INFO, meta)
+	
+	var chunk = Core.world.get_node("Chunk/(0, 0, 0)")
+	
+#	const DEFAULT_CHUNK = {
+#	meta = {
+#		system = "chunk",
+#		type = "chunk",
+#		id = str(Vector3(0, 0, 0)),
+#		seen = false,
+#		in_range = false,
+#		blocked = false
+#	},
+#	position = {
+#		world = Vector3(0, 0, 0),
+#		address = 0
+#	},
+#	mesh = {
+#		rendered = false,
+#		disabled = false,
+#		detailed = false,
+#		vertices = Array(),
+#		blocks = Dictionary(),
+#		blocks_loaded = 0
+#	},
+#	generator = {
+#		seed = 0
+#	}
+#}
+	
+	if chunk.components.meta.system == "chunk" and chunk.components.meta.type == "chunk":
+		Core.emit_signal("msg", "✓ Valid entity type: YES", Core.INFO, meta)
+	else:
+		Core.emit_signal("msg", "𐄂𐄂❌- Valid entity type: NO", Core.INFO, meta)
+	
+	Core.emit_signal("msg", "Waiting for the chunk to compile...", Core.INFO, meta)
+	var timer = Timer.new()
+	timer.one_shot = true
+	timer.wait_time = 10
+	Core.add_child(timer)
+	timer.start()
+	yield(timer,"timeout")
+	
+	if chunk.components.mesh.rendered == true:
+		Core.emit_signal("msg", "✓ Mesh rendered: YES", Core.INFO, meta)
+	else:
+		Core.emit_signal("msg", "𐄂𐄂❌- Mesh rendered: NO", Core.INFO, meta)
+	
+	if chunk.components.mesh.blocks_loaded == 1:
+		Core.emit_signal("msg", "✓ Correct number of blocks loaded: YES", Core.INFO, meta)
+	else:
+		Core.emit_signal("msg", "𐄂𐄂❌- Correct number of blocks loaded: NO", Core.INFO, meta)
+	
+	if chunk.components.mesh.blocks.size() == 1:
+		Core.emit_signal("msg", "✓ Correct number of blocks saved: YES", Core.INFO, meta)
+	else:
+		Core.emit_signal("msg", "𐄂𐄂❌- Correct number of blocks saved: NO", Core.INFO, meta)
+	
+	if chunk.components.mesh.vertices.size() >= 1:
+		Core.emit_signal("msg", "✓ Vertices saved not empty: YES", Core.INFO, meta)
+	else:
+		Core.emit_signal("msg", "𐄂𐄂❌- Vertices saved not empty: NO", Core.INFO, meta)
+	
+	
+	
+	Core.emit_signal("msg", "Testing node data...", Core.INFO, meta)
+	
+	if chunk.has_node("Chunk"):
+		Core.emit_signal("msg", "✓ Chunk spatial node exists: YES", Core.INFO, meta)
+	else:
+		Core.emit_signal("msg", "𐄂𐄂❌- Chunk spatial node exists: NO", Core.INFO, meta)
+	
+	if chunk.get_node("Chunk").has_node("MeshInstance"):
+		Core.emit_signal("msg", "✓ Chunk mesh instance node exists: YES", Core.INFO, meta)
+	else:
+		Core.emit_signal("msg", "𐄂𐄂❌- Chunk mesh instance node exists: NO", Core.INFO, meta)
+	
+	if chunk.get_node("Chunk").get_node("MeshInstance").has_node("StaticBody"):
+		Core.emit_signal("msg", "✓ Chunk static body node exists: YES", Core.INFO, meta)
+	else:
+		Core.emit_signal("msg", "𐄂𐄂❌- Chunk static body node exists: NO", Core.INFO, meta)
+	
+	if chunk.get_node("Chunk").get_node("MeshInstance").get_node("StaticBody").has_node("Shape"):
+		Core.emit_signal("msg", "✓ Chunk shape node exists: YES", Core.INFO, meta)
+	else:
+		Core.emit_signal("msg", "𐄂𐄂❌- Chunk shape node exists: NO", Core.INFO, meta)
+# ^ input.cli.single_block_test ##################################################

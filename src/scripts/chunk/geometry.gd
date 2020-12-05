@@ -123,7 +123,9 @@ static func create_cube(position: Vector3, voxel_data: Dictionary, block_data: D
 		if floor(rand_range(0, 3)) == 1:
 			uv_offset = Vector2(0, 0)
 		var sides_not_to_render = can_be_seen(voxel_position, voxel_data)
-		var voxel_array = create_voxel(position+voxel_position, uv_offset, sides_not_to_render)
+		
+		var rvoxel_position = position + (voxel_position/Vector3(16, 16, 16))# + Vector3(0, resolution, 0)
+		var voxel_array = create_voxel(rvoxel_position, uv_offset, Array())
 		
 		verts.append_array(voxel_array[Mesh.ARRAY_VERTEX])
 		uvs.append_array(voxel_array[Mesh.ARRAY_TEX_UV])

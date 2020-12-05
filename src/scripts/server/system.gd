@@ -21,8 +21,8 @@ const DEFAULT_DATA := {
 			single_voxel = false,
 			terrain_type = GEN_NATURAL
 		},
-		path = "user://world/videogame-museum",
-		name = "Videogame Museum",
+		path = "unknown path",
+		name = "Unknown World",
 		last_location = Vector3(0, 0, 0),
 		home = {
 			location = Vector3(0, 0, 0),

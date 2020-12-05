@@ -121,7 +121,12 @@ static func draw_chunk_highlight(node: Entity, color: Color):
 	m.flags_unshaded = true
 	m.albedo_color = color
 	
+	if !node.has_node("Highlight"):
+		return
+	
 	var line = node.get_node("Highlight")
+	if !line:
+		return
 	line.clear()
 	line.set_material_override(m)
 	line.begin(Mesh.PRIMITIVE_LINES)

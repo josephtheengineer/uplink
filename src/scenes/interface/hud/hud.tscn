@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=18 format=2]
 
 [ext_resource path="res://aux/assets/textures/ui/eden2/iphone/cusor.png" type="Texture" id=1]
 [ext_resource path="res://src/scenes/interface/hud/pause_window.tscn" type="PackedScene" id=2]
@@ -15,6 +15,7 @@
 [ext_resource path="res://aux/assets/fonts/orbitron/Orbitron Light.otf" type="DynamicFontData" id=13]
 [ext_resource path="res://src/scenes/interface/debug/stats.tscn" type="PackedScene" id=14]
 [ext_resource path="res://src/scenes/interface/hud/navbox.tscn" type="PackedScene" id=15]
+[ext_resource path="res://src/scenes/interface/hud/status.tscn" type="PackedScene" id=16]
 
 [sub_resource type="DynamicFont" id=1]
 size = 14
@@ -65,11 +66,11 @@ rect_min_size = Vector2( 0, 50 )
 [node name="VerticalCenterContent" type="HBoxContainer" parent="HorizontalMain/VerticalMain"]
 margin_top = 54.0
 margin_right = 1920.0
-margin_bottom = 458.0
+margin_bottom = 549.0
 
 [node name="LeftMargin" type="Control" parent="HorizontalMain/VerticalMain/VerticalCenterContent"]
 margin_right = 50.0
-margin_bottom = 404.0
+margin_bottom = 495.0
 rect_min_size = Vector2( 50, 0 )
 
 [node name="LeftPanel" type="VBoxContainer" parent="HorizontalMain/VerticalMain/VerticalCenterContent"]
@@ -289,6 +290,13 @@ margin_bottom = -4.0
 size_flags_horizontal = 1
 size_flags_vertical = 1
 
+[node name="Status" parent="HorizontalMain/VerticalMain/VerticalCenterContent/LeftPanel/TabContainer" instance=ExtResource( 16 )]
+visible = false
+margin_left = 4.0
+margin_top = 33.0
+margin_right = -4.0
+margin_bottom = -4.0
+
 [node name="Spacer2" type="Control" parent="HorizontalMain/VerticalMain/VerticalCenterContent/LeftPanel"]
 margin_top = 404.0
 margin_right = 500.0
@@ -313,16 +321,16 @@ margin_bottom = 672.0
 
 [node name="Spacer" type="Control" parent="HorizontalMain/VerticalMain/VerticalCenterContent"]
 margin_left = 558.0
-margin_right = 1884.0
-margin_bottom = 404.0
+margin_right = 1599.0
+margin_bottom = 495.0
 size_flags_horizontal = 3
 
 [node name="DebugStats" parent="HorizontalMain/VerticalMain/VerticalCenterContent" instance=ExtResource( 14 )]
-margin_left = 1888.0
-margin_bottom = 404.0
+margin_left = 1603.0
+margin_bottom = 495.0
 
 [node name="Control" type="Control" parent="HorizontalMain/VerticalMain"]
-margin_top = 462.0
+margin_top = 553.0
 margin_right = 1920.0
 margin_bottom = 1030.0
 size_flags_vertical = 3

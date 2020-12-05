@@ -164,7 +164,7 @@ static func compile(node: Entity): #############################################
 		add_verts_to_chunk(node, mesh_arrays, mat)
 		full_mesh.append_array(mesh_arrays[Mesh.ARRAY_VERTEX])
 	
-	create_chunk_shape(node, full_mesh)
+	#create_chunk_shape(node, full_mesh)
 	
 	var empty_points := 0
 	for point in full_mesh:

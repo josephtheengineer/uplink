@@ -166,9 +166,9 @@ const scenes = {
 	}
 }
 #warning-ignore:unused_class_variable
-const lib = {
-	voxel = preload("res://src/code/voxel_mesh.gdns")
-}
+#const lib = {
+#	voxel = preload("res://src/code/voxel_mesh.gdns")
+#}
 #warning-ignore:unused_class_variable
 var data := {
 	
