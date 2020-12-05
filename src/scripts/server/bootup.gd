@@ -12,7 +12,7 @@ const meta := {
 }
 
 static func load_world():
-	Core.emit_signal("system_process", meta, "load_world", true)
+	Core.emit_signal("system_process", meta, "load_world", "start")
 	
 	#Core.emit_signal("msg", "Removing all entities...", Core.DEBUG, meta)
 	#for id in Entity.objects:
@@ -22,10 +22,10 @@ static func load_world():
 	Core.scripts.chunk.eden.world_decoder.load_world()
 	#Core.scripts.chunk.manager.create_chunk(Vector3(0, 0, 0))
 	
-	Core.emit_signal("system_process", meta, "load_world")
+	Core.emit_signal("system_process", meta, "load_world", "success")
 
 static func accept_connections():
-	Core.emit_signal("system_process", meta, "accept_connections", true)
+	Core.emit_signal("system_process", meta, "accept_connections", "start")
 	
 	Core.emit_signal("msg", "Creating server...", Core.INFO, meta)
 	
@@ -45,4 +45,4 @@ static func accept_connections():
 	#network.connect("server_disconnected", Core.Server, "_peer_disconnected")
 	#Core.get_tree().set_meta("network_peer", network)
 	
-	Core.emit_signal("system_process", meta, "accept_connections")
+	Core.emit_signal("system_process", meta, "accept_connections", "success")

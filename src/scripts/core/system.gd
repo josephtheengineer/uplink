@@ -54,6 +54,9 @@ const scripts := {
 			comp = preload("res://src/scripts/core/entity/comp.gd"),
 			main = preload("res://src/scripts/core/entity/main.gd")
 		},
+		test = {
+			single_block = preload("res://src/scripts/core/test/single_block.gd")
+		},
 		files = preload("res://src/scripts/core/files.gd"),
 		manager = preload("res://src/scripts/core/manager.gd"),
 		memory = preload("res://src/scripts/core/memory.gd"),
@@ -337,22 +340,27 @@ func _on_system_process_start(script_name):
 func _on_reset(): ##############################################################
 	emit_signal("msg", "Event reset called.", TRACE, meta)
 
-func _on_system_process(meta_script, step, start = false): #####################
+func _on_system_process(meta_script, step, code): #####################
 	emit_signal("msg", "Event system_process called. meta: [script_name]: "
-		+ str(meta_script.script_name) + ", step: " + str(step) + ", start: " 
-		+ str(start), TRACE, meta)
+		+ str(meta_script.script_name) + ", step: " + str(step) + ", code: " 
+		+ str(code), TRACE, meta)
 	
 	var script = scripts.core.dictionary.main.get_from_dict(scripts, meta_script.script_name.split("."))
 	var num = meta_script.steps.find(step)+1
-	if start:
-		emit_signal("msg", "\t" + meta_script.steps[num-1] + ": ", INFO, meta)
-	else:
-		if num < meta_script.steps.size():
-			script.call(meta_script.steps[num])
-		else:
-			emit_signal("msg", "==== " + meta_script.script_name + " Finished ====", INFO, meta)
-			if meta_script.script_name == "client.bootup":
-				emit_signal("msg", "Welcome to Uplink! To start a demo sequence type /demo, or for a list of commands type /help", INFO, meta)
+	match code:
+		"start":
+			emit_signal("msg", "\t" + meta_script.steps[num-1] + ": ", INFO, meta)
+		"success":
+			if num < meta_script.steps.size():
+				script.call(meta_script.steps[num])
+			else:
+				emit_signal("msg", "==== " + meta_script.script_name + " Finished ====", INFO, meta)
+				if meta_script.script_name == "client.bootup":
+					emit_signal("msg", "Welcome to Uplink! To start a demo sequence type /demo, or for a list of commands type /help", INFO, meta)
+		_:
+			emit_signal("msg", "\t" + meta_script.steps[num] + " finished with error " + str(code), WARN, meta)
+			if num < meta_script.steps.size():
+				script.call(meta_script.steps[num])
 
 ################################################################################
 

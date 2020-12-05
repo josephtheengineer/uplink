@@ -114,7 +114,7 @@ static func _update_terminal(signal_link, meta_data, name):
 		38:
 			Core.emit_signal("msg", "Is Window Always on Top: " + str(OS.is_window_always_on_top()), Core.INFO, meta)
 		39:
-			Core.emit_signal(signal_link, meta_data, name)
+			Core.emit_signal(signal_link, meta_data, name, "success")
 			#show_text(id, components, "Type '" + keyword +"' to continue: ")
 			#OS.show_virtual_keyboard()
 			#create_text_input()

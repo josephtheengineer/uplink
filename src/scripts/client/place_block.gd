@@ -13,7 +13,7 @@ const meta := {
 }
 
 static func play_sound():
-	Core.emit_signal("system_process", meta, "play_sound", true)
+	Core.emit_signal("system_process", meta, "play_sound", "start")
 	var music_player = AudioStreamPlayer3D.new()
 	var audio = load("res://aux/assets/sounds/game/block_break_generic_1_v2.ogg")
 	audio.loop = false
@@ -21,10 +21,10 @@ static func play_sound():
 	music_player.connect("finished", Core.client, "_stop_player", [music_player])
 	Core.client.add_child(music_player)
 	music_player.play()
-	Core.emit_signal("system_process", meta, "play_sound")
+	Core.emit_signal("system_process", meta, "play_sound", "success")
 
 static func modify_chunk():
-	Core.emit_signal("system_process", meta, "modify_chunk", true)
+	Core.emit_signal("system_process", meta, "modify_chunk", "start")
 	var player_name = Core.client.data.subsystem.input.Link.data.player
 	var player = Core.get_parent().get_node("World/Input/" + player_name)
 	var chunk_location = player.components.looking_at.chunk
@@ -39,4 +39,4 @@ static func modify_chunk():
 	
 	var chunk = Core.get_parent().get_node("World/Chunks/" + str(chunk_location))
 	Core.scripts.chunk.modify.place_block(chunk, final_pos, 8)
-	Core.emit_signal("system_process", meta, "modify_chunk")
+	Core.emit_signal("system_process", meta, "modify_chunk", "success")

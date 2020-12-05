@@ -15,7 +15,7 @@ const meta := {
 
 # systems bootup ###############################################################
 static func bring_systems_online():
-	Core.emit_signal("system_process", meta, "bring_systems_online", true)
+	Core.emit_signal("system_process", meta, "bring_systems_online", "start")
 	Core.scripts.core.debug.msg.init(Core.client.data.log_path)
 	Core.scripts.core.system_manager.setup()
 	
@@ -30,7 +30,7 @@ static func bring_systems_online():
 	
 	yield(Core.get_tree(), "idle_frame")
 	
-	Core.emit_signal("system_process", meta, "bring_systems_online")
+	Core.emit_signal("system_process", meta, "bring_systems_online", "success")
 
 static func create_chunk_system(): #############################################
 	Core.emit_signal("msg", "Creating chunk system...", Core.DEBUG, meta)
@@ -76,18 +76,18 @@ static func create_sound_system(): #############################################
 
 ################################################################################
 static func check_systems():####################################################
-	Core.emit_signal("system_process", meta, "check_systems", true)
+	Core.emit_signal("system_process", meta, "check_systems", "start")
 	Core.scripts.core.system_manager.check_systems()
 	Core.scripts.core.files.check()
 	Core.emit_signal("msg", "App ready!", Core.INFO, meta)
-	Core.emit_signal("system_process", meta, "check_systems")
+	Core.emit_signal("system_process", meta, "check_systems", "success")
 ################################################################################
 
 
 
 ################################################################################
 static func run_diagnostics(): #################################################
-	Core.emit_signal("system_process", meta, "run_diagnostics", true)
+	Core.emit_signal("system_process", meta, "run_diagnostics", "start")
 	Core.scripts.core.debug.diagnostics.run("system_process", meta, "run_diagnostics")
 ################################################################################
 
@@ -95,8 +95,8 @@ static func run_diagnostics(): #################################################
 
 # remove tty, create hud #######################################################
 static func load_interface():
-	Core.emit_signal("system_process", meta, "load_interface", true)
+	Core.emit_signal("system_process", meta, "load_interface", "start")
 	Core.world.get_node("Interface/0").free()
 	Core.scripts.interface.hud.create()
-	Core.emit_signal("system_process", meta, "load_interface")
+	Core.emit_signal("system_process", meta, "load_interface", "success")
 ################################################################################
