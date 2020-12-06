@@ -55,8 +55,9 @@ const scripts := {
 			main = preload("res://src/scripts/core/entity/main.gd")
 		},
 		test = {
-			single_block = preload("res://src/scripts/core/test/single_block.gd"),
-			alias = preload("res://src/scripts/core/test/alias.gd")
+			alias = preload("res://src/scripts/core/test/alias.gd"),
+			floor = preload("res://src/scripts/core/test/floor.gd"),
+			single_block = preload("res://src/scripts/core/test/single_block.gd")
 		},
 		files = preload("res://src/scripts/core/files.gd"),
 		manager = preload("res://src/scripts/core/manager.gd"),

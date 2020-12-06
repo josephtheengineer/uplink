@@ -1,6 +1,6 @@
 #warning-ignore:unused_class_variable
 const meta := {
-	script_name = "core.test.single_block",
+	script_name = "core.test.floor",
 	type = "process",
 	steps = [
 		"setup_environment",
@@ -29,7 +29,7 @@ static func setup_environment():
 	Core.world.get_node("Interface/Hud/Hud/Background").visible = false
 	
 	# Make the world generator generate 1 block only
-	Core.server.data.map.generator.single_voxel = true
+	Core.server.data.map.generator.single_voxel = false
 	
 	Core.emit_signal("system_process_start", "server.bootup")
 	Core.emit_signal("system_process_start", "client.connect")
@@ -94,7 +94,7 @@ static func blocks_loaded_count():
 	Core.emit_signal("system_process", meta, "blocks_loaded_count", "start")
 	
 	var chunk = Core.world.get_node("Chunk/(0, 0, 0)")
-	if chunk.components.mesh.blocks_loaded == 1:
+	if chunk.components.mesh.blocks_loaded == (16*16):
 		Core.emit_signal("system_process", meta, "blocks_loaded_count", "success")
 	else:
 		Core.emit_signal("system_process", meta, "blocks_loaded_count", "incorrect number of blocks loaded")
@@ -103,7 +103,7 @@ static func block_data_size():
 	Core.emit_signal("system_process", meta, "block_data_size", "start")
 	
 	var chunk = Core.world.get_node("Chunk/(0, 0, 0)")
-	if chunk.components.mesh.blocks.size() == 1:
+	if chunk.components.mesh.blocks.size() == (16*16):
 		Core.emit_signal("system_process", meta, "block_data_size", "success")
 	else:
 		Core.emit_signal("system_process", meta, "block_data_size", "incorrect number of blocks saved")

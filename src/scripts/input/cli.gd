@@ -360,9 +360,21 @@ const single_block_test_meta := {
 		Tests the engine for a single block generation
 	"""
 		}
-static func single_block_test(_args := single_block_test_meta) -> void: #########
+static func single_block_test(_args := single_block_test_meta) -> void: ########
 	Core.emit_signal("system_process_start", "core.test.single_block")
 # ^ input.cli.single_block_test ################################################
+
+
+# input.cli.floor_test #########################################################
+const floor_test_meta := {
+	func_name = "input.cli.floor_test",
+	description = """
+		
+	"""
+		}
+static func floor_test(_args := floor_test_meta) -> void: ######################
+	Core.emit_signal("system_process_start", "core.test.floor")
+# ^ input.cli.floor_test #######################################################
 
 
 # input.cli.create_alias #######################################################
