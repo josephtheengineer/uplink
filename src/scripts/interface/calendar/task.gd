@@ -25,7 +25,6 @@ const task_template := {
 
 # interface.calendar.task.list #################################################
 const list_meta := {
-	script = meta,
 	func_name = "interface.calendar.task.list",
 	description = """
 		List all tasks

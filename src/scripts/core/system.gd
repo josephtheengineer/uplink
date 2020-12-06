@@ -245,35 +245,72 @@ var signals = [ "system_ready", "entity_loaded", "request_entity_unload",
 
 ################################################################################
 
-func _ready(): #################################################################	
+
+# core.system.ready ############################################################
+const ready_meta := {
+	func_name = "core.system.ready",
+	description = """
+		
+	""",
+		}
+func _ready(args := ready_meta) -> void: #######################################
 	for app_signal in signals:
 		var error = connect(app_signal, self, "_on_" + app_signal)
 		if error:
 			emit_signal("msg", "Error on binding to " + app_signal 
-				+ ": " + str(error), WARN, meta)
-    
+				+ ": " + str(error), WARN, args)
+# ^ core.system.ready ##########################################################
 
-func _process(_delta):
+
+# core.system._process #########################################################
+const _process_meta := {
+	func_name = "core.system._process",
+	description = """
+		
+	""",
+		}
+func _process(_delta, args := _process_meta) -> void: ##########################
 	scripts.core.memory.check()
+# ^ core.system._process #######################################################
 
 
-func _on_system_ready(system, obj): ############################################
+# core.system._on_system_ready #################################################
+const _on_system_ready_meta := {
+	func_name = "core.system._on_system_ready",
+	description = """
+		
+	""",
+		}
+func _on_system_ready(system, obj, args := _on_system_ready_meta) -> void: #####
 	emit_signal("msg", "Event system_ready called. system: " + str(system) 
-		+ ", obj: " + str(obj), TRACE, meta)
+		+ ", obj: " + str(obj), TRACE, args)
+# ^ core.system._on_system_ready ###############################################
 
 
-func _on_entity_loaded(entity): ################################################
-	emit_signal("msg", "Event entity_loaded called. entity: " 
-		+ str(entity), TRACE, meta)
-
-
-func _on_request_entity_unload(entity): ########################################
+# core.system._on_request_entity_unload ########################################
+const _on_request_entity_unload_meta := {
+	
+	func_name = "core.system._on_request_entity_unload",
+	description = """
+		
+	""",
+		}
+func _on_request_entity_unload(entity, args := _on_request_entity_unload_meta) -> void:
 	emit_signal("msg", "Event request_entity_unload called. entity: " 
-		+ str(entity), TRACE, meta)
+		+ str(entity), TRACE, args)
+# ^ core.system._on_request_entity_unload ########################################
 
 
-func _on_app_ready(): ##########################################################
-	emit_signal("msg", "Event app_ready called", TRACE, meta)
+# core.system._on_app_ready ####################################################
+const _on_app_ready_meta := {
+	func_name = "core.system._on_app_ready",
+	description = """
+		
+	""",
+		}
+func _on_app_ready(args := _on_app_ready_meta) -> void: ########################
+	emit_signal("msg", "Event app_ready called", TRACE, args)
+# ^ core.system._on_app_ready ##################################################
 
 
 func _on_request_scene_load(scene): ############################################

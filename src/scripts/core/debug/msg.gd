@@ -41,7 +41,6 @@ static func level_string(level: int):
 
 # core.debug.msg.send ##########################################################
 const send_meta := {
-	script = meta,
 	func_name = "core.debug.msg.send",
 	description = """
 		

@@ -64,7 +64,6 @@ static func call_cli(args := call_cli_meta) -> void: ###########################
 
 # input.cli.help ###############################################################
 const help_meta := {
-	script = meta,
 	func_name = "input.cli.help",
 	description = """
 		Prints help infomation
@@ -80,7 +79,6 @@ static func help(args := help_meta) -> void: ###################################
 
 # input.cli.run_demo ###########################################################
 const run_demo_meta := {
-	script = meta,
 	func_name = "input.cli.run_demo",
 	description = """
 		Runs a demo for new users
@@ -102,7 +100,6 @@ static func run_demo(args := run_demo_meta) -> void: ###########################
 
 # input.cli.reset ##############################################################
 const reset_meta := {
-	script = meta,
 	func_name = "input.cli.reset",
 	description = """
 		Resets all systems
@@ -128,7 +125,6 @@ static func reset(args := reset_meta) -> void: #################################
 
 # input.cli.launch_voxel_editor ################################################
 const launch_voxel_editor_meta := {
-	script = meta,
 	func_name = "input.cli.launch_voxel_editor",
 	description = """
 		Loades a specialised world for edditing voxels on a block
@@ -162,7 +158,6 @@ static func launch_voxel_editor(args := launch_voxel_editor_meta) -> void: #####
 
 # input.cli.launch_test_world ################################################
 const launch_test_world_meta := {
-	script = meta,
 	func_name = "input.cli.launch_test_world",
 	description = """
 		Loads a world designed to test the voxel engine
@@ -285,7 +280,6 @@ static func tp(args := tp_meta) -> void: #######################################
 
 # input.cli.break ##############################################################
 const break_meta := {
-	script = meta,
 	func_name = "input.cli.break",
 	description = """
 		A breakpoint
@@ -300,7 +294,6 @@ static func break(args := break_meta) -> void: #################################
 
 # input.cli.quit ###############################################################
 const quit_meta := {
-	script = meta,
 	func_name = "input.cli.quit",
 	description = """
 		Quits Uplink
@@ -333,7 +326,6 @@ static func get_var(args := get_var_meta) -> void: #############################
 
 # input.cli.init_vr ############################################################
 const init_vr_meta := {
-	script = meta,
 	func_name = "input.cli.init_vr",
 	description = """
 		Enables steroscopic output + head tracking
@@ -375,7 +367,6 @@ static func single_block_test(_args := single_block_test_meta) -> void: ########
 
 # input.cli.create_alias #######################################################
 const create_alias_meta := {
-	script = meta,
 	func_name = "input.cli.create_alias",
 	description = """
 		Stores a alias to a file

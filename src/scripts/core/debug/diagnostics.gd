@@ -20,7 +20,6 @@ const DEFAULT_TTY = {
 
 # core.debug.diagnostics.run ###################################################
 const run_meta := {
-	script = meta,
 	func_name = "core.debug.diagnostics.run",
 	description = """
 		Starts the diagnostics process
@@ -51,7 +50,6 @@ static func run(args := run_meta) -> void: #####################################
 
 # core.debug.diagnostics._update_terminal ######################################
 const _update_terminal_meta := {
-	script = meta,
 	func_name = "core.debug.diagnostics._update_terminal",
 	description = """
 		Updates the terminal with diagnostics messages
