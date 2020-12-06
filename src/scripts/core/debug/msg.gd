@@ -7,6 +7,7 @@ const meta := {
 }
 
 const log_loc = "user://log/"
+const BREAK_ON_WARN = false
 
 static func init(_client_log_loc):
 	#var log_loc = client_log_loc
@@ -75,6 +76,9 @@ static func send(args := send_meta) -> void: ###################################
 	var time = str(OS.get_time().hour) + ":" + str(OS.get_time().minute) + ":" + str(OS.get_time().second) 
 	file.store_string(date + " " + time + " | " + level_string + " [ " + func_path + " ] " + args.message + '\n')
 	file.close()
+	
+	if BREAK_ON_WARN and (args.level == Core.WARN or args.level == Core.ERROR):
+		breakpoint
 	
 	if args.level == Core.FATAL:
 		print("ERR FATAL received, terminating active processes")

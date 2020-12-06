@@ -37,7 +37,6 @@ physics_engine=false
 [debug]
 
 gdscript/warnings/unused_class_variable=true
-gdscript/warnings/unsafe_property_access=true
 gdscript/warnings/unsafe_method_access=true
 gdscript/warnings/unsafe_cast=true
 gdscript/warnings/unsafe_call_argument=true
