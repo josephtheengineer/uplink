@@ -148,8 +148,11 @@ static func discover_surrounding_chunks(): #####################################
 
 # once per chunk ###############################################################
 static func compile(node: Entity): #############################################
-	node.get_node("Chunk/MeshInstance").mesh = null
-	node.get_node("Chunk/MeshInstance/StaticBody/Shape").shape = null
+	var mesh_instance: MeshInstance = node.get_node("Chunk/MeshInstance")
+	mesh_instance.mesh = null
+	
+	var shape: CollisionShape = node.get_node("Chunk/MeshInstance/StaticBody/Shape")
+	shape.shape = null
 	
 	var mat = create_atlas()
 	
@@ -178,7 +181,8 @@ static func create_chunk_shape(node: Entity, full_mesh: PoolVector3Array) -> voi
 	Core.scripts.chunk.manager.draw_chunk_highlight(node, Color(0, 0, 255))
 	var shape := ConcavePolygonShape.new()
 	shape.set_faces(full_mesh)
-	node.get_node("Chunk/MeshInstance/StaticBody/Shape").shape = shape
+	var shape_node: CollisionShape = node.get_node("Chunk/MeshInstance/StaticBody/Shape")
+	shape_node.shape = shape
 
 
 static func create_cube_mesh(node: Entity, position: Vector3) -> Array:
@@ -202,8 +206,9 @@ static func create_cube_mesh(node: Entity, position: Vector3) -> Array:
 
 static func add_verts_to_chunk(node: Entity, mesh_arrays: Array, mat: SpatialMaterial) -> void:
 	var mesh = ArrayMesh.new()
-	if node.get_node("Chunk/MeshInstance").mesh:
-		mesh = node.get_node("Chunk/MeshInstance").mesh
+	var mesh_node: MeshInstance = node.get_node("Chunk/MeshInstance")
+	if mesh_node.mesh:
+		mesh = mesh_node.mesh
 	else:
 		mesh = ArrayMesh.new()
 	
@@ -211,7 +216,7 @@ static func add_verts_to_chunk(node: Entity, mesh_arrays: Array, mat: SpatialMat
 		mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, mesh_arrays)
 		mesh.surface_set_material(0, mat)
 		
-		node.get_node("Chunk/MeshInstance").mesh = mesh
+		mesh_node.mesh = mesh
 		node.components.mesh.blocks_loaded += 1
 		Core.client.data.blocks_loaded += 1
 	else:

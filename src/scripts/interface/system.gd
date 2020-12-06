@@ -42,8 +42,9 @@ func create(entity: Dictionary):
 		var node = Entity.new()
 		node.set_name("0")
 		add_child(node)
-		get_node("0").components = entity
-		get_node("0").add_child(Core.scenes.interface.terminal.tty.instance())
+		var tty: Entity = get_node("0")
+		tty.components = entity
+		tty.add_child(Core.scenes.interface.terminal.tty.instance())
 	
 	if entity.meta.type == "hud":
 		var node = Entity.new()
@@ -105,7 +106,16 @@ func _on_msg(message, level, script_meta): #####################################
 						label.add_text(sub_level_string + " [ " + sub_script_name + " ] " + sub_message + "\n")
 			file.close()
 		#if level <= Core.INFO:
-		label.add_text(level_string + " [ " + script_meta.script_name + " ] " + message + "\n")
+		
+		var func_path = ""
+		if script_meta.has("func_name"):
+			func_path = script_meta.func_name
+		elif script_meta.has("script_name"):
+			func_path = script_meta.script_name + ".n/a"
+		else:
+			func_path = "n/a"
+		
+		label.add_text(level_string + " [ " + func_path + " ] " + message + "\n")
 
 
 func update_world_map(): #######################################################

@@ -25,15 +25,14 @@ const task_template := {
 
 # interface.calendar.task.list #################################################
 const list_meta := {
+	script = meta,
 	func_name = "interface.calendar.task.list",
 	description = """
 		List all tasks
 	""",
-		task = "" }
+		}
 static func list(args := list_meta) -> void: ########################
-	Core.emit_signal(
-		"msg", "Tasks: ",
-		Core.INFO, meta )
+	Core.emit_signal("msg", "Tasks: ", Core.INFO, args)
 	
 	var tasks = []
 	
@@ -56,7 +55,7 @@ static func list(args := list_meta) -> void: ########################
 			text += (str(i-header) + ". "
 			+ tasks[i].due_date + ": " + tasks[i].name + '\n' )
 	
-	Core.emit_signal("msg", text, Core.INFO, meta)
+	Core.emit_signal("msg", text, Core.INFO, args)
 # ^ interface.calendar.task.list ###############################################
 
 
@@ -132,7 +131,7 @@ const read_meta := {
 		task = {} }
 static func read(args := create_task_meta) -> void: ############################
 	var task = task_template.duplicate(true)
-	var dir = Directory.new()
+	#var dir = Directory.new()
 	#if !dir.file_exists(TASKS_FOLDER):
 	#	breakpoint
 	#	return false
@@ -201,4 +200,6 @@ static func list_files_in_directory(path):
 
 static func delete_task(id: int):
 	var dir := Directory.new()
-	dir.remove(TASKS_FOLDER + str(id))
+	var err = dir.remove(TASKS_FOLDER + str(id))
+	if err:
+		Core.emit_signal("msg", "Error when deleting task folder " + TASKS_FOLDER + str(id) + ": " + str(err), Core.ERROR, meta)

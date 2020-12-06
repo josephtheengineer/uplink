@@ -122,7 +122,7 @@ static func create_cube(position: Vector3, voxel_data: Dictionary, block_data: D
 		var uv_offset = Vector2(-0.5, -0.5)
 		if floor(rand_range(0, 3)) == 1:
 			uv_offset = Vector2(0, 0)
-		var sides_not_to_render = can_be_seen(voxel_position, voxel_data)
+		#var sides_not_to_render = can_be_seen(voxel_position, voxel_data)
 		
 		var rvoxel_position = position + (voxel_position/Vector3(16, 16, 16))# + Vector3(0, resolution, 0)
 		var voxel_array = create_voxel(rvoxel_position, uv_offset, Array())
@@ -171,7 +171,7 @@ static func create_voxel(position: Vector3, uv_offset: Vector2, sides_not_to_ren
 	
 	if not sides_not_to_render.has(Vector3(0, -1, 0)) or SHOW_UNSEEN_SIDES: # down
 		var i = hplane_vertices.size()
-		for index in range(hplane_vertices.size()):
+		for _index in range(hplane_vertices.size()):
 			i -= 1
 			normals.append(Vector3(0, -1, 0))
 			uvs.append(hplane_uvs[i] + uv_offset)
@@ -187,7 +187,7 @@ static func create_voxel(position: Vector3, uv_offset: Vector2, sides_not_to_ren
 
 	if not sides_not_to_render.has(Vector3(0, 0, -1)) or SHOW_UNSEEN_SIDES: # east
 		var i = hplane_vertices.size()
-		for index in range(vplane_vertices.size()):
+		for _index in range(vplane_vertices.size()):
 			i -= 1
 			normals.append(Vector3(0, 0, -1))
 			uvs.append(vplane_uvs[i] + uv_offset)
@@ -201,7 +201,7 @@ static func create_voxel(position: Vector3, uv_offset: Vector2, sides_not_to_ren
 
 	if not sides_not_to_render.has(Vector3(1, 0, 0)) or SHOW_UNSEEN_SIDES: # south
 		var i = hplane_vertices.size()
-		for index in range(vplane_vertices2.size()):
+		for _index in range(vplane_vertices2.size()):
 			i -= 1
 			normals.append(Vector3(1, 0, 0))
 			uvs.append(vplane_uvs2[i] + uv_offset)

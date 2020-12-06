@@ -360,6 +360,41 @@ const single_block_test_meta := {
 		Tests the engine for a single block generation
 	"""
 		}
-static func single_block_test(args := single_block_test_meta) -> void: #############
+static func single_block_test(args := single_block_test_meta) -> void: #########
 	Core.emit_signal("system_process_start", "core.test.single_block")
 # ^ input.cli.single_block_test ################################################
+
+
+# input.cli.create_alias #######################################################
+const create_alias_meta := {
+	script = meta,
+	func_name = "input.cli.create_alias",
+	description = """
+		Stores a alias to a file
+	""",
+		name = "",
+		value = "" }
+static func create_alias(args := create_alias_meta) -> void: ###################
+	var text = args.name + "=" + args.value + '\n'
+	
+	var file = File.new()
+	if !file.file_exists("user://data.txt"):
+		Core.emit_signal("msg", "No file to write to", Core.ERROR, args)
+	elif file.open("user://data.txt", File.WRITE) != 0:
+		Core.emit_signal("msg", "Error while writing to file", Core.ERROR, args)
+	else:
+		file.seek_end()
+		file.store_line(text)
+		file.close()
+# ^ input.cli.create_alias #####################################################
+
+# input.cli.alias_test #########################################################
+const alias_test_meta := {
+	func_name = "input.cli.alias_test",
+	description = """
+		Tests the cli function for creating and using an alias
+	"""
+		}
+static func alias_test(args := alias_test_meta) -> void: #########
+	Core.emit_signal("system_process_start", "core.test.alias")
+# ^ input.cli.alias_test #######################################################

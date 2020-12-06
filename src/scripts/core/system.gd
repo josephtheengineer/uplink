@@ -55,7 +55,8 @@ const scripts := {
 			main = preload("res://src/scripts/core/entity/main.gd")
 		},
 		test = {
-			single_block = preload("res://src/scripts/core/test/single_block.gd")
+			single_block = preload("res://src/scripts/core/test/single_block.gd"),
+			alias = preload("res://src/scripts/core/test/alias.gd")
 		},
 		files = preload("res://src/scripts/core/files.gd"),
 		manager = preload("res://src/scripts/core/manager.gd"),
@@ -252,7 +253,7 @@ func _ready(): #################################################################
 				+ ": " + str(error), WARN, meta)
     
 
-func _process(delta):
+func _process(_delta):
 	scripts.core.memory.check()
 
 
@@ -335,7 +336,10 @@ func _on_system_process_start(script_name):
 		+ str(script_name), TRACE, meta)
 	emit_signal("msg", "==== Starting " + script_name + " ====", INFO, meta)
 	var script = scripts.core.dictionary.main.get_from_dict(scripts, script_name.split("."))
-	script.call(script.meta.steps[0])
+	if script:
+		script.call(script.meta.steps[0])
+	else:
+		emit_signal("msg", "Invalid script called!", ERROR, meta)
 
 func _on_reset(): ##############################################################
 	emit_signal("msg", "Event reset called.", TRACE, meta)
@@ -358,14 +362,18 @@ func _on_system_process(meta_script, step, code): #####################
 				if meta_script.script_name == "client.bootup":
 					emit_signal("msg", "Welcome to Uplink! To start a demo sequence type /demo, or for a list of commands type /help", INFO, meta)
 		_:
-			emit_signal("msg", "\t" + meta_script.steps[num] + " finished with error " + str(code), WARN, meta)
+			emit_signal("msg", "\t" + step + " finished with error " + str(code), WARN, meta)
 			if num < meta_script.steps.size():
 				script.call(meta_script.steps[num])
 
 ################################################################################
 
 func _on_msg(message: String, level: int, meta: Dictionary):
-	scripts.core.debug.msg.send(message, level, meta)
+	var args = scripts.core.debug.msg.send_meta.duplicate(true)
+	args.message = message
+	args.level = level
+	args.meta = meta
+	scripts.core.debug.msg.send(args)
 
 func _on_system_ready_fancy(system: int, obj: Object): ########################
 	scripts.core.system_manager.ready_fancy(system, obj)

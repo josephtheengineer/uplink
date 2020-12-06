@@ -102,7 +102,7 @@ static func fly(player: Entity, delta: float): #################################
 	
 	# move
 	var body: KinematicBody = player.get_node("Player")
-	body.move_and_slide(velocity)
+	var _linear_velocity = body.move_and_slide(velocity)
 
 
 

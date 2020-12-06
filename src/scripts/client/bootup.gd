@@ -88,7 +88,12 @@ static func check_systems():####################################################
 ################################################################################
 static func run_diagnostics(): #################################################
 	Core.emit_signal("system_process", meta, "run_diagnostics", "start")
-	Core.scripts.core.debug.diagnostics.run("system_process", meta, "run_diagnostics")
+	
+	var run_args = Core.scripts.core.debug.diagnostics.run_meta.duplicate(true)
+	run_args.signal_link = "system_process"
+	run_args.meta_data = meta
+	run_args.name = "run_diagnostics"
+	Core.scripts.core.debug.diagnostics.run(run_args)
 ################################################################################
 
 

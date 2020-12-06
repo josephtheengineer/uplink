@@ -94,7 +94,8 @@ static func get_looking_at(player: Entity, position: Vector2): #################
 		var line = ImmediateGeometry.new()
 		line.begin(Mesh.PRIMITIVE_LINES)
 		line.set_color(Color(1, 0, 0))
-		line.add_vertex(player.get_node("Player").translation)
+		var player_node: KinematicBody = player.get_node("Player")
+		line.add_vertex(player_node.translation)
 		line.add_vertex(result.position)
 		line.end()
 		line.name = "DebugLookingAtLine"

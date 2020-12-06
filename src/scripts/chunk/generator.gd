@@ -48,7 +48,6 @@ static func generate_flat_terrain(): ###########################################
 
 static func generate_box():
 	var voxel_data = Dictionary()
-	var VSIZE = Core.scripts.chunk.geometry.VSIZE
 	# draw an outline of voxels (for debuging mostly)
 #	for x in 16:
 #		for y in 16:
@@ -81,7 +80,6 @@ static func generate_box():
 
 static func generate_block():
 	var voxel_data = Dictionary()
-	var VSIZE = Core.scripts.chunk.geometry.VSIZE
 	# draw an outline of voxels (for debuging mostly)
 #	for x in 16:
 #		for y in 16:
@@ -105,7 +103,6 @@ static func generate_block():
 
 static func generate_small_box():
 	var voxel_data = Dictionary()
-	var VSIZE = Core.scripts.chunk.geometry.VSIZE
 	
 	voxel_data[Vector3(16/2, 16/2, 16/2)] = 1
 	return voxel_data
@@ -191,5 +188,5 @@ static func generate_simple_terrain(): #########################################
 	#place_block(2, 0, 0, 0)
 	#compile()
 
-static func text(string):
-	pass
+#static func text(string):
+#	pass

@@ -114,7 +114,7 @@ func _input(event: InputEvent): ################################################
 	
 	if event.is_action_pressed("ui_up"):
 		data.history_line += 1
-		print(data.history_line)
+		Core.emit_signal("msg", "History index: " + str(data.history_line), Core.DEBUG, meta)
 		if data.history_line >= 0:
 			var file = File.new()
 			file.open(Core.client.data.cmd_history_file, File.READ_WRITE)
@@ -130,7 +130,7 @@ func _input(event: InputEvent): ################################################
 			data.history_line = 0
 	if event.is_action_pressed("ui_down"):
 		data.history_line -= 1
-		print(data.history_line)
+		Core.emit_signal("msg", "History index: " + str(data.history_line), Core.DEBUG, meta)
 		if data.history_line >= 0:
 			var file = File.new()
 			file.open(Core.client.data.cmd_history_file, File.READ_WRITE)
