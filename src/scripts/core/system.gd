@@ -269,7 +269,7 @@ const _process_meta := {
 		
 	""",
 		}
-func _process(_delta, args := _process_meta) -> void: ##########################
+func _process(_delta, _args := _process_meta) -> void: ##########################
 	scripts.core.memory.check()
 # ^ core.system._process #######################################################
 
@@ -313,95 +313,211 @@ func _on_app_ready(args := _on_app_ready_meta) -> void: ########################
 # ^ core.system._on_app_ready ##################################################
 
 
-func _on_request_scene_load(scene): ############################################
+# core.system._on_request_scene_load ###########################################
+const _on_request_scene_load_meta := {
+	func_name = "core.system._on_request_scene_load",
+	description = """
+		
+	""",
+		}
+func _on_request_scene_load(scene, args := _on_request_scene_load_meta) -> void: 
 	emit_signal("msg", "Event request_scene_load called. scene: " 
-		+ str(scene), TRACE, meta)
+		+ str(scene), TRACE, args)
+# ^ core.system._on_request_scene_load #########################################
 
 
-func _on_scene_loaded(scene): ##################################################
+# core.system._on_scene_loaded #################################################
+const _on_scene_loaded_meta := {
+	func_name = "core.system._on_scene_loaded",
+	description = """
+		
+	""",
+		}
+func _on_scene_loaded(scene, args := _on_scene_loaded_meta) -> void: ###########
 	emit_signal("msg", "Event scene_loaded called. scene: " + str(scene), 
-		TRACE, meta)
+		TRACE, args)
+# ^ core.system._on_scene_loaded ###############################################
 
 
-func _on_entity_moved(entity, dir): ############################################
+# core.system._on_entity_moved #################################################
+const _on_entity_moved_meta := {
+	func_name = "core.system._on_entity_moved",
+	description = """
+		
+	""",
+		}
+func _on_entity_moved(entity, dir, args := _on_entity_moved_meta) -> void: #####
 	emit_signal("msg", "Event entity_moved called. entity: " + str(entity) 
-		+ ", dir: " + str(dir), TRACE, meta)
+		+ ", dir: " + str(dir), TRACE, args)
+# ^ core.system._on_entity_moved ###############################################
 
 
-func _on_entity_used(entity, amount): ##########################################
+# core.system._on_entity_used ##################################################
+const _on_entity_used_meta := {
+	func_name = "core.system._on_entity_used",
+	description = """
+		
+	""",
+		}
+func _on_entity_used(entity, amount, args := _on_entity_used_meta) -> void: ####
 	emit_signal("msg", "Event entity_used called. entity: " + str(entity) 
-		+ ", amount: " + str(amount), TRACE, meta)
+		+ ", amount: " + str(amount), TRACE, args)
+# ^ core.system._on_entity_used ################################################
 
 
-func _on_damage_dealt(target, shooter, weapon_data): ###########################
+# core.system._on_damage_dealt #################################################
+const _on_damage_dealt_meta := {
+	func_name = "core.system._on_damage_dealt",
+	description = """
+		
+	""",
+		}
+func _on_damage_dealt(target, shooter, weapon_data, args := _on_damage_dealt_meta) -> void:
 	emit_signal("msg", "Event damage_dealt called. target: " + str(target) 
 		+ ", shooter: " + str(shooter) + ", weapon_data: " 
-		+ str(weapon_data), TRACE, meta)
+		+ str(weapon_data), TRACE, args)
+# ^ core.system._on_damage_dealt ###############################################
 
 
-func _on_damage_taken(target, shooter): ########################################
+# core.system._on_damage_taken #################################################
+const _on_damage_taken_meta := {
+	func_name = "core.system._on_damage_taken",
+	description = """
+		
+	""",
+		}
+func _on_damage_taken(target, shooter, args := _on_damage_taken_meta) -> void: #
 	emit_signal("msg", "Event damage_taken called. target: " + str(target) 
-		+ ", shooter: " + str(shooter), TRACE, meta)
+		+ ", shooter: " + str(shooter), TRACE, args)
+# ^ core.system._on_damage_taken ###############################################
 
 
-func _on_entity_picked_up(picker, entity): #####################################
+# core.system._on_entity_picked_up #############################################
+const _on_entity_picked_up_meta := {
+	func_name = "core.system._on_entity_picked_up",
+	description = """
+		
+	""",
+		}
+func _on_entity_picked_up(picker, entity, args := _on_entity_picked_up_meta) -> void: 
 	emit_signal("msg", "Event entity_picked_up called. picker: " 
-		+ str(picker) + ", entity: " + str(entity), TRACE, meta)
+		+ str(picker) + ", entity: " + str(entity), TRACE, args)
+# ^ core.system._on_entity_picked_up ###########################################
 
 
-func _on_break_block(block): ###################################################
+# core.system._on_break_block ##################################################
+const _on_break_block_meta := {
+	func_name = "core.system._on_break_block",
+	description = """
+		
+	""",
+		}
+func _on_break_block(block, args := _on_break_block_meta) -> void: #############
 	emit_signal("msg", "Event break_block called. block: " 
-		+ str(block), TRACE, meta)
+		+ str(block), TRACE, args)
+# ^ core.system._on_break_block ################################################
 
 
-func _on_place_block(block): ###################################################
+# core.system._on_place_block ##################################################
+const _on_place_block_meta := {
+	func_name = "core.system._on_place_block",
+	description = """
+		
+	""",
+		}
+func _on_place_block(block, args := _on_place_block_meta) -> void: #############
 	emit_signal("msg", "Event place_block called. block: " + str(block), 
-		TRACE, meta)
+		TRACE, args)
+# ^ core.system._on_place_block ################################################
 
 
-func _on_gui_loaded(name, entity): #############################################
+# core.system._on_gui_loaded ###################################################
+const _on_gui_loaded_meta := {
+	func_name = "core.system._on_gui_loaded",
+	description = """
+		
+	""",
+		}
+func _on_gui_loaded(name, entity, args := _on_gui_loaded_meta) -> void: ########
 	emit_signal("msg", "Event gui_loaded called. name: " + str(name) 
-		+ ", entity: " + str(entity), TRACE, meta)
+		+ ", entity: " + str(entity), TRACE, args)
+# ^ core.system._on_gui_loaded #################################################
 
 
-func _on_gui_pushed(name, init_param): #########################################
+# core.system._on_gui_pushed ###################################################
+const _on_gui_pushed_meta := {
+	func_name = "core.system._on_gui_pushed",
+	description = """
+		
+	""",
+		}
+func _on_gui_pushed(name, init_param, args := _on_gui_pushed_meta) -> void: ####
 	emit_signal("msg", "Event gui_pushed called. name: " + str(name) 
-		+ ", init_param: " + str(init_param), TRACE, meta)
+		+ ", init_param: " + str(init_param), TRACE, args)
+# ^ core.system._on_gui_pushed #################################################
 
-func _on_system_process_start(script_name):
+
+# core.system._on_system_process_start #########################################
+const _on_system_process_start_meta := {
+	func_name = "core.system._on_system_process_start",
+	description = """
+		
+	""",
+		}
+func _on_system_process_start(script_name, args := _on_system_process_start_meta) -> void: 
 	emit_signal("msg", "Event system_process_start called. script_name: "
-		+ str(script_name), TRACE, meta)
-	emit_signal("msg", "==== Starting " + script_name + " ====", INFO, meta)
+		+ str(script_name), TRACE, args)
+	emit_signal("msg", "==== Starting " + script_name + " ====", INFO, args)
 	var script = scripts.core.dictionary.main.get_from_dict(scripts, script_name.split("."))
 	if script:
 		script.call(script.meta.steps[0])
 	else:
-		emit_signal("msg", "Invalid script called!", ERROR, meta)
+		emit_signal("msg", "Invalid script called!", ERROR, args)
+# ^ core.system._on_system_process_start #######################################
 
-func _on_reset(): ##############################################################
-	emit_signal("msg", "Event reset called.", TRACE, meta)
 
-func _on_system_process(meta_script, step, code): #####################
+# core.system._on_reset ########################################################
+const _on_reset_meta := {
+	func_name = "core.system._on_reset",
+	description = """
+		
+	""",
+		}
+func _on_reset(args := _on_reset_meta) -> void: ################################
+	emit_signal("msg", "Event reset called.", TRACE, args)
+# ^ core.system._on_reset ######################################################
+
+
+# core.system._on_system_process ###############################################
+const _on_system_process_meta := {
+	func_name = "core.system._on_system_process",
+	description = """
+		
+	""",
+		}
+func _on_system_process(meta_script, step, code, args := _on_system_process_meta) -> void: 
 	emit_signal("msg", "Event system_process called. meta: [script_name]: "
 		+ str(meta_script.script_name) + ", step: " + str(step) + ", code: " 
-		+ str(code), TRACE, meta)
+		+ str(code), TRACE, args)
 	
 	var script = scripts.core.dictionary.main.get_from_dict(scripts, meta_script.script_name.split("."))
 	var num = meta_script.steps.find(step)+1
 	match code:
 		"start":
-			emit_signal("msg", "\t" + meta_script.steps[num-1] + ": ", INFO, meta)
+			emit_signal("msg", "\t" + meta_script.steps[num-1] + ": ", INFO, args)
 		"success":
 			if num < meta_script.steps.size():
 				script.call(meta_script.steps[num])
 			else:
-				emit_signal("msg", "==== " + meta_script.script_name + " Finished ====", INFO, meta)
+				emit_signal("msg", "==== " + meta_script.script_name + " Finished ====", INFO, args)
 				if meta_script.script_name == "client.bootup":
-					emit_signal("msg", "Welcome to Uplink! To start a demo sequence type /demo, or for a list of commands type /help", INFO, meta)
+					emit_signal("msg", "Welcome to Uplink! To start a demo sequence type /demo, or for a list of commands type /help", INFO, args)
 		_:
-			emit_signal("msg", "\t" + step + " finished with error " + str(code), WARN, meta)
+			emit_signal("msg", "\t" + step + " finished with error " + str(code), WARN, args)
 			if num < meta_script.steps.size():
 				script.call(meta_script.steps[num])
+# ^ core.system._on_system_process #############################################
+
 
 ################################################################################
 

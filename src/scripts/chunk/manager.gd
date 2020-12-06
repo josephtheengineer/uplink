@@ -47,9 +47,17 @@ const DEFAULT_BLOCK = {
 	#Vector3(0, 0, 0) = DEFAULT_VOXEL
 }
 
-static func create_chunk(position: Vector3): #################
+
+# chunk.manager.create_chunk ###################################################
+const create_chunk_meta := {
+	func_name = "chunk.manager.create_chunk",
+	description = """
+		
+	""",
+		}
+static func create_chunk(position: Vector3, args := create_chunk_meta) -> bool: 
 	Core.emit_signal("msg", "Creating chunk " + str(position) + "...", 
-		Core.DEBUG, meta)
+		Core.DEBUG, args)
 	
 	var chunk_data = Core.scripts.chunk.eden.world_decoder.get_chunk_data(position)
 	
@@ -67,6 +75,7 @@ static func create_chunk(position: Vector3): #################
 		return false
 	
 	return true
+# ^ chunk.manager.create_chunk #################################################
 
 
 static func generate_chunk_components(node: Entity): ###########################

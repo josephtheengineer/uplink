@@ -36,7 +36,7 @@ const get_online_systems_meta := {
 		
 	""",
 		}
-static func get_online_systems(args := get_online_systems_meta) -> int: ########
+static func get_online_systems(_args := get_online_systems_meta) -> int: ########
 	var online = 0
 	if Core.client.data.subsystem.chunk.online:
 		online+=1

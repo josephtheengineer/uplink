@@ -8,7 +8,7 @@ const meta := {
 
 ################################################################################
 
-static func get_entities_with(component: String): #####################################
+static func get_entities_with(component: String): ##############################
 	if Core.world.has_node(component):
 		return Core.world.get_node(component).get_children()
 	else:

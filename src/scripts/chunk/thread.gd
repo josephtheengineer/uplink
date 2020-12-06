@@ -196,8 +196,8 @@ static func create_cube_mesh(node: Entity, position: Vector3) -> Array:
 	
 	var mesh_arrays = voxel_mesh.create_cube (
 		position+Vector3(0, -1, 0),
-		voxel_data,
-		node.components.mesh.blocks
+		voxel_data
+		#node.components.mesh.blocks
 		#Core.scripts.chunk.geometry.VSIZE
 	)
 	
