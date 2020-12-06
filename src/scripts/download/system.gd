@@ -147,7 +147,7 @@ func fetch_data(): #############################################################
 	#download_world_client.queue_free()
 	#load_world()
 
-func _process(delta):
+func _process(_delta):
 	#if downloading_direct_city and OS.get_unix_time() - downloading_wait > 5:
 	#	Core.emit_signal("msg", "KB downloaded: " + str(direct_city_downloader.get_downloaded_bytes() * 0.001), Core.INFO, meta)
 	#	downloading_wait = OS.get_unix_time()
@@ -264,7 +264,7 @@ var http_error = [
 	"Request timed out"
 ]
 
-func _on_file_download_completed(result: int, response_code: int, headers: PoolStringArray, body: PoolByteArray, file: Dictionary):
+func _on_file_download_completed(result: int, _response_code: int, _headers: PoolStringArray, _body: PoolByteArray, file: Dictionary):
 	Core.emit_signal("msg", file.url + " finished downloading! code: " + http_error[result], Core.INFO, meta)
 	data.downloading = false
 

@@ -19,7 +19,8 @@ static func break_block(chunk: Entity, location: Vector3): #####################
 	chunk.components.mesh.rendered = false
 	
 	if Core.Client.data.subsystem.chunk.Link.data.destroyer_of_chunks:
-		chunk.get_node("Chunk/MeshInstance").mesh = null
+		var mesh_instance: MeshInstance = chunk.get_node("Chunk/MeshInstance")
+		mesh_instance.mesh = null
 
 static func place_block(chunk: Entity, location: Vector3, block_id: int): ######
 	if !chunk.components.mesh.blocks:

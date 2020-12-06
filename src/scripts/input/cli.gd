@@ -64,21 +64,23 @@ static func call_cli(args := call_cli_meta) -> void: ###########################
 
 # input.cli.help ###############################################################
 const help_meta := {
+	script = meta,
 	func_name = "input.cli.help",
 	description = """
 		Prints help infomation
 	""",
 		command = "" }
 static func help(args := help_meta) -> void: ###################################
-	Core.emit_signal("msg", "Available commands: ", Core.INFO, meta)
+	Core.emit_signal("msg", "Available commands: ", Core.INFO, args)
 	for cmd in Core.scripts.input.chat.commands:
-		Core.emit_signal("msg", cmd, Core.INFO, meta)
+		Core.emit_signal("msg", cmd, Core.INFO, args)
 # ^ input.cli.help #############################################################
 
 
 
 # input.cli.run_demo ###########################################################
 const run_demo_meta := {
+	script = meta,
 	func_name = "input.cli.run_demo",
 	description = """
 		Runs a demo for new users
@@ -88,7 +90,7 @@ const run_demo_meta := {
 		username = "user",
 		error = false } 
 static func run_demo(args := run_demo_meta) -> void: ###########################
-	Core.emit_signal("msg", "Running demo preset...", Core.INFO, meta)
+	Core.emit_signal("msg", "Running demo preset...", Core.INFO, args)
 	Core.scripts.input.cli.reset()
 	Core.emit_signal("system_process_start", "server.bootup")
 	Core.emit_signal("system_process_start", "client.connect")
@@ -100,6 +102,7 @@ static func run_demo(args := run_demo_meta) -> void: ###########################
 
 # input.cli.reset ##############################################################
 const reset_meta := {
+	script = meta,
 	func_name = "input.cli.reset",
 	description = """
 		Resets all systems
@@ -107,17 +110,17 @@ const reset_meta := {
 		}
 static func reset(args := reset_meta) -> void: #################################
 	Core.world.get_node("Interface/Hud/Hud/Background").visible = true
-	Core.emit_signal("msg", "Deleting chunks...", Core.INFO, meta)
+	Core.emit_signal("msg", "Deleting chunks...", Core.INFO, args)
 	if Core.world.has_node("Chunk"):
 		for c in Core.world.get_node("Chunk").get_children():
 			Core.remove_child(c)
 			c.queue_free()
-	Core.emit_signal("msg", "Deleting players...", Core.INFO, meta)
+	Core.emit_signal("msg", "Deleting players...", Core.INFO, args)
 	if Core.world.has_node("Input"):
 		for c in Core.world.get_node("Input").get_children():
 			Core.remove_child(c)
 			c.queue_free()
-	Core.emit_signal("msg", "Reseting system databases...", Core.INFO, meta)
+	Core.emit_signal("msg", "Reseting system databases...", Core.INFO, args)
 	Core.emit_signal("reset")
 # ^ input.cli.reset ############################################################
 
@@ -125,13 +128,14 @@ static func reset(args := reset_meta) -> void: #################################
 
 # input.cli.launch_voxel_editor ################################################
 const launch_voxel_editor_meta := {
+	script = meta,
 	func_name = "input.cli.launch_voxel_editor",
 	description = """
 		Loades a specialised world for edditing voxels on a block
 	""",
 		}
 static func launch_voxel_editor(args := launch_voxel_editor_meta) -> void: #####
-	Core.emit_signal("msg", "Opening voxel editor...", Core.INFO, meta)
+	Core.emit_signal("msg", "Opening voxel editor...", Core.INFO, args)
 	Core.world.get_node("Interface/Hud/Hud/Background").visible = false
 	Core.scripts.input.cli.reset()
 	Core.world.get_node("Interface/Hud/Hud/Background").visible = false
@@ -158,13 +162,14 @@ static func launch_voxel_editor(args := launch_voxel_editor_meta) -> void: #####
 
 # input.cli.launch_test_world ################################################
 const launch_test_world_meta := {
+	script = meta,
 	func_name = "input.cli.launch_test_world",
 	description = """
 		Loads a world designed to test the voxel engine
 	""",
 		}
 static func launch_test_world(args := launch_test_world_meta) -> void: #########
-	Core.emit_signal("msg", "Opening test-world...", Core.INFO, meta)
+	Core.emit_signal("msg", "Opening test-world...", Core.INFO, args)
 	Core.scripts.input.cli.reset()
 	#yield(get_tree().create_timer(2), "timeout")
 	Core.world.get_node("Interface/Hud/Hud/Background").visible = false
@@ -280,12 +285,14 @@ static func tp(args := tp_meta) -> void: #######################################
 
 # input.cli.break ##############################################################
 const break_meta := {
+	script = meta,
 	func_name = "input.cli.break",
 	description = """
 		A breakpoint
 	"""
 		}
 static func break(args := break_meta) -> void: #################################
+	Core.emit_signal("msg", "Executing breakpoint...", Core.INFO, args)
 	breakpoint
 # ^ input.cli.break ############################################################
 
@@ -293,13 +300,14 @@ static func break(args := break_meta) -> void: #################################
 
 # input.cli.quit ###############################################################
 const quit_meta := {
+	script = meta,
 	func_name = "input.cli.quit",
 	description = """
 		Quits Uplink
 	"""
 		}
 static func quit(args := quit_meta) -> void: ###################################
-	Core.emit_signal("msg", "Quit command recieved!", Core.FATAL, meta)
+	Core.emit_signal("msg", "Quit command recieved!", Core.FATAL, args)
 # ^ input.cli.quit #############################################################
 
 
@@ -325,12 +333,14 @@ static func get_var(args := get_var_meta) -> void: #############################
 
 # input.cli.init_vr ############################################################
 const init_vr_meta := {
+	script = meta,
 	func_name = "input.cli.init_vr",
 	description = """
 		Enables steroscopic output + head tracking
 	"""
 		}
 static func init_vr(args := init_vr_meta) -> void: #############################
+	Core.emit_signal("msg", "Initializing ARVR Interface...", Core.DEBUG, args)
 	#print(ARVRServer.get_interfaces())
 	var arvr_interface = ARVRServer.find_interface("Native mobile")
 	if arvr_interface and arvr_interface.initialize():
@@ -347,9 +357,7 @@ const invalid_command_meta := {
 	""",
 		cmd = "" }
 static func invalid_command(args := invalid_command_meta) -> void: #############
-	Core.emit_signal(
-		"msg", "Invalid command " + args.cmd,
-		Core.WARN, meta )
+	Core.emit_signal("msg", "Invalid command " + args.cmd, Core.WARN, meta)
 # ^ input.cli.invalid_command ##################################################
 
 
@@ -360,7 +368,7 @@ const single_block_test_meta := {
 		Tests the engine for a single block generation
 	"""
 		}
-static func single_block_test(args := single_block_test_meta) -> void: #########
+static func single_block_test(_args := single_block_test_meta) -> void: #########
 	Core.emit_signal("system_process_start", "core.test.single_block")
 # ^ input.cli.single_block_test ################################################
 
@@ -395,6 +403,6 @@ const alias_test_meta := {
 		Tests the cli function for creating and using an alias
 	"""
 		}
-static func alias_test(args := alias_test_meta) -> void: #########
+static func alias_test(_args := alias_test_meta) -> void: #########
 	Core.emit_signal("system_process_start", "core.test.alias")
 # ^ input.cli.alias_test #######################################################

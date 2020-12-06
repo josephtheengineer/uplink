@@ -180,7 +180,10 @@ static func list_files_in_directory(path):
 		Core.emit_signal("msg", "Error when opening folder " + path + ": " + str(err), Core.WARN, meta)
 		return false
 	
-	dir.list_dir_begin(true)
+	err = dir.list_dir_begin(true)
+	if err:
+		Core.emit_signal("msg", "Error when listing folder " + path + ": " + str(err), Core.WARN, meta)
+		return false
 	
 	while true:
 		var file = dir.get_next()

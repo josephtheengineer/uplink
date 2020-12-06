@@ -50,8 +50,9 @@ func create(entity: Dictionary):
 		var node = Entity.new()
 		node.set_name(entity.meta.id)
 		add_child(node)
-		get_node(str(entity.meta.id)).components = entity
-		get_node(str(entity.meta.id)).add_child(Core.scenes.interface.hud.hud.instance())
+		var hud: Entity = get_node(str(entity.meta.id))
+		hud.components = entity
+		hud.add_child(Core.scenes.interface.hud.hud.instance())
 
 
 func _on_msg(message, level, script_meta): #####################################

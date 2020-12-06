@@ -50,4 +50,5 @@ func _on_button_pressed():
 	Core.scripts.calendar.task.create_task(task)
 
 func get_text(name: String):
-	return get_node(path + name + "/TextEdit").text
+	var text_edit: TextEdit = get_node(path + name + "/TextEdit")
+	return text_edit.text

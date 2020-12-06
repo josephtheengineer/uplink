@@ -73,7 +73,8 @@ func _input(event: InputEvent): ################################################
 				attach_mouse(Player)
 		
 		if event.is_action_pressed("action"):
-			Core.scripts.client.player.interact.action(Player, event.position)
+			var action_event: InputEventMouse = event
+			Core.scripts.client.player.interact.action(Player, action_event.position)
 		Core.scripts.client.player.interact.update_looking_at_block(Player)
 	
 	if data.setup_chat_input and Core.world.has_node("Interface/Hud"):
@@ -159,9 +160,11 @@ func create(entity: Dictionary):
 		var node = Entity.new()
 		node.set_name(entity.meta.id)
 		add_child(node)
-		get_node(entity.meta.id).components = entity
-		get_node(entity.meta.id).add_child(Core.scenes.world.player.instance())
-		get_node(entity.meta.id + "/Player").translation = entity.position.world
+		var player: Entity = get_node(entity.meta.id)
+		player.components = entity
+		player.add_child(Core.scenes.world.player.instance())
+		var player_node: KinematicBody = player.get_node("Player")
+		player_node.translation = entity.position.world
 
 func detach_mouse(Player: Entity): ###########################################################
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)

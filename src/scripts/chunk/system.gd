@@ -44,7 +44,7 @@ const RES_12 = RES_11*2 # 16384( 0.06103515625mm) # The matrix (iPhone dpi) (16K
 const DEFAULT_VOXEL_RES = RES_2
 var voxel_res = DEFAULT_VOXEL_RES
 
-signal thread_completed
+#signal thread_completed
 
 func _ready(): #################################################################
 	#Core.emit_signal("function_started", "_ready()", meta)

@@ -54,7 +54,7 @@ static func create_chunk(position: Vector3): #################
 	var chunk_data = Core.scripts.chunk.eden.world_decoder.get_chunk_data(position)
 	
 	if !chunk_data:
-		chunk_data = generate_terrain(0, position)
+		chunk_data = generate_terrain(position)
 	
 	var chunk = DEFAULT_CHUNK.duplicate(true)
 	chunk.meta.id = str(position)
@@ -154,7 +154,7 @@ static func destroy_chunk(chunk: Entity): ######################################
 	Core.client.data.blocks_loaded -= chunk.components.mesh.blocks_loaded
 	Core.client.data.blocks_found -= chunk.components.mesh.blocks.size()
 
-static func generate_terrain(chunk_seed: int, position: Vector3): #######################
+static func generate_terrain(position: Vector3): ####################### #chunk_seed: int,
 	var noise = Core.scripts.chunk.generator.generate_noise()
 	
 	if Core.server.data.map.generator.single_voxel:

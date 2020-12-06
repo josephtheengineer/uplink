@@ -101,7 +101,7 @@ static func block_can_be_seen(position: Vector3, block_data: Array):
 	return num_surrounding_blocks
 
 # once per block ###############################################################
-static func create_cube(position: Vector3, voxel_data: Dictionary, block_data: Dictionary):
+static func create_cube(position: Vector3, voxel_data: Dictionary): #, block_data: Dictionary):
 	#Core.emit_signal("msg", "ARRAY_MAX is " + str(Mesh.ARRAY_MAX), Core.TRACE, meta)
 
 	var mesh_arrays = []
