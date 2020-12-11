@@ -115,6 +115,23 @@ static func single_voxel(): ####################################################
 	chunk_data[Vector3(8, 8, 8)].voxels = generate_box()
 	return chunk_data
 
+static func plane(): ###########################################################
+	var chunk_data = Dictionary()
+	for x in 16:
+		for y in 16:
+			for z in 16:
+				if x == 0:
+					chunk_data[Vector3(x, y, z)] = 1
+				elif z == 0:
+					chunk_data[Vector3(x, y, z)] = 1
+				elif y == 0:
+					chunk_data[Vector3(x, y, z)] = 1
+				elif x == 15:
+					chunk_data[Vector3(x, y, z)] = 1
+				elif y == 15:
+					chunk_data[Vector3(x, y, z)] = 1
+	return chunk_data
+
 
 static func generate_natural_terrain(noise): ###################################
 	var chunk_data = Dictionary()

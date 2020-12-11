@@ -43,7 +43,7 @@ static func setup_environment():
 	player.components.action.resolution = 16 # RES_2
 	
 	# Tp the player to the correct position
-	player.get_node("Player").translation = Vector3(0, 0, 0)
+	player.get_node("Player").translation = Vector3(8, 8, 8)
 	Core.scripts.chunk.manager.create_chunk(Vector3(0, 0, 0))
 	
 	Core.emit_signal("system_process", meta, "setup_environment", "success")
