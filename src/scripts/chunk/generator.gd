@@ -6,7 +6,14 @@ const meta := {
 	"""
 }
 
-static func generate_noise(): ##################################################
+# chunk.generator.generate_noise ###############################################
+const generate_noise_meta := {
+	func_name = "chunk.generator.generate_noise",
+	description = """
+		
+	""",
+		noise = null}
+static func generate_noise(args := generate_noise_meta) -> void: ###############
 	randomize()
 	var noise = OpenSimplexNoise.new()
 	noise.seed = randi()
@@ -15,9 +22,18 @@ static func generate_noise(): ##################################################
 	noise.period = 15
 	noise.lacunarity = 1.5
 	noise.persistence = 0.75
-	return noise
+	args.noise = noise
+# ^ chunk.generator.generate_noise #############################################
 
-static func generate_random_terrain(): #########################################
+
+# chunk.generator.generate_random_terrain ######################################
+const generate_random_terrain_meta := {
+	func_name = "chunk.generator.generate_noise",
+	description = """
+		
+	""",
+		data = Dictionary()}
+static func generate_random_terrain(args := generate_random_terrain_meta) -> void: 
 	var chunk_data = Dictionary()
 	for x in 5:
 		for y in 10:
@@ -26,10 +42,18 @@ static func generate_random_terrain(): #########################################
 					chunk_data[Vector3(x, y, z)] = int(
 							floor(rand_range(1, 80))
 						)
-	return chunk_data
+	args.data = chunk_data
+# ^ chunk.generator.generate_random_terrain ####################################
 
 
-static func generate_flat_terrain(): ###########################################
+# chunk.generator.generate_flat_terrain ########################################
+const generate_flat_terrain_meta := {
+	func_name = "chunk.generator.generate_flat_terrain",
+	description = """
+		
+	""",
+		data = Dictionary()}
+static func generate_flat_terrain(args := generate_flat_terrain_meta) -> void: #
 	var chunk_data = Dictionary()
 	for x in 16:
 		for y in 16:
@@ -43,10 +67,18 @@ static func generate_flat_terrain(): ###########################################
 					#chunk_data[Vector3(x, y, z)] = 3
 				#else:
 					#chunk_data[Vector3(x, y, z)] = 2
-	return chunk_data
+	args.data = chunk_data
+# ^ chunk.generator.generate_flat_terrain ######################################
 
 
-static func generate_box():
+# chunk.generator.generate_box #################################################
+const generate_box_meta := {
+	func_name = "chunk.generator.generate_box",
+	description = """
+		
+	""",
+		data = Dictionary()}
+static func generate_box(args := generate_box_meta) -> void: ###################
 	var voxel_data = Dictionary()
 	# draw an outline of voxels (for debuging mostly)
 #	for x in 16:
@@ -75,10 +107,18 @@ static func generate_box():
 					voxel_data[Vector3(x, y, z)] = 1
 				elif y == 15:
 					voxel_data[Vector3(x, y, z)] = 1
-	return voxel_data
+	args.data = voxel_data
+# ^ chunk.generator.generate_box ###############################################
 
 
-static func generate_block():
+# chunk.generator.generate_block ###############################################
+const generate_block_meta := {
+	func_name = "chunk.generator.generate_block",
+	description = """
+		
+	""",
+		data = Dictionary()}
+static func generate_block(args := generate_block_meta) -> void: ###############
 	var voxel_data = Dictionary()
 	# draw an outline of voxels (for debuging mostly)
 #	for x in 16:
@@ -98,49 +138,75 @@ static func generate_block():
 		for y in 16:
 			for z in 16:
 				voxel_data[Vector3(x, y, z)] = 1
-	return voxel_data
+	args.data = voxel_data
+# ^ chunk.generator.generate_block #############################################
 
 
-static func generate_small_box():
-	var voxel_data = Dictionary()
-	
-	voxel_data[Vector3(16/2, 16/2, 16/2)] = 1
-	return voxel_data
+# chunk.generator.generate_small_box ###########################################
+const generate_small_box_meta := {
+	func_name = "chunk.generator.generate_small_box",
+	description = """
+		
+	""",
+		data = Dictionary()}
+static func generate_small_box(args := generate_small_box_meta) -> void: #######
+	args.data[Vector3(16/2, 16/2, 16/2)] = 1
+# ^ chunk.generator.generate_small_box #########################################
 
 
-static func single_voxel(): ####################################################
-	var chunk_data = Dictionary()
-	chunk_data[Vector3(8, 8, 8)] = {}
-	chunk_data[Vector3(8, 8, 8)].id = 8
-	chunk_data[Vector3(8, 8, 8)].voxels = generate_box()
-	return chunk_data
+# chunk.generator.single_voxel #################################################
+const single_voxel_meta := {
+	func_name = "chunk.generator.single_voxel",
+	description = """
+		
+	""",
+		data = Dictionary()}
+static func single_voxel(args := single_voxel_meta) -> void: ###################
+	args.data[Vector3(8, 8, 8)] = {}
+	args.data[Vector3(8, 8, 8)].id = 8
+	args.data[Vector3(8, 8, 8)].voxels = generate_box()
+# ^ chunk.generator.single_voxel ###############################################
 
-static func plane(): ###########################################################
-	var chunk_data = Dictionary()
+
+# chunk.generator.plane ########################################################
+const plane_meta := {
+	func_name = "chunk.generator.plane",
+	description = """
+		
+	""",
+		data = Dictionary()}
+static func plane(args := plane_meta) -> void: #################################
 	for x in 16:
 		for y in 16:
 			for z in 16:
 				if x == 0:
-					chunk_data[Vector3(x, y, z)] = 1
+					args.data[Vector3(x, y, z)] = 1
 				elif z == 0:
-					chunk_data[Vector3(x, y, z)] = 1
+					args.data[Vector3(x, y, z)] = 1
 				elif y == 0:
-					chunk_data[Vector3(x, y, z)] = 1
+					args.data[Vector3(x, y, z)] = 1
 				elif x == 15:
-					chunk_data[Vector3(x, y, z)] = 1
+					args.data[Vector3(x, y, z)] = 1
 				elif y == 15:
-					chunk_data[Vector3(x, y, z)] = 1
-	return chunk_data
+					args.data[Vector3(x, y, z)] = 1
+# ^ chunk.generator.plane ######################################################
 
 
-static func generate_natural_terrain(noise): ###################################
-	var chunk_data = Dictionary()
+# chunk.generator.generate_natural_terrain #####################################
+const generate_natural_terrain_meta := {
+	func_name = "chunk.generator.generate_natural_terrain",
+	description = """
+		
+	""",
+		noise = null,
+		data = Dictionary()}
+static func generate_natural_terrain(args := generate_natural_terrain_meta) -> void: 
 	var id = 0
 	var color = 0
 	for x in 16:
 		for y in 16:
 			for z in 16:
-				var value = noise.get_noise_3d(float(x), 
+				var value = args.noise.get_noise_3d(float(x), 
 							     float(y), float(z))
 				if value > 0:
 					if y == 0:
@@ -159,51 +225,52 @@ static func generate_natural_terrain(noise): ###################################
 						"color": color
 					}
 				
-					chunk_data[Vector3(
+					args.data[Vector3(
 							x, y, z
 						)] = block_data;
-	return chunk_data
+# ^ chunk.generator.generate_natural_terrain ###################################
 
 
-static func generate_matrix_terrain(): #########################################
+# chunk.generator.generate_matrix_terrain ######################################
+const generate_matrix_terrain_meta := {
+	func_name = "chunk.generator.generate_matrix_terrain",
+	description = """
+		
+	""",
+		data = Dictionary()}
+static func generate_matrix_terrain(args := generate_matrix_terrain_meta) -> void: 
 	for x in range(16):
 		for y in range(16):
 			for z in range(16):
 				if x == 0 and y == 0 and z == 0:
-					pass
-					#if y >= 15:
-						#place_block(8, Vector3(
-						#	x, y, z)
-						#)
-					#elif y > 10:
-						#place_block(3, Vector3(
-						#	x, y, z)
-						#)
-					#else:
-						#place_block(2, Vector3(
-						#	x, y, z)
-						#)
+					if y >= 15:
+						args.data[Vector3(x, y, z)] = 8
+					elif y > 10:
+						args.data[Vector3(x, y, z)] = 3
+					else:
+						args.data[Vector3(x, y, z)] = 2
+# ^ chunk.generator.generate_matrix_terrain ####################################
 
 
-static func generate_simple_terrain(): #########################################
+# chunk.generator.generate_simple_terrain ######################################
+const generate_simple_terrain_meta := {
+	func_name = "chunk.generator.generate_simple_terrain",
+	description = """
+		
+	""",
+		data = Dictionary()}
+static func generate_simple_terrain(args := generate_simple_terrain_meta) -> void: 
 	for x in range(16):
 		for y in range(16):
 			for z in range(16):
 				#if x == 15 or x == 0 or z == 15
 							 # or z == 0 or y == 15:
 				if y == 0 && x != 15 && z != 15:
-					pass
-					#place_block(2, Vector3(x, y, z))
+					args.data[Vector3(x, y, z)] = 2
 				elif y == 0:
-					pass
-					#place_block(4, Vector3(x, y, z))
-						#place_block(8, x, y, z)
-					#elif y > 10:
-						#place_block(3, x, y, z)
-					#else:
-						#place_block(x, y, z, 2)
-	#place_block(2, 0, 0, 0)
-	#compile()
-
-#static func text(string):
-#	pass
+					args.data[Vector3(x, y, z)] = 4
+				elif y > 10:
+					args.data[Vector3(x, y, z)] = 3
+				else:
+					args.data[Vector3(x, y, z)] = 2
+# chunk.generator.generate_simple_terrain ######################################

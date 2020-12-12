@@ -200,31 +200,16 @@ static func get_chunk_data(args := get_chunk_data_meta) -> void: ###############
 				var id = read_int(chunk_address + baseHeight * 8192 + x * 256 + y * 16 + z)
 				var color = read_int(chunk_address + baseHeight * 8192 + x * 256 + y * 16 + z + 4096)
 				
-				#var RealX = (x + (location.x*16))
-				#var RealY = (y + (location.z*16))
-				#var RealZ = (z + (16 * baseHeight))
-				
-				#var position = Vector3(x, z + 16 * baseHeight, y)
 				var position := Vector3(x, z, y)
 				
-				#Logger.LogInt("=== Id: ", Id, " ===", Core.DEBUG, args);
-				#Logger.LogInt("Color: ", Color, "", Core.DEBUG, args);
-				#Logger.LogFloat("X: ", (x + (globalChunkPosX*16)) * 100, "", Core.DEBUG, args);
-				#Logger.LogFloat("Y: ", (y + (globalChunkPosY*16)) * 100, "", Core.DEBUG, args);
-				#Logger.LogFloat("Z: ", (z + (16 * baseHeight)) * 100, "", Core.DEBUG, args);
-				
 				if id != 0 && id <= 79 && id > 0:
-					# Logger.Log("Block is valid", Core.DEBUG, args);
-					#Core.emit_signal("msg", id, Core.TRACE, args)
 					var block_data := {
 						"id": id, 
 						"color": color
 					}
 					
 					chunk_data[position] = block_data;
-					#Core.emit_signal("msg", ["id: ", id], Core.TRACE, args)
-					#Core.emit_signal("msg", ["Adding Block ", chunk_data.size()], Core.DEBUG, args);
-				#Core.emit_signal("msg", ["Chunk data tmp: ", chunk_data.size(), " blocks"], Core.DEBUG, args);
+	
 	Core.emit_signal("msg", str("Chunk data contains ", chunk_data.size(), " blocks"), Core.DEBUG, args);
 	args.data = chunk_data;
 # ^ chunk.eden.world_decoder.get_chunk_data ####################################
