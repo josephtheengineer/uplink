@@ -123,7 +123,7 @@ func _input(event: InputEvent): ################################################
 			history.invert()
 			if data.history_line < history.size():
 				var next_text = history[data.history_line-1]
-				Core.world.get_node(data.input_path).text = next_text
+				Core.world.get_node(data.input_path).call_deferred("insert_text_at_cursor", next_text)
 			else:
 				data.history_line = history.size()
 			file.close()
