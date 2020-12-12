@@ -25,20 +25,55 @@ enum direction {
 	RIGHT
 }
 
-func _ready(): #################################################################
+
+# input.system._ready ##########################################################
+const _ready_meta := {
+	func_name = "input.system._ready",
+	description = """
+		Connects reset and sets input system to online
+	""",
+		}
+func _ready(args := _ready_meta) -> void: ######################################
 	set_process_input(true)
 	Core.connect("reset", self, "_reset")
 	Core.emit_signal("system_ready", Core.scripts.core.system_manager.INPUT, self)             ##### READY #####
+# ^ input.system._ready ########################################################
 
-func _reset():
-	Core.emit_signal("msg", "Reseting input system database...", Core.DEBUG, meta)
+
+# input.system._reset ##########################################################
+const _reset_meta := {
+	func_name = "input.system._reset",
+	description = """
+		Resets the input system database
+	""",
+		}
+func _reset(args := _reset_meta) -> void: ######################################
+	Core.emit_signal("msg", "Reseting input system database...", Core.DEBUG, args)
 	data = DEFAULT_DATA.duplicate(true)
+# input.system._reset ##########################################################
 
-func _chat_input():
+
+# input.system._chat_input #####################################################
+const _chat_input_meta := {
+	func_name = "input.system._chat_input",
+	description = """
+		Handles global chat window type event by sending a signal
+	""",
+		}
+func _chat_input(args := _chat_input_meta) -> void: ############################
 	var node: TextEdit = Core.world.get_node(data.input_path)
 	emit_signal("chat_input", node, node.text)
+# ^ input.system._chat_input ###################################################
 
-func _input(event: InputEvent): ############################################################	
+
+# input.system._input ##########################################################
+const _input_meta := {
+	func_name = "input.system._input",
+	description = """
+		Main entry point to recieve input events
+	""",
+		}
+func _input(event: InputEvent, args := _input_meta) -> void: ###################
 	if has_node(data.player):
 		#if !Core.get_parent().has_node("World/Inputs/" + data.player).components.has("player"):
 		#	breakpoint
@@ -50,23 +85,23 @@ func _input(event: InputEvent): ################################################
 				Core.scripts.client.player.move.look(Player, event)
 		
 		if event.is_action_pressed("burn"):
-			Core.emit_signal("msg", "Changing action_mode to burn...", Core.INFO, meta)
+			Core.emit_signal("msg", "Changing action_mode to burn...", Core.INFO, args)
 			player_data.action.mode = "burn"
 	
 		if event.is_action_pressed("mine"):
-			Core.emit_signal("msg", "Changing action_mode to mine...", Core.INFO, meta)
+			Core.emit_signal("msg", "Changing action_mode to mine...", Core.INFO, args)
 			player_data.action.mode = "mine"
 		
 		if event.is_action_pressed("build"):
-			Core.emit_signal("msg", "Changing action_mode to build...", Core.INFO, meta)
+			Core.emit_signal("msg", "Changing action_mode to build...", Core.INFO, args)
 			player_data.action.mode = "build"
 		
 		if event.is_action_pressed("paint"):
-			Core.emit_signal("msg", "Changing action_mode to paint...", Core.INFO, meta)
+			Core.emit_signal("msg", "Changing action_mode to paint...", Core.INFO, args)
 			player_data.action.mode = "paint"
 		
 		if event.is_action_pressed("ui_cancel"):
-			Core.emit_signal("msg", "Cancel event received", Core.DEBUG, meta)
+			Core.emit_signal("msg", "Cancel event received", Core.DEBUG, args)
 			if player_data.mouse_attached:
 				detach_mouse(Player)
 			else:
@@ -81,17 +116,17 @@ func _input(event: InputEvent): ################################################
 		var error: int = Core.world.get_node(data.input_path).connect("text_changed", self, "_chat_input")
 		if error:
 			Core.emit_signal("msg", "Error on binding to text_changed on _chat_input"
-				+ ": " + str(error), Core.WARN, meta)
+				+ ": " + str(error), Core.WARN, args)
 		data.setup_chat_input = false
 	
 	if has_node(data.player):
 		var player: Entity = get_node(data.player)
 		if event.is_action_pressed("fly"):
 			if player.components.position.mode == "walk":
-				Core.emit_signal("msg", "Changing move_mode to fly...", Core.INFO, meta)
+				Core.emit_signal("msg", "Changing move_mode to fly...", Core.INFO, args)
 				player.components.position.mode = "fly"
 			else:
-				Core.emit_signal("msg", "Changing move_mode to walk...", Core.INFO, meta)
+				Core.emit_signal("msg", "Changing move_mode to walk...", Core.INFO, args)
 				player.components.position.mode = "walk"
 	
 	if event is InputEventScreenTouch:
@@ -115,7 +150,7 @@ func _input(event: InputEvent): ################################################
 	
 	if event.is_action_pressed("ui_up"):
 		data.history_line += 1
-		Core.emit_signal("msg", "History index: " + str(data.history_line), Core.DEBUG, meta)
+		Core.emit_signal("msg", "History index: " + str(data.history_line), Core.DEBUG, args)
 		if data.history_line >= 0:
 			var file = File.new()
 			file.open(Core.client.data.cmd_history_file, File.READ_WRITE)
@@ -132,7 +167,7 @@ func _input(event: InputEvent): ################################################
 			data.history_line = 0
 	if event.is_action_pressed("ui_down"):
 		data.history_line -= 1
-		Core.emit_signal("msg", "History index: " + str(data.history_line), Core.DEBUG, meta)
+		Core.emit_signal("msg", "History index: " + str(data.history_line), Core.DEBUG, args)
 		if data.history_line >= 0:
 			var file = File.new()
 			file.open(Core.client.data.cmd_history_file, File.READ_WRITE)
@@ -151,11 +186,21 @@ func _input(event: InputEvent): ################################################
 		#Core.world.get_node(data.input_path).text = data.last_text
 	if event.is_action_pressed("ui_cancel"):
 		Core.world.get_node(data.input_path).text = ""
+# ^ input.system._input ########################################################
 
-func create(entity: Dictionary):
+
+# input.system.create ##########################################################
+const create_meta := {
+	func_name = "input.system.create",
+	description = """
+		Creates interface system nodes
+	""",
+		error = null}
+func create(entity: Dictionary, args := create_meta) -> void: ##################
 	if entity.meta.system != "input":
-		Core.emit_signal("msg", "Input entity create called with incorrect system set", Core.WARN, meta)
-		return false
+		Core.emit_signal("msg", "Input entity create called with incorrect system set", Core.WARN, args)
+		args.error = "Input entity create called with incorrect system set"
+		return
 	
 	if entity.meta.type == "player":
 		var node = Entity.new()
@@ -166,16 +211,43 @@ func create(entity: Dictionary):
 		player.add_child(Core.scenes.world.player.instance())
 		var player_node: KinematicBody = player.get_node("Player")
 		player_node.translation = entity.position.world
+# ^ input.system.create ########################################################
 
-func detach_mouse(Player: Entity): ###########################################################
+
+# input.system.detach_mouse ####################################################
+const detach_mouse_meta := {
+	func_name = "input.system.detach_mouse",
+	description = """
+		
+	""",
+		}
+func detach_mouse(Player: Entity, args := detach_mouse_meta) -> void: ##########
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	Player.components.mouse_attached = false
+# ^ input.system.detach_mouse ##################################################
 
-func attach_mouse(Player: Entity): ###########################################################
+
+# input.system.attach_mouse ####################################################
+const attach_mouse_meta := {
+	func_name = "input.system.attach_mouse",
+	description = """
+		
+	""",
+		}
+func attach_mouse(Player: Entity, args := attach_mouse_meta) -> void: ##########
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	Player.components.mouse_attached = true
+# ^ input.system.attach_mouse ##################################################
 
-func _physics_process(delta): ##################################################
+
+# input.system._physics_process ################################################
+const _physics_process_meta := {
+	func_name = "input.system._physics_process",
+	description = """
+		
+	""",
+		}
+func _physics_process(delta: float, args := _physics_process_meta) -> void: ####
 #	for node in Manager.get_entities_with("Input"):
 #		var components = node.components
 #		if components.has("player"):
@@ -196,3 +268,4 @@ func _physics_process(delta): ##################################################
 				#if event.scancode == KEY_ENTER:
 					#emit_signal("submit")
 				#components.text_input.text += event.as_text()
+# input.system._physics_process ################################################

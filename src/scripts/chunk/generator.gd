@@ -273,4 +273,4 @@ static func generate_simple_terrain(args := generate_simple_terrain_meta) -> voi
 					args.data[Vector3(x, y, z)] = 3
 				else:
 					args.data[Vector3(x, y, z)] = 2
-# chunk.generator.generate_simple_terrain ######################################
+# ^ chunk.generator.generate_simple_terrain ####################################
