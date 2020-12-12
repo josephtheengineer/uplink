@@ -149,19 +149,3 @@ static func generate_block_mat(args := generate_block_mat_meta) -> void: #######
 	
 	args.mat = mat
 # ^ chunk.eden.block_data.generate_block_mat ###################################
-
-
-#static func single_sided_block(data): ################################################
-#	var arr = Array()
-#	for _i in range(6):
-#		arr.append(data)
-#	return arr
-#
-#
-#static func two_sided_block(side_tex, top_bot_tex): ##################################
-#	var arr = Array()
-#	for _i in range(4):
-#		arr.append(side_tex)
-#	for _i in range(2):
-#		arr.append(top_bot_tex)
-#	return arr

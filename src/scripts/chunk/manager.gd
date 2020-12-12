@@ -59,7 +59,7 @@ static func create_chunk(position: Vector3, args := create_chunk_meta) -> bool:
 	Core.emit_signal("msg", "Creating chunk " + str(position) + "...", 
 		Core.DEBUG, args)
 	
-	var chunk_data = Core.scripts.chunk.eden.world_decoder.get_chunk_data(position)
+	var chunk_data = Core.run("chunk.eden.world_decoder.get_chunk_data", {location = position}).data
 	
 	if !chunk_data:
 		chunk_data = generate_terrain(position)

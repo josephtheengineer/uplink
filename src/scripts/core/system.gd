@@ -532,3 +532,25 @@ func _on_msg(message: String, level: int, meta: Dictionary):
 
 func _on_system_ready_fancy(system: int, obj: Object): ########################
 	scripts.core.system_manager.ready_fancy(system, obj)
+
+
+static func run(path: String, args: Dictionary):
+	var script_path: Array = path.split(".", false)
+	script_path.pop_back()
+	
+	var script = Core.scripts.core.dictionary.main.get_from_dict(Core.scripts, script_path)
+	var func_name = path.split(".", false)[-1]
+	
+	if typeof(script) != TYPE_OBJECT or not script.new().has_method(func_name):
+		Core.emit_signal("msg", "Invalid script called " + path, Core.ERROR, meta)
+		return
+	
+	var func_meta = script.get(str(func_name) + "_meta").duplicate(true)
+	
+	for arg in args.keys():
+		if func_meta.has(arg):
+			func_meta[arg] = args[arg]
+	
+	script.call(func_name, func_meta)
+	
+	return func_meta
