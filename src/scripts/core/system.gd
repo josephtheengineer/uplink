@@ -38,6 +38,7 @@ const scripts := {
 		place_block = preload("res://src/scripts/client/place_block.gd"),
 		spawn = preload("res://src/scripts/client/spawn.gd"),
 		system = preload("res://src/scripts/client/system.gd"),
+		video = preload("res://src/scripts/client/video.gd")
 	},
 	core = {
 		debug = {
