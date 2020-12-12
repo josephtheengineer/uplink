@@ -72,6 +72,7 @@ static func create_chunk(position: Vector3, args := create_chunk_meta) -> bool:
 	Core.client.data.subsystem.chunk.Link.create(chunk)
 	
 	if !chunk_data:
+		Core.emit_signal("msg", "Could not generate or find chunk data for " + str(position), Core.ERROR, args)
 		return false
 	
 	return true
@@ -164,16 +165,16 @@ static func destroy_chunk(chunk: Entity): ######################################
 	Core.client.data.blocks_found -= chunk.components.mesh.blocks.size()
 
 static func generate_terrain(position: Vector3): ####################### #chunk_seed: int,
-	var noise = Core.scripts.chunk.generator.generate_noise()
+	var new_noise = Core.run("chunk.generator.generate_noise").noise
 	
 	if Core.server.data.map.generator.single_voxel:
 		if position.x == 0 and position.y == 0 and position.z == 0:
-			return Core.scripts.chunk.generator.single_voxel()
+			return Core.run("chunk.generator.single_voxel").data
 		else:
 			return Dictionary()
 	
 	if Core.server.data.map.generator.terrain_type == Core.server.GEN_FLAT:
-		return Core.scripts.chunk.generator.generate_flat_terrain()
+		return Core.run("chunk.generator.generate_flat_terrain").data
 	
 	elif Core.server.data.map.generator.terrain_type == Core.server.GEN_NATURAL:
-		return Core.scripts.chunk.generator.generate_natural_terrain(noise)
+		return Core.run("chunk.generator.generate_flat_terrain", {noise=new_noise}).data

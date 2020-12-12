@@ -534,7 +534,7 @@ func _on_system_ready_fancy(system: int, obj: Object): ########################
 	scripts.core.system_manager.ready_fancy(system, obj)
 
 
-static func run(path: String, args: Dictionary):
+static func run(path: String, args=Dictionary()):
 	var script_path: Array = path.split(".", false)
 	script_path.pop_back()
 	
