@@ -78,32 +78,50 @@ const vplane_vertices2 = [ Vector3(0, 0, 0), Vector3(0, 0, VSIZE), Vector3(0, -V
 const hplane_uvs = [ Vector2(0, 0), Vector2(VSIZE, 0), Vector2(0, VSIZE), Vector2(VSIZE, VSIZE), Vector2(0, VSIZE), Vector2(VSIZE, 0) ]
 const hplane_vertices = [ Vector3(0, 0, 0), Vector3(VSIZE, 0, 0), Vector3(0, 0, VSIZE), Vector3(VSIZE, 0, VSIZE), Vector3(0, 0, VSIZE), Vector3(VSIZE, 0, 0) ]
 
-################################################################################
-# once per voxel ###############################################################
-static func can_be_seen(position: Vector3, voxel_data: Dictionary):
+
+# chunk.geometry.can_be_seen ###################################################
+const can_be_seen_meta := {
+	func_name = "chunk.geometry.can_be_seen",
+	description = """
+		Runs once per voxel!
+	""",
+		}
+static func can_be_seen(position: Vector3, voxel_data: Dictionary, args := can_be_seen_meta) -> Array:
 	var num_surrounding_voxels = [ ]
-	#print("Voxel data: " + str(voxel_data.keys()))
-	#print("Position: " + str(position))
 	
 	for surrounding_position in SURROUNDING_BLOCKS:
-		#print(str(position + surrounding_position*VSIZE))
 		if voxel_data.has(position + surrounding_position*VSIZE):
 			num_surrounding_voxels.append(surrounding_position)
-	#print("Surrounding voxels: " + str(num_surrounding_voxels))
+	
 	return num_surrounding_voxels
+# ^ chunk.geometry.can_be_seen #################################################
 
-static func block_can_be_seen(position: Vector3, block_data: Array):
+
+# chunk.geometry.block_can_be_seen #############################################
+const block_can_be_seen_meta := {
+	func_name = "chunk.geometry.block_can_be_seen",
+	description = """
+		Runs once per block!
+	""",
+		}
+static func block_can_be_seen(position: Vector3, block_data: Array, args := block_can_be_seen_meta) -> Array:
 	var num_surrounding_blocks = [ ]
-
+	
 	for surrounding_position in SURROUNDING_BLOCKS:
 		if block_data.has(position + surrounding_position):
 			num_surrounding_blocks.append(surrounding_position)
 	return num_surrounding_blocks
+# ^ chunk.geometry.block_can_be_seen ###########################################
 
-# once per block ###############################################################
-static func create_cube(position: Vector3, voxel_data: Dictionary): #, block_data: Dictionary):
-	#Core.emit_signal("msg", "ARRAY_MAX is " + str(Mesh.ARRAY_MAX), Core.TRACE, meta)
 
+# chunk.geometry.create_cube ###################################################
+const create_cube_meta := {
+	func_name = "chunk.geometry.create_cube",
+	description = """
+		Runs once per block!
+	""",
+		}
+static func create_cube(position: Vector3, voxel_data: Dictionary, args := create_cube_meta) -> Array:
 	var mesh_arrays = []
 	mesh_arrays.resize(Mesh.ARRAY_MAX)
 	
@@ -112,7 +130,6 @@ static func create_cube(position: Vector3, voxel_data: Dictionary): #, block_dat
 	var normals = PoolVector3Array()
 	#var indices = PoolIntArray()
 	
-	#var start = OS.get_ticks_msec()
 #	var num_of_sides = 6
 #	mesh_arrays[Mesh.ARRAY_NORMAL].resize(num_of_sides*voxel_data.size())
 #	mesh_arrays[Mesh.ARRAY_TEX_UV].resize(vplane_uvs.size()*num_of_sides*voxel_data.size())
@@ -137,11 +154,18 @@ static func create_cube(position: Vector3, voxel_data: Dictionary): #, block_dat
 	mesh_arrays[Mesh.ARRAY_NORMAL] = normals
 	#mesh_arrays[Mesh.ARRAY_INDEX] = indices
 	
-	#Core.emit_signal("msg", "create_cube() took " + str(OS.get_ticks_msec()-start) + "ms", Core.TRACE, meta)
 	return mesh_arrays
+# ^ chunk.geometry.create_cube #################################################
 
-# once per voxel ###############################################################
-static func create_voxel(position: Vector3, uv_offset: Vector2, sides_not_to_render: Array):
+
+# chunk.geometry.create_voxel ##################################################
+const create_voxel_meta := {
+	func_name = "chunk.geometry.create_voxel",
+	description = """
+		Runs once per voxel!
+	""",
+		}
+static func create_voxel(position: Vector3, uv_offset: Vector2, sides_not_to_render: Array, args := create_voxel_meta) -> Array:
 	var mesh_arrays = []
 	mesh_arrays.resize(Mesh.ARRAY_MAX)
 	
@@ -212,82 +236,6 @@ static func create_voxel(position: Vector3, uv_offset: Vector2, sides_not_to_ren
 	mesh_arrays[Mesh.ARRAY_NORMAL] = normals
 	#mesh_arrays[Mesh.ARRAY_INDEX] = indices
 	
-	#Core.emit_signal("msg", "create_voxel() took " + str(OS.get_ticks_msec()-start) + "ms", Core.TRACE, meta)
+	#Core.emit_signal("msg", "create_voxel() took " + str(OS.get_ticks_msec()-start) + "ms", Core.TRACE, args)
 	return mesh_arrays
-
-
-
-
-
-
-
-
-
-## for blocks (no longer used)
-#const vertical_plane_uvs_block = [ Vector2(0, 1), Vector2(1, 1), Vector2(0, 0), Vector2(1, 0), Vector2(0, 0), Vector2(1, 1) ]
-#const vertical_plane_vertices_block = [ Vector3(0, 0, 0), Vector3(1, 0, 0), Vector3(0, -1, 0), Vector3(1, -1, 0), Vector3(0, -1, 0), Vector3(1, 0, 0) ]
-#
-#const vertical_plane_uvs2_block = [ Vector2(0, 1), Vector2(1, 1), Vector2(0, 0), Vector2(1, 0), Vector2(0, 0), Vector2(1, 1) ]
-#const vertical_plane_vertices2_block = [ Vector3(0, 0, 0), Vector3(0, 0, 1), Vector3(0, -1, 0), Vector3(0, -1, 1), Vector3(0, -1, 0), Vector3(0, 0, 1) ]
-#
-#static func create_vertical_plane_block(st, position, direction):
-#	var vertex_data = []
-#	if direction == "west":
-#		for i in range(vertical_plane_vertices.size()):
-#			st.add_uv(vertical_plane_uvs[i])
-#			st.add_vertex(vertical_plane_vertices[i] + position)
-#			vertex_data.append(vertical_plane_vertices[i] + position)
-#
-#	elif direction == "east":
-#		vertical_plane_vertices.invert()
-#		vertical_plane_uvs.invert()
-#		for i in range(vertical_plane_vertices.size()):
-#			st.add_uv(vertical_plane_uvs[i])
-#			st.add_vertex(vertical_plane_vertices[i] + position)
-#			vertex_data.append(vertical_plane_vertices[i] + position)
-#
-#		vertical_plane_vertices.invert()
-#		vertical_plane_uvs.invert()
-#
-#
-#
-#	elif direction == "north":
-#		for i in range(vertical_plane_vertices2.size()):
-#			st.add_uv(vertical_plane_uvs2[i])
-#			st.add_vertex(vertical_plane_vertices2[i] + position)
-#			vertex_data.append(vertical_plane_vertices2[i] + position)
-#
-#	elif direction == "south":
-#		vertical_plane_vertices2.invert()
-#		vertical_plane_uvs2.invert()
-#		for i in range(vertical_plane_vertices2.size()):
-#			st.add_uv(vertical_plane_uvs2[i])
-#			st.add_vertex(vertical_plane_vertices2[i] + position)
-#			vertex_data.append(vertical_plane_vertices2[i] + position)
-#
-#		vertical_plane_vertices2.invert()
-#		vertical_plane_uvs2.invert()
-#	return vertex_data
-#
-#const horizontal_plane_uvs_block = [ Vector2(0, 0), Vector2(1, 0), Vector2(0, 1), Vector2(1, 1), Vector2(0, 1), Vector2(1, 0) ]
-#const horizontal_plane_vertices_block = [ Vector3(0, 0, 0), Vector3(1, 0, 0), Vector3(0, 0, 1), Vector3(1, 0, 1), Vector3(0, 0, 1), Vector3(1, 0, 0) ]
-#
-#static func create_horizontal_plane_block(st, position, direction):
-#	var vertex_data = []
-#	if direction == "up":
-#		for i in range(horizontal_plane_vertices.size()):
-#			st.add_uv(horizontal_plane_uvs[i])
-#			st.add_vertex(horizontal_plane_vertices[i] + position)
-#			vertex_data.append(horizontal_plane_vertices[i] + position)
-#
-#	elif direction == "down":
-#		horizontal_plane_vertices.invert()
-#		horizontal_plane_uvs.invert()
-#		for i in range(horizontal_plane_vertices.size()):
-#			st.add_uv(horizontal_plane_uvs[i])
-#			st.add_vertex(horizontal_plane_vertices[i] + position)
-#			vertex_data.append(horizontal_plane_vertices[i] + position)
-#
-#		horizontal_plane_vertices.invert()
-#		horizontal_plane_uvs.invert()
-#	return vertex_data
+# ^ chunk.geometry.create_voxel ################################################
