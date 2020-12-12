@@ -59,19 +59,27 @@ func _on_msg(message, level, script_meta): #####################################
 	var level_string = "All"
 	match level:
 		Core.FATAL:
-			level_string = "Fatal"
+			level_string = "[color=red]Fatal"
 		Core.ERROR:
-			level_string = "Error"
+			level_string = "[color=red]Error"
 		Core.WARN:
-			level_string = " Warn"
+			level_string = " [color=yellow]Warn"
 		Core.INFO:
-			level_string = " Info"
+			level_string = " [color=white]Info"
 		Core.DEBUG:
-			level_string = "Debug"
+			level_string = "[color=teal]Debug"
 		Core.TRACE:
-			level_string = "Trace"
+			level_string = "[color=grey]Trace"
 		Core.ALL:
-			level_string = "  All"
+			level_string = "  [color=blue]All"
+	
+	var func_path = ""
+	if script_meta.has("func_name"):
+		func_path = script_meta.func_name
+	elif script_meta.has("script_name"):
+		func_path = script_meta.script_name + ".n/a"
+	else:
+		func_path = "n/a"
 	
 	#Core.emit_signal("msg", "Rec message", Core.DEBUG, meta)
 	var label_path := "Interface/0/TTY/RichTextLabel"
@@ -82,7 +90,7 @@ func _on_msg(message, level, script_meta): #####################################
 			file.open(Core.client.data.log_path + "latest.txt", File.READ)
 			label.add_text(file.get_as_text())
 			file.close()
-		label.add_text(level_string + " [ " + meta.script_name + " ] " + message + "\n")
+		label.append_bbcode(level_string + " [ " + func_path + " ] " + message + "\n")
 	
 	var hud_path := "Interface/Hud/Hud/"
 	var chat_path := hud_path + "HorizontalMain/VerticalMain/VerticalCenterContent/LeftPanel/TabContainer/Chat/Content/TabContainer/"
@@ -108,15 +116,7 @@ func _on_msg(message, level, script_meta): #####################################
 			file.close()
 		#if level <= Core.INFO:
 		
-		var func_path = ""
-		if script_meta.has("func_name"):
-			func_path = script_meta.func_name
-		elif script_meta.has("script_name"):
-			func_path = script_meta.script_name + ".n/a"
-		else:
-			func_path = "n/a"
-		
-		label.add_text(level_string + " [ " + func_path + " ] " + message + "\n")
+		label.append_bbcode(level_string + " [ " + func_path + " ] " + message + "[/color]\n")
 
 
 func update_world_map(): #######################################################
