@@ -79,7 +79,14 @@ static func create_chunk(position: Vector3, args := create_chunk_meta) -> bool:
 # ^ chunk.manager.create_chunk #################################################
 
 
-static func generate_chunk_components(node: Entity): ###########################
+# chunk.helper.generate_chunk_components ########################################
+const generate_chunk_components_meta := {
+	func_name = "chunk.manager.generate_chunk_components",
+	description = """
+		
+	""",
+		}
+static func generate_chunk_components(node: Entity, args := generate_chunk_components_meta) -> void: 
 	var chunk = Spatial.new()
 	chunk.name = "Chunk"
 	
@@ -122,8 +129,17 @@ static func generate_chunk_components(node: Entity): ###########################
 	Core.client.data.chunk_index.append(pos)
 	
 	node.call_deferred("add_child", chunk)
+# ^ chunk.helper.generate_chunk_components #####################################
 
-static func draw_chunk_highlight(node: Entity, color: Color):
+
+# chunk.helper.draw_chunk_highlight ############################################
+const draw_chunk_highlight_meta := {
+	func_name = "chunk.manager.draw_chunk_highlight",
+	description = """
+		
+	""",
+		}
+static func draw_chunk_highlight(node: Entity, color: Color, args := draw_chunk_highlight_meta) -> void: 
 	var m = SpatialMaterial.new()
 	#m.flags_use_point_size = true
 	#m.params_point_size = 1
@@ -143,8 +159,17 @@ static func draw_chunk_highlight(node: Entity, color: Color):
 	for point in Core.scripts.chunk.geometry.BOX_HIGHLIGHT_NO_OVERLAP:
 		line.add_vertex(point*Core.scripts.chunk.geometry.CSIZE + (node.get_node("Chunk").translation) + Vector3(0, -1, 0))
 	line.end()
+# chunk.helper.draw_chunk_highlight ############################################
 
-static func draw_block_highlight(node: Entity, position: Vector3, color: Color):
+
+# chunk.helper.draw_block_highlight ############################################
+const draw_block_highlight_meta := {
+	func_name = "chunk.manager.draw_block_highlight",
+	description = """
+		
+	""",
+		}
+static func draw_block_highlight(node: Entity, position: Vector3, color: Color, args := draw_block_highlight_meta) -> void: 
 	var m = SpatialMaterial.new()
 	#m.flags_use_point_size = true
 	#m.params_point_size = 1
@@ -158,13 +183,31 @@ static func draw_block_highlight(node: Entity, position: Vector3, color: Color):
 	for point in Core.scripts.chunk.geometry.BOX_HIGHLIGHT:
 		line.add_vertex(point*Core.scripts.chunk.geometry.BSIZE + (node.get_node("Chunk").translation) + position + Vector3(0, -1.0625, 0))
 	line.end()
+# ^ chunk.helper.draw_block_highlight ##########################################
 
-static func destroy_chunk(chunk: Entity): #########################################
+
+# chunk.helper.destroy_chunk ###################################################
+const destroy_chunk_meta := {
+	func_name = "chunk.manager.destroy_chunk",
+	description = """
+		
+	""",
+		}
+static func destroy_chunk(chunk: Entity, args := destroy_chunk_meta) -> void: ##
 	chunk.call_deferred("queue_free")
 	Core.client.data.blocks_loaded -= chunk.components.mesh.blocks_loaded
 	Core.client.data.blocks_found -= chunk.components.mesh.blocks.size()
+# ^ chunk.helper.destroy_chunk #################################################
 
-static func generate_terrain(position: Vector3): ####################### #chunk_seed: int,
+
+# chunk.helper.generate_terrain ################################################
+const generate_terrain_meta := {
+	func_name = "chunk.manager.generate_terrain",
+	description = """
+		
+	""",
+		}
+static func generate_terrain(position: Vector3, args := generate_terrain_meta) -> Dictionary:
 	var new_noise = Core.run("chunk.generator.generate_noise").noise
 	
 	if Core.server.data.map.generator.single_voxel:
@@ -175,6 +218,6 @@ static func generate_terrain(position: Vector3): ####################### #chunk_
 	
 	if Core.server.data.map.generator.terrain_type == Core.server.GEN_FLAT:
 		return Core.run("chunk.generator.generate_flat_terrain").data
-	
-	elif Core.server.data.map.generator.terrain_type == Core.server.GEN_NATURAL:
-		return Core.run("chunk.generator.generate_flat_terrain", {noise=new_noise}).data
+	#elif Core.server.data.map.generator.terrain_type == Core.server.GEN_NATURAL:
+	return Core.run("chunk.generator.generate_flat_terrain", {noise=new_noise}).data
+# ^ chunk.helper.generate_terrain ##############################################
