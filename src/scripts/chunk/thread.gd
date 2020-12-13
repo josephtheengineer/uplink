@@ -187,10 +187,10 @@ static func create_chunk_shape(node: Entity, full_mesh: PoolVector3Array) -> voi
 
 static func create_cube_mesh(node: Entity, position: Vector3) -> Array:
 	var voxel_data = Dictionary()
-	if node.components.mesh.blocks[position].has("voxels"):
-		voxel_data = node.components.mesh.blocks[position].voxels
-	else:
-		voxel_data = Core.scripts.chunk.generator.generate_block()
+	#if node.components.mesh.blocks[position].has("voxels"):
+	#	voxel_data = node.components.mesh.blocks[position].voxels
+	#else:
+	voxel_data = Core.run("chunk.generator.generate_block").data
 	
 	var voxel_mesh = Core.scripts.chunk.geometry
 	
