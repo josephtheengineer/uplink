@@ -20,9 +20,9 @@ static func get_chunk_sub(location: int): ######################################
 
 
 static func get_chunk(location: Vector3): #############################################
-	var x = get_chunk_sub(int(round(location.x)))
-	var y = get_chunk_sub(int(round(location.y)))
-	var z = get_chunk_sub(int(round(location.z)))
+	var x = get_chunk_sub(int(round(location.x))+8)
+	var y = get_chunk_sub(int(round(location.y))+8)
+	var z = get_chunk_sub(int(round(location.z))+8)
 	
 	return Vector3(x, y, z)
 

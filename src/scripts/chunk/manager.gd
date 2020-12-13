@@ -57,7 +57,7 @@ const create_chunk_meta := {
 		}
 static func create_chunk(position: Vector3, args := create_chunk_meta) -> bool: 
 	Core.emit_signal("msg", "Creating chunk " + str(position) + "...", 
-		Core.DEBUG, args)
+		Core.TRACE, args)
 	
 	var chunk_data = Core.run("chunk.eden.world_decoder.get_chunk_data", {location = position}).data
 	
@@ -72,7 +72,7 @@ static func create_chunk(position: Vector3, args := create_chunk_meta) -> bool:
 	Core.client.data.subsystem.chunk.Link.create(chunk)
 	
 	if !chunk_data:
-		Core.emit_signal("msg", "Could not generate or find chunk data for " + str(position), Core.ERROR, args)
+		Core.emit_signal("msg", "Could not generate or find chunk data for " + str(position), Core.DEBUG, args)
 		return false
 	
 	return true
@@ -118,7 +118,7 @@ static func generate_chunk_components(node: Entity): ###########################
 	Core.client.data.blocks_found += node.components.mesh.blocks.size()
 	
 	var pos = node.components.position.world
-	chunk.translation = Vector3(pos.x * 16, pos.y * 16, pos.z * 16)
+	chunk.translation = Vector3(pos.x * 16-8, pos.y * 16-8, pos.z * 16-8)
 	Core.client.data.chunk_index.append(pos)
 	
 	node.call_deferred("add_child", chunk)
@@ -131,7 +131,7 @@ static func draw_chunk_highlight(node: Entity, color: Color):
 	m.flags_unshaded = true
 	m.albedo_color = color
 	
-	if !node.has_node("Highlight"):
+	if !node.has_node("Highlight") or !node.has_node("Chunk"):
 		return
 	
 	var line = node.get_node("Highlight")
@@ -141,7 +141,7 @@ static func draw_chunk_highlight(node: Entity, color: Color):
 	line.set_material_override(m)
 	line.begin(Mesh.PRIMITIVE_LINES)
 	for point in Core.scripts.chunk.geometry.BOX_HIGHLIGHT_NO_OVERLAP:
-		line.add_vertex(point*Core.scripts.chunk.geometry.CSIZE + (node.components.position.world*16) + Vector3(0, -1, 0))
+		line.add_vertex(point*Core.scripts.chunk.geometry.CSIZE + (node.get_node("Chunk").translation) + Vector3(0, -1, 0))
 	line.end()
 
 static func draw_block_highlight(node: Entity, position: Vector3, color: Color):
@@ -156,7 +156,7 @@ static func draw_block_highlight(node: Entity, position: Vector3, color: Color):
 	line.set_material_override(m)
 	line.begin(Mesh.PRIMITIVE_LINES)
 	for point in Core.scripts.chunk.geometry.BOX_HIGHLIGHT:
-		line.add_vertex(point*Core.scripts.chunk.geometry.BSIZE + (node.components.position.world*16) + position + Vector3(0, -1, 0))
+		line.add_vertex(point*Core.scripts.chunk.geometry.BSIZE + (node.get_node("Chunk").translation) + position + Vector3(0, -1.0625, 0))
 	line.end()
 
 static func destroy_chunk(chunk: Entity): #########################################
