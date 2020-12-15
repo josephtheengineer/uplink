@@ -65,86 +65,22 @@ static func discover_surrounding_chunks(): #####################################
 	
 	var surrounding_chunks = []
 	
-	var top = center_chunk.x - distance;
-	var bottom = top + distance * 2;
-	
-	var front = center_chunk.y - distance;
-	var back = front + distance * 2;
-	
-	var left = center_chunk.z - distance;
-	var right = left + distance * 2;
-	
-	for x in range(top, bottom):
-		for y in range(front, back):
-			for z in range(left, right):
-				var dx = x - center_chunk.x
-				var dy = y - center_chunk.y
-				var dz = z - center_chunk.z
-				var distance_squared = dx * dx + dy * dy + dz * dz
-				
-				if distance_squared <= (distance * distance):
-					surrounding_chunks.append(
-						Vector3(x, y, z))
-	
-	var chunks_to_create = []
+	for x in range(center_chunk.x - distance, center_chunk.x + distance):
+		for y in range(center_chunk.y - distance, center_chunk.y + distance):
+			for z in range(center_chunk.z - distance, center_chunk.z + distance):
+				surrounding_chunks.append(Vector3(x, y, z))
 	
 	for chunk in surrounding_chunks:
-		#if !Core.client.data.chunk_index.has(chunk):
-			#chunks_to_create.append(chunk)
-		#print(str(chunk))
-		if !Core.world.get_node("Chunk").has_node(str(chunk)):
-			chunks_to_create.append(chunk)
-		else:
-			var chunk_node = Core.world.get_node("Chunk").get_node(str(chunk))
-			if !chunk_node.components.meta.in_range:
-				chunk_node.components.meta.in_range = true
-				Core.scripts.chunk.manager.draw_chunk_highlight(chunk_node, Color(0, 1, 0))
-	
+		if !Core.world.has_node("Chunk/" + str(chunk)):
+			#Core.scripts.chunk.manager.draw_chunk_highlight(chunk, Color(255, 255, 255))
+			Core.scripts.chunk.manager.create_chunk(chunk)
 	
 	for chunk in Core.world.get_node("Chunk").get_children():
-		if !surrounding_chunks.has(chunk.components.position.world):
-			#if chunk.components.meta.in_range:
-			#	chunk.components.meta.in_range = false
-			#	if chunk.components.mesh.rendered:
-			#		Core.scripts.chunk.manager.draw_chunk_highlight(chunk, Color(0, 0, 0))
-			#	else:
-			#		Core.scripts.chunk.manager.draw_chunk_highlight(chunk, Color(255, 255, 255))
+		if not surrounding_chunks.has(chunk.components.position.world):
 			Core.scripts.chunk.manager.destroy_chunk(chunk)
-	
-	
-	#for chunk in Core.world.get_node("Chunk").get_children():
-		#if not chunk.components.position.world in surrounding_chunks:
-			#Core.scripts.chunk.manager.destroy_chunk(chunk)
-	
-	var player_name = Core.client.data.subsystem.input.Link.data.player
-	var min_distance = Core.world.get_node("Input/" + player_name).components.render_distance + 500
-	var closest_chunk = false
-	
-	#var woah = center_chunk.distance_to(Vector3(0, 0, 0))
-	#Core.emit_signal("msg", "surrounding_chunks " + str(surrounding_chunks), Core.DEBUG, meta)
-	#Core.emit_signal("msg", "Chunks to create " + str(chunks_to_create), Core.DEBUG, meta)
-	
-	for chunk in chunks_to_create:
-		if center_chunk.distance_to(chunk) < min_distance:
-			min_distance = center_chunk.distance_to(chunk)
-			closest_chunk = chunk
-	
-	if closest_chunk:
-		#Core.emit_signal("msg", "Creating closest chunk " + str(closest_chunk), Core.DEBUG, meta)
-		return Core.scripts.chunk.manager.create_chunk(closest_chunk)
-	
-#	# Remove chunks outside of bounds
-#	var entities = Entity.get_entities_with("chunk")
-#	for id in entities:
-#		var pos = Entity.get_component(id, "chunk.position")
-#		if !surrounding_chunks.has(pos):
-#			Core.Client.chunk_index.erase(pos)
-#			if Entity.get_component(id, "chunk.blocks_loaded"):
-#				Core.Client.blocks_loaded -= Entity.get_component(id, "chunk.blocks_loaded")
-#				Core.Client.blocks_found -= Entity.get_component(id, "chunk.block_data").size()
-#			Core.emit_signal("msg", "Destroyed chunk" + str(pos), Core.DEBUG, meta)
-#			Entity.destory(id)
-	
+		else:
+			pass
+			#Core.scripts.chunk.manager.draw_chunk_highlight(chunk, Color(0, 1, 0))
 
 # once per chunk ###############################################################
 static func compile(node: Entity): #############################################
@@ -257,7 +193,7 @@ static func process_chunks(): ##################################################
 		return false
 	for node in Core.scripts.core.manager.get_entities_with("Chunk"):
 		#Core.emit_signal("msg", "Checking rendered state..." + str(node.components.mesh), Core.TRACE, meta)
-		if node.components.mesh.rendered == false and node.components.meta.in_range: # and node.components.mesh.detailed:
+		if node.components.mesh.rendered == false: # and node.components.meta.in_range: # and node.components.mesh.detailed:
 			update_pending_blocks(node)
 
 # once per chunk ###############################################################

@@ -115,7 +115,12 @@ static func vertices_size():
 	Core.emit_signal("system_process", meta, "vertices_size", "start")
 	
 	var chunk = Core.world.get_node("Chunk/(0, 0, 0)")
-	if chunk.components.mesh.vertices.size() >= 1:
+	
+	var mesh = chunk.get_node("Chunk/MeshInstance").mesh
+	
+	Core.emit_signal("msg", "Verts in block/chunk: " + str(mesh.surface_get_array_len(0)), Core.INFO, meta)
+	
+	if mesh.surface_get_array_len(0) == 36:
 		Core.emit_signal("system_process", meta, "vertices_size", "success")
 	else:
 		Core.emit_signal("system_process", meta, "vertices_size", "no vertices were saved")

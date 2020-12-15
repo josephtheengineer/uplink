@@ -23,7 +23,6 @@ const DEFAULT_CHUNK = {
 		rendered = false,
 		disabled = false,
 		detailed = false,
-		vertices = Array(),
 		blocks = Dictionary(),
 		blocks_loaded = 0
 	},

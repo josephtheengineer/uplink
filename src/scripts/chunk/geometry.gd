@@ -43,27 +43,27 @@ const BOX_HIGHLIGHT = [
 ]
 
 const BOX_HIGHLIGHT_NO_OVERLAP = [
-	Vector3(0, 0, 0), Vector3(0.999, 0, 0), # ______
+	Vector3(0, 0, 0), Vector3(0.999, 0, 0),                 # ______
 	
-	Vector3(0.999, 0, 0), Vector3(0.999, 0.999, 0), #      |
+	Vector3(0.999, 0, 0), Vector3(0.999, 0.999, 0),         #      |
 	
-	Vector3(0, 0.999, 0), Vector3(0, 0, 0), # |
+	Vector3(0, 0.999, 0), Vector3(0, 0, 0),                 # |
 	
-	Vector3(0, 0, 0.999), Vector3(0.999, 0, 0.999), # ------
+	Vector3(0, 0, 0.999), Vector3(0.999, 0, 0.999),         # ------
 	
 	Vector3(0.999, 0, 0.999), Vector3(0.999, 0.999, 0.999), #       |
 	
-	Vector3(0, 0.999, 0.999), Vector3(0, 0, 0.999), # |
+	Vector3(0, 0.999, 0.999), Vector3(0, 0, 0.999),         # |
 	
-	Vector3(0, 0.999, 0), Vector3(0, 0.999, 0.999), # ^/
+	Vector3(0, 0.999, 0), Vector3(0, 0.999, 0.999),         # ^/
 	
-	Vector3(0, 0, 0), Vector3(0, 0, 0.999), # /
+	Vector3(0, 0, 0), Vector3(0, 0, 0.999),                 # /
 	
 	Vector3(0.999, 0.999, 0), Vector3(0.999, 0.999, 0.999), #      ^/
 	
-	Vector3(0.999, 0, 0), Vector3(0.999, 0, 0.999), #        /
+	Vector3(0.999, 0, 0), Vector3(0.999, 0, 0.999),         #        /
 	
-	Vector3(0, 0.999, 0), Vector3(0.999, 0.999, 0), # ^______
+	Vector3(0, 0.999, 0), Vector3(0.999, 0.999, 0),         # ^______
 	
 	Vector3(0, 0.999, 0.999), Vector3(0.999, 0.999, 0.999)  # ^------
 ]
@@ -154,6 +154,7 @@ static func create_cube(position: Vector3, voxel_data: Dictionary, args := creat
 	mesh_arrays[Mesh.ARRAY_NORMAL] = normals
 	#mesh_arrays[Mesh.ARRAY_INDEX] = indices
 	
+	Core.emit_signal("msg", "")
 	return mesh_arrays
 # ^ chunk.geometry.create_cube #################################################
 

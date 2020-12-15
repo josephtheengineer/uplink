@@ -18,14 +18,15 @@ const call_cli_meta := {
 		enter_is_char = false }
 static func call_cli(args := call_cli_meta) -> void: ###########################
 	var text_path
-	if " " in args:
-		text_path = args.text_input.split(" ", false)[0]
+	
+	if args.enter_is_char:
+		text_path = args.text_input.replace(">", "")
 	else:
-		if args.enter_is_char:
-			text_path = args.text_input.replace(">", "")
-		else:
-			text_path = args.text_input.replace("\n", "")
-			text_path = text_path.replace("/", "")
+		text_path = args.text_input.replace("\n", "")
+		text_path = text_path.replace("/", "")
+	
+	if " " in args.text_input:
+		text_path = text_path.split(" ", false)[0]
 	
 	var func_arguments = args.text_input.split(" ", false)
 	var script_path: Array = text_path.split(".", false)
@@ -49,7 +50,7 @@ static func call_cli(args := call_cli_meta) -> void: ###########################
 		var argument_name = arg[0]
 		var argument_value = arg[1]
 		
-		if func_meta.has[argument_name]:
+		if func_meta.has(argument_name):
 			if typeof(func_meta[argument_name]) == TYPE_ARRAY:
 				argument_value = argument_value.split(",", false)
 			elif typeof(func_meta[argument_name]) == TYPE_INT:
@@ -57,7 +58,8 @@ static func call_cli(args := call_cli_meta) -> void: ###########################
 			
 			dict_args[argument_name] = argument_value
 	
-	script.call(func_name, dict_args)
+	#script.call(func_name, dict_args)
+	Core.run(text_path, dict_args)
 # ^ input.cli.call_cli #########################################################
 
 

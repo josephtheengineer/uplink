@@ -8,7 +8,7 @@ const meta := {
 }
 #warning-ignore:unused_class_variable
 const DEFAULT_DATA := {
-	
+	client = null
 }
 #warning-ignore:unused_class_variable
 var data := DEFAULT_DATA.duplicate(true)
@@ -26,6 +26,9 @@ func _process(_delta): #########################################################
 	for entity in get_children():
 		if entity.components.meta.type == 'hud':
 			Core.scripts.interface.hud.process_hud(entity)
+	
+	if data.client:
+		Core.run("input.irc.fetch", {client = data.client})
 
 
 func _reset():

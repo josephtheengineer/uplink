@@ -73,6 +73,7 @@ const scripts := {
 		chat = preload("res://src/scripts/input/chat.gd"),
 		other = preload("res://src/scripts/input/other.gd"),
 		cli = preload("res://src/scripts/input/cli.gd"),
+		irc = preload("res://src/scripts/input/irc.gd"),
 		system = preload("res://src/scripts/input/system.gd")
 	},
 	interface = {
