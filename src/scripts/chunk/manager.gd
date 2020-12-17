@@ -146,7 +146,7 @@ static func draw_chunk_highlight(node: Entity, color: Color, args := draw_chunk_
 	m.flags_unshaded = true
 	m.albedo_color = color
 	
-	if !node.has_node("Highlight") or !node.has_node("Chunk"):
+	if !node or !node.has_node("Highlight") or !node.has_node("Chunk"):
 		return
 	
 	var line = node.get_node("Highlight")

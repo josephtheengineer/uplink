@@ -117,6 +117,8 @@ static func create_chunk_shape(node: Entity, full_mesh: PoolVector3Array) -> voi
 	Core.scripts.chunk.manager.draw_chunk_highlight(node, Color(0, 0, 255))
 	var shape := ConcavePolygonShape.new()
 	shape.set_faces(full_mesh)
+	if !node:
+		return
 	var shape_node: CollisionShape = node.get_node("Chunk/MeshInstance/StaticBody/Shape")
 	shape_node.shape = shape
 
@@ -142,8 +144,10 @@ static func create_cube_mesh(node: Entity, position: Vector3) -> Array:
 
 static func add_verts_to_chunk(node: Entity, mesh_arrays: Array, mat: SpatialMaterial) -> void:
 	var mesh = ArrayMesh.new()
+	if !node:
+		return
 	var mesh_node: MeshInstance = node.get_node("Chunk/MeshInstance")
-	if mesh_node.mesh:
+	if node and mesh_node.mesh:
 		mesh = mesh_node.mesh
 	else:
 		mesh = ArrayMesh.new()
@@ -193,14 +197,18 @@ static func process_chunks(): ##################################################
 		return false
 	for node in Core.scripts.core.manager.get_entities_with("Chunk"):
 		#Core.emit_signal("msg", "Checking rendered state..." + str(node.components.mesh), Core.TRACE, meta)
-		if node.components.mesh.rendered == false: # and node.components.meta.in_range: # and node.components.mesh.detailed:
+		if node and node.components.mesh.rendered == false: # and node.components.meta.in_range: # and node.components.mesh.detailed:
 			update_pending_blocks(node)
 
 # once per chunk ###############################################################
 static func update_pending_blocks(node: Entity): ###############################
+	if !node:
+		return
 	# Returns blocks_loaded, mesh, vertex_data
 	Core.scripts.chunk.manager.draw_chunk_highlight(node, Color(255, 0, 0))
 	compile(node)
+	if !node:
+		return
 	node.components.mesh.rendered = true
 	Core.scripts.chunk.manager.draw_chunk_highlight(node, Color(0, 0, 0))
 
