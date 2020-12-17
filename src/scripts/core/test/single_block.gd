@@ -123,7 +123,7 @@ static func vertices_size():
 	if mesh.surface_get_array_len(0) == 36:
 		Core.emit_signal("system_process", meta, "vertices_size", "success")
 	else:
-		Core.emit_signal("system_process", meta, "vertices_size", "no vertices were saved")
+		Core.emit_signal("system_process", meta, "vertices_size", str(mesh.surface_get_array_len(0)) + " vertices saved when 36 was expected")
 
 static func spatial_node():
 	Core.emit_signal("system_process", meta, "spatial_node", "start")
