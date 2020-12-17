@@ -154,7 +154,6 @@ static func create_cube(position: Vector3, voxel_data: Dictionary, args := creat
 	mesh_arrays[Mesh.ARRAY_NORMAL] = normals
 	#mesh_arrays[Mesh.ARRAY_INDEX] = indices
 	
-	Core.emit_signal("msg", "")
 	return mesh_arrays
 # ^ chunk.geometry.create_cube #################################################
 
