@@ -6,25 +6,44 @@ const meta := {
 	"""
 }
 
-
-# This function handles text uvs and stuff
-static func optimize_mesh(mesh_data: Array):
+# chunk.optimize.optimize_mesh #################################################
+const optimize_mesh_meta := {
+	func_name = "chunk.optimize.optimize_mesh",
+	description = """
+		handles text uvs and stuff
+	""",
+		}
+static func optimize_mesh(mesh_data: Array, args := optimize_mesh_meta) -> void: 
 	optimize_vertices(mesh_data[Mesh.ARRAY_VERTEX])
+# ^ chunk.optimize.optimize_mesh ###############################################
 
 
-# This function handles deleting and resizing verts
-static func optimize_vertices(verts: PoolVector3Array) -> PoolVector3Array:
+# chunk.optimize.optimize_vertices #############################################
+const optimize_vertices_meta := {
+	func_name = "chunk.optimize.optimize_vertices",
+	description = """
+		handles deleting and resizing verts
+	""",
+		}
+static func optimize_vertices(verts: PoolVector3Array, args := optimize_vertices_meta) -> PoolVector3Array: 
 	var i := 0
 	var corner := find_corner_pairs(verts)
 	
 	return verts
+# chunk.optimize.optimize_vertices #############################################
 
 
-# Finds the corners of planes (XX)
-# XX-------|   XX-|
-# |        |   |-XX
-# |-------XX
-static func find_corner_pairs(vertices: PoolVector3Array) -> Array:
+# chunk.optimize.find_corner_pairs #############################################
+const find_corner_pairs_meta := {
+	func_name = "chunk.optimize.find_corner_pairs",
+	description = """
+		Finds the corners of planes (XX)
+		XX-------|   XX-|
+		|        |   |-XX
+		|-------XX
+	""",
+		}
+static func find_corner_pairs(vertices: PoolVector3Array, args := find_corner_pairs_meta) -> Array: 
 	var edges0 = []
 	var edges1 = []
 	var edges2 = []
@@ -46,3 +65,4 @@ static func find_corner_pairs(vertices: PoolVector3Array) -> Array:
 		i+=3
 	
 	return [edges0, edges1, edges2]
+# ^ chunk.optimize.find_corner_pairs ###########################################
