@@ -44,17 +44,31 @@ const RES_12 = RES_11*2 # 16384( 0.06103515625mm) # The matrix (iPhone dpi) (16K
 const DEFAULT_VOXEL_RES = RES_2
 var voxel_res = DEFAULT_VOXEL_RES
 
-#signal thread_completed
-
-func _ready(): #################################################################
+# chunk.system._ready ##########################################################
+const _ready_meta := {
+	func_name = "chunk.system._ready",
+	description = """
+		
+	""",
+		}
+func _ready(args := _ready_meta) -> void: ######################################
 	#Core.emit_signal("function_started", "_ready()", meta)
 	Core.connect("reset", self, "_reset")
 	#Core.connect("thread_completed", self, "_thread_completed")
 	if !Core.scripts.chunk.thread.MULTITHREADING:
-		Core.emit_signal("msg", "Multithreading has been turnend off, game will be very slow when loading chunks!", Core.WARN, meta)
+		Core.emit_signal("msg", "Multithreading has been turnend off, game will be very slow when loading chunks!", Core.WARN, args)
 	Core.emit_signal("system_ready", Core.scripts.core.system_manager.CHUNK, self)             ##### READY #####
+# ^ chunk.system._ready ########################################################
 
-func _process(_delta):
+
+# chunk.system._process ########################################################
+const _process_meta := {
+	func_name = "chunk.system._process",
+	description = """
+		
+	""",
+		}
+func _process(delta, args := _process_meta) -> void: ###########################
 	if data.discover.thread and not data.discover.busy:
 		if data.discover.thread.is_active() or data.discover.busy:
 			data.discover.thread.wait_to_finish()
@@ -66,36 +80,66 @@ func _process(_delta):
 			data.process.thread.wait_to_finish()
 		else:
 			Core.scripts.chunk.thread.start_process_thread()
+# ^ chunk.system._process ######################################################
 
-func _reset():
-	Core.emit_signal("msg", "Reseting chunk system database...", Core.DEBUG, meta)
+
+# chunk.system._reset ##########################################################
+const _reset_meta := {
+	func_name = "chunk.system._reset",
+	description = """
+		
+	""",
+		}
+func _reset(args := _reset_meta) -> void: ######################################
+	Core.emit_signal("msg", "Reseting chunk system database...", Core.DEBUG, args)
 	data = DEFAULT_DATA.duplicate()
+# ^ chunk.system._reset ########################################################
 
 
-#func _chunk_thread_process(_data): ##################################################
-#	# Create chunk nodes
-#	Core.scripts.chunk.thread.discover_surrounding_chunks()
-#
-#	# Render meshes for chunk nodes
-#	Core.scripts.chunk.thread.process_chunks()
-#	data.thread_busy = false
-
-func _discover_surrounding_chunks(_data):
+# chunk.system._discover_surrounding_chunks ####################################
+const _discover_surrounding_chunks_meta := {
+	func_name = "chunk.system._discover_surrounding_chunks",
+	description = """
+		
+	""",
+		}
+func _discover_surrounding_chunks(_data, args := _discover_surrounding_chunks_meta) -> void: 
 	Core.scripts.chunk.thread.discover_surrounding_chunks()
 	data.discover.busy = false
+# ^ chunk.system._discover_surrounding_chunks ##################################
 
-func _process_chunks(_data):
+
+# chunk.system._process_chunks #################################################
+const _process_chunks_meta := {
+	func_name = "chunk.system._process_chunks",
+	description = """
+		
+	""",
+		}
+func _process_chunks(_data, args := _process_chunks_meta) -> void: #############
 	Core.scripts.chunk.thread.process_chunks()
 	data.process.busy = false
+# ^ chunk.system._process_chunks ###############################################
 
-func create(entity: Dictionary):
-	if entity.meta.system != "chunk":
-		Core.emit_signal("msg", "Chunk entity create called with incorrect system set", Core.WARN, meta)
-		return false
+
+# chunk.system.create ##########################################################
+const create_meta := {
+	func_name = "chunk.system.create",
+	description = """
+		
+	""",
+		entity = {},
+		error = false}
+func create(args := create_meta) -> void: ######################################
+	if args.entity.meta.system != "chunk":
+		Core.emit_signal("msg", "Chunk entity create called with incorrect system set", Core.WARN, args)
+		args.error = "Chunk entity create called with incorrect system set"
+		return
 	
-	if entity.meta.type == "chunk":
+	if args.entity.meta.type == "chunk":
 		var node = Entity.new()
-		node.set_name(entity.meta.id)
-		node.components = entity
+		node.set_name(args.entity.meta.id)
+		node.components = args.entity
 		add_child(node)
 		Core.scripts.chunk.manager.generate_chunk_components(node)
+# ^ chunk.system.create ########################################################
