@@ -20,11 +20,16 @@ const join_meta := {
 static func join(args := join_meta) -> void: 
 	var client = StreamPeerTCP.new()
 	client.connect_to_host(args.ip, 6667)
-	if args.password != "":
-		client.put_data(("JOIN "+ args.password +"\n").to_utf8())
+	#if args.password != "":
+	#	client.put_data(("JOIN "+ args.password +"\n").to_utf8())
+	yield(Core.get_tree().create_timer(1.0), "timeout")
 	client.put_data(("USER "+ args.nick +" "+ args.nick +" "+ args.nick +" :TEST\n").to_utf8())
+	yield(Core.get_tree().create_timer(1.0), "timeout")
 	client.put_data(("NICK "+ args.nick +"\n").to_utf8())
-	client.put_data(("NICKSERV REGISTER test test@theengineer.life\n").to_utf8())
+	yield(Core.get_tree().create_timer(1.0), "timeout")
+	client.put_data(("NICKSERV REGISTER test joseph@theengineer.life\n").to_utf8())
+	yield(Core.get_tree().create_timer(1.0), "timeout")
+	#client.put_data(("NICKSERV IDENTIFY test\n").to_utf8())
 	client.put_data(("JOIN "+ args.channel +"\n").to_utf8())
 	
 	args.client = client
@@ -61,7 +66,7 @@ static func fetch(args := fetch_meta) -> void:
 						text += b[i] + " "
 					Core.emit_signal("msg", "[" + args.time + "][i] [color=green]SERVER:[/color] " + text + "[/i]", Core.INFO, args)
 				elif b[1] == "JOIN":
-					Core.emit_signal("msg", "[" + args.time + "][i] [color=red]==[/color] " + get_name_user(b[0]) + " has joined " + str(args.channel) + "[/i]", Core.INFO, meta)
+					Core.emit_signal("msg", "[" + args.time + "][i] [color=red]==[/color] " + Core.call("input.irc.get_name_user", {value=b[0]}).user + " has joined " + str(args.channel) + "[/i]", Core.INFO, meta)
 				elif b[1] == "QUIT":
 					var text = ""
 					for i in range (4, b.size()):
