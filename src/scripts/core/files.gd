@@ -18,5 +18,5 @@ static func check():
 	for file in Core.client.data.subsystem.download.Link.data.required:
 		if not dir.file_exists("user://" + file.type + "/" + file.name):
 			Core.emit_signal("msg", file.type + " " + file.name + "does not exist", Core.WARN, meta)
-			Core.Client.data.subsystem.download.Link.download_file(file)
+			Core.client.data.subsystem.download.Link.download_file(file)
 	

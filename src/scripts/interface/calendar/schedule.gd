@@ -31,7 +31,11 @@ var task_template = {
 func _ready():
 	var tasks = []
 	
-	for task in Core.scripts.interface.calendar.task.list_files_in_directory(Core.scripts.interface.calendar.task.TASKS_FOLDER):
+	var tasks_dir = Core.scripts.interface.calendar.task.list_files_in_directory(Core.scripts.interface.calendar.task.TASKS_FOLDER)
+	if !tasks_dir:
+		return
+	
+	for task in tasks_dir:
 		var task_data = { id = int(task.name) }
 		Core.scripts.interface.calendar.task.read(task_data)
 		if task_data.task:
