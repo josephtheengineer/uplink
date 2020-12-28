@@ -354,31 +354,6 @@ static func invalid_command(args := invalid_command_meta) -> void: #############
 	Core.emit_signal("msg", "Invalid command " + args.cmd, Core.WARN, meta)
 # ^ input.cli.invalid_command ##################################################
 
-
-# input.cli.single_block_test ##################################################
-const single_block_test_meta := {
-	func_name = "input.cli.single_block_test",
-	description = """
-		Tests the engine for a single block generation
-	"""
-		}
-static func single_block_test(_args := single_block_test_meta) -> void: ########
-	Core.emit_signal("system_process_start", "core.test.single_block")
-# ^ input.cli.single_block_test ################################################
-
-
-# input.cli.floor_test #########################################################
-const floor_test_meta := {
-	func_name = "input.cli.floor_test",
-	description = """
-		
-	"""
-		}
-static func floor_test(_args := floor_test_meta) -> void: ######################
-	Core.emit_signal("system_process_start", "core.test.floor")
-# ^ input.cli.floor_test #######################################################
-
-
 # input.cli.create_alias #######################################################
 const create_alias_meta := {
 	func_name = "input.cli.create_alias",
@@ -400,14 +375,3 @@ static func create_alias(args := create_alias_meta) -> void: ###################
 		file.store_line(text)
 		file.close()
 # ^ input.cli.create_alias #####################################################
-
-# input.cli.alias_test #########################################################
-const alias_test_meta := {
-	func_name = "input.cli.alias_test",
-	description = """
-		Tests the cli function for creating and using an alias
-	"""
-		}
-static func alias_test(_args := alias_test_meta) -> void: #########
-	Core.emit_signal("system_process_start", "core.test.alias")
-# ^ input.cli.alias_test #######################################################

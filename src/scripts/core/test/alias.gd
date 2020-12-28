@@ -13,10 +13,24 @@ const meta := {
 	"""
 }
 
+
+# core.test.alias.start ########################################################
+const start_meta := {
+	func_name = "core.test.alias.start",
+	description = """
+		Tests the cli function for creating and using an alias
+	"""
+		}
+static func start(_args := start_meta) -> void: ################################
+	Core.emit_signal("system_process_start", "core.test.alias")
+# ^ core.test.alias.start ######################################################
+
+
 ####### >> ########
 static func test_call():
 	Core.client.data.test_alias = true
 ####### >> ########
+
 
 static func create_alias():
 	Core.emit_signal("system_process", meta, "create_alias", "start")

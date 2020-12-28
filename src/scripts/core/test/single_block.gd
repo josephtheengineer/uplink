@@ -21,6 +21,19 @@ const meta := {
 	"""
 }
 
+
+# core.test.single_block.start #################################################
+const start_meta := {
+	func_name = "core.test.single_block.start",
+	description = """
+		Tests the engine for single block generation
+	"""
+		}
+static func start(_args := start_meta) -> void: ################################
+	Core.emit_signal("system_process_start", "core.test.single_block")
+# ^ core.test.single_block.start ###############################################
+
+
 static func setup_environment():
 	Core.emit_signal("system_process", meta, "setup_environment", "start")
 	

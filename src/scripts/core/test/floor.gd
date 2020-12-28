@@ -21,6 +21,19 @@ const meta := {
 	"""
 }
 
+
+# core.test.floor.start ########################################################
+const start_meta := {
+	func_name = "core.test.floor.start",
+	description = """
+		
+	"""
+		}
+static func start(_args := start_meta) -> void: ################################
+	Core.emit_signal("system_process_start", "core.test.floor")
+# ^ core.test.floor.start ######################################################
+
+
 static func setup_environment():
 	Core.emit_signal("system_process", meta, "setup_environment", "start")
 	
