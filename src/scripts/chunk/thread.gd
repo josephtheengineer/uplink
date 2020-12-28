@@ -122,7 +122,14 @@ static func compile(node: Entity, args := compile_meta) -> void: ###############
 		if node.components.mesh.blocks_loaded >= BLOCK_LIMIT:
 			Core.emit_signal("msg", "Chunk contained more then " + str(BLOCK_LIMIT) + " blocks!", Core.ERROR, args)
 			#break
-		if Core.scripts.chunk.geometry.block_can_be_seen(position, node.components.mesh.blocks.keys()).size() != 6:
+		
+		var surrounding_blocks = Core.run(
+			"chunk.geometry.block_can_be_seen", {
+				position = position, 
+				block_data = node.components.mesh.blocks.keys()
+			}).surrounding_blocks
+		
+		if surrounding_blocks.size() != 6:
 			Core.scripts.chunk.manager.draw_block_highlight(node, position, Color(255, 255, 255))
 		var mesh_arrays := create_cube_mesh(node, position)
 		add_verts_to_chunk(node, mesh_arrays, mat)
@@ -166,19 +173,12 @@ const create_cube_mesh_meta := {
 		}
 static func create_cube_mesh(node: Entity, position: Vector3, args := create_cube_mesh_meta) -> Array: 
 	var voxel_data = Dictionary()
-	#if node.components.mesh.blocks[position].has("voxels"):
-	#	voxel_data = node.components.mesh.blocks[position].voxels
-	#else:
 	voxel_data = Core.run("chunk.generator.generate_block").data
 	
-	var voxel_mesh = Core.scripts.chunk.geometry
-	
-	var mesh_arrays = voxel_mesh.create_cube (
-		position+Vector3(0, -1, 0),
-		voxel_data
-		#node.components.mesh.blocks
-		#Core.scripts.chunk.geometry.VSIZE
-	)
+	var mesh_arrays = Core.run("chunk.geometry.create_cube", {
+		position = position+Vector3(0, -1, 0),
+		voxel_data = voxel_data
+	}).mesh
 	
 	return mesh_arrays
 # ^ chunk.thread.create_cube_mesh ##############################################

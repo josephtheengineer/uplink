@@ -85,15 +85,13 @@ const can_be_seen_meta := {
 	description = """
 		Runs once per voxel!
 	""",
-		}
-static func can_be_seen(position: Vector3, voxel_data: Dictionary, args := can_be_seen_meta) -> Array:
-	var num_surrounding_voxels = [ ]
-	
+		position = null,
+		voxel_data = {},
+		surrounding_voxels = []}
+static func can_be_seen(args := can_be_seen_meta) -> void: #####################	
 	for surrounding_position in SURROUNDING_BLOCKS:
-		if voxel_data.has(position + surrounding_position*VSIZE):
-			num_surrounding_voxels.append(surrounding_position)
-	
-	return num_surrounding_voxels
+		if args.voxel_data.has(args.position + surrounding_position*VSIZE):
+			args.surrounding_voxels.append(surrounding_position)
 # ^ chunk.geometry.can_be_seen #################################################
 
 
@@ -103,14 +101,13 @@ const block_can_be_seen_meta := {
 	description = """
 		Runs once per block!
 	""",
-		}
-static func block_can_be_seen(position: Vector3, block_data: Array, args := block_can_be_seen_meta) -> Array:
-	var num_surrounding_blocks = [ ]
-	
+		position = null,
+		block_data = [],
+		surrounding_blocks = []}
+static func block_can_be_seen(args := block_can_be_seen_meta) -> void: #########
 	for surrounding_position in SURROUNDING_BLOCKS:
-		if block_data.has(position + surrounding_position):
-			num_surrounding_blocks.append(surrounding_position)
-	return num_surrounding_blocks
+		if args.block_data.has(args.position + surrounding_position):
+			args.surrounding_blocks.append(surrounding_position)
 # ^ chunk.geometry.block_can_be_seen ###########################################
 
 
@@ -120,10 +117,11 @@ const create_cube_meta := {
 	description = """
 		Runs once per block!
 	""",
-		}
-static func create_cube(position: Vector3, voxel_data: Dictionary, args := create_cube_meta) -> Array:
-	var mesh_arrays = []
-	mesh_arrays.resize(Mesh.ARRAY_MAX)
+		position = null,
+		voxel_data = {},
+		mesh = []}
+static func create_cube(args := create_cube_meta) -> void: #####################
+	args.mesh.resize(Mesh.ARRAY_MAX)
 	
 	var verts = PoolVector3Array()
 	var uvs = PoolVector2Array()
@@ -131,30 +129,33 @@ static func create_cube(position: Vector3, voxel_data: Dictionary, args := creat
 	#var indices = PoolIntArray()
 	
 #	var num_of_sides = 6
-#	mesh_arrays[Mesh.ARRAY_NORMAL].resize(num_of_sides*voxel_data.size())
-#	mesh_arrays[Mesh.ARRAY_TEX_UV].resize(vplane_uvs.size()*num_of_sides*voxel_data.size())
-#	mesh_arrays[Mesh.ARRAY_VERTEX].resize(vplane_vertices.size()*num_of_sides*voxel_data.size())
+#	args.mesh[Mesh.ARRAY_NORMAL].resize(num_of_sides*voxel_data.size())
+#	args.mesh[Mesh.ARRAY_TEX_UV].resize(vplane_uvs.size()*num_of_sides*voxel_data.size())
+#	args.mesh[Mesh.ARRAY_VERTEX].resize(vplane_vertices.size()*num_of_sides*voxel_data.size())
 	
-	for voxel_position in voxel_data:
+	for voxel_position in args.voxel_data:
 		var uv_offset = Vector2(-0.5, -0.5)
 		if floor(rand_range(0, 3)) == 1:
 			uv_offset = Vector2(0, 0)
 		#var sides_not_to_render = can_be_seen(voxel_position, voxel_data)
 		
-		var rvoxel_position = position + (voxel_position/Vector3(16, 16, 16))# + Vector3(0, resolution, 0)
-		var voxel_array = create_voxel(rvoxel_position, uv_offset, Array())
+		var rvoxel_position = args.position + (voxel_position/Vector3(16, 16, 16))# + Vector3(0, resolution, 0)
+		var voxel_array = Core.run(
+			"chunk.geometry.create_voxel", {
+				position = rvoxel_position,
+				uv_offset = uv_offset, 
+				sides_not_to_render = Array()
+			}).mesh
 		
 		verts.append_array(voxel_array[Mesh.ARRAY_VERTEX])
 		uvs.append_array(voxel_array[Mesh.ARRAY_TEX_UV])
 		normals.append_array(voxel_array[Mesh.ARRAY_NORMAL])
 		#indices.append_array(voxel_array[Mesh.ARRAY_INDEX])
 	
-	mesh_arrays[Mesh.ARRAY_VERTEX] = verts
-	mesh_arrays[Mesh.ARRAY_TEX_UV] = uvs
-	mesh_arrays[Mesh.ARRAY_NORMAL] = normals
-	#mesh_arrays[Mesh.ARRAY_INDEX] = indices
-	
-	return mesh_arrays
+	args.mesh[Mesh.ARRAY_VERTEX] = verts
+	args.mesh[Mesh.ARRAY_TEX_UV] = uvs
+	args.mesh[Mesh.ARRAY_NORMAL] = normals
+	#args.mesh[Mesh.ARRAY_INDEX] = indices
 # ^ chunk.geometry.create_cube #################################################
 
 
@@ -164,10 +165,12 @@ const create_voxel_meta := {
 	description = """
 		Runs once per voxel!
 	""",
-		}
-static func create_voxel(position: Vector3, uv_offset: Vector2, sides_not_to_render: Array, args := create_voxel_meta) -> Array:
-	var mesh_arrays = []
-	mesh_arrays.resize(Mesh.ARRAY_MAX)
+		position = null,
+		uv_offset = null,
+		sides_not_to_render = [],
+		mesh = []}
+static func create_voxel(args := create_voxel_meta) -> void: ###################
+	args.mesh.resize(Mesh.ARRAY_MAX)
 	
 	var verts = PoolVector3Array()
 	var uvs = PoolVector2Array()
@@ -187,55 +190,54 @@ static func create_voxel(position: Vector3, uv_offset: Vector2, sides_not_to_ren
 	#var start = OS.get_ticks_msec()
 	#var num_of_sides = sides_not_to_render.size() - SURROUNDING_BLOCKS.size()
 	
-	if not sides_not_to_render.has(Vector3(0, 1, 0)) or SHOW_UNSEEN_SIDES: # up
+	if not args.sides_not_to_render.has(Vector3(0, 1, 0)) or SHOW_UNSEEN_SIDES: # up
 		for i in range(hplane_vertices.size()):
 			normals.append(Vector3(0, 1, 0))
-			uvs.append(hplane_uvs[i] + uv_offset)
-			verts.append(hplane_vertices[i] + position + Vector3(0, 0, 0))
+			uvs.append(hplane_uvs[i] + args.uv_offset)
+			verts.append(hplane_vertices[i] + args.position + Vector3(0, 0, 0))
 	
-	if not sides_not_to_render.has(Vector3(0, -1, 0)) or SHOW_UNSEEN_SIDES: # down
+	if not args.sides_not_to_render.has(Vector3(0, -1, 0)) or SHOW_UNSEEN_SIDES: # down
 		var i = hplane_vertices.size()
 		for _index in range(hplane_vertices.size()):
 			i -= 1
 			normals.append(Vector3(0, -1, 0))
-			uvs.append(hplane_uvs[i] + uv_offset)
-			verts.append(hplane_vertices[i] + position + Vector3(0, -VSIZE, 0))
+			uvs.append(hplane_uvs[i] + args.uv_offset)
+			verts.append(hplane_vertices[i] + args.position + Vector3(0, -VSIZE, 0))
 	
 	
 	
-	if not sides_not_to_render.has(Vector3(0, 0, 1)) or SHOW_UNSEEN_SIDES: # west
+	if not args.sides_not_to_render.has(Vector3(0, 0, 1)) or SHOW_UNSEEN_SIDES: # west
 		for i in range(vplane_vertices.size()):
 			normals.append(Vector3(0, 0, 1))
-			uvs.append(vplane_uvs[i] + uv_offset)
-			verts.append(vplane_vertices[i] + position + Vector3(0, 0, VSIZE))
+			uvs.append(vplane_uvs[i] + args.uv_offset)
+			verts.append(vplane_vertices[i] + args.position + Vector3(0, 0, VSIZE))
 
-	if not sides_not_to_render.has(Vector3(0, 0, -1)) or SHOW_UNSEEN_SIDES: # east
+	if not args.sides_not_to_render.has(Vector3(0, 0, -1)) or SHOW_UNSEEN_SIDES: # east
 		var i = hplane_vertices.size()
 		for _index in range(vplane_vertices.size()):
 			i -= 1
 			normals.append(Vector3(0, 0, -1))
-			uvs.append(vplane_uvs[i] + uv_offset)
-			verts.append(vplane_vertices[i] + position + Vector3(0, 0, 0))
+			uvs.append(vplane_uvs[i] + args.uv_offset)
+			verts.append(vplane_vertices[i] + args.position + Vector3(0, 0, 0))
 
-	if not sides_not_to_render.has(Vector3(-1, 0, 0)) or SHOW_UNSEEN_SIDES: # north
+	if not args.sides_not_to_render.has(Vector3(-1, 0, 0)) or SHOW_UNSEEN_SIDES: # north
 		for i in range(vplane_vertices2.size()):
 			normals.append(Vector3(-1, 0, 0))
-			uvs.append(vplane_uvs2[i] + uv_offset)
-			verts.append(vplane_vertices2[i] + position + Vector3(0, 0, 0))
+			uvs.append(vplane_uvs2[i] + args.uv_offset)
+			verts.append(vplane_vertices2[i] + args.position + Vector3(0, 0, 0))
 
-	if not sides_not_to_render.has(Vector3(1, 0, 0)) or SHOW_UNSEEN_SIDES: # south
+	if not args.sides_not_to_render.has(Vector3(1, 0, 0)) or SHOW_UNSEEN_SIDES: # south
 		var i = hplane_vertices.size()
 		for _index in range(vplane_vertices2.size()):
 			i -= 1
 			normals.append(Vector3(1, 0, 0))
-			uvs.append(vplane_uvs2[i] + uv_offset)
-			verts.append(vplane_vertices2[i] + position + Vector3(VSIZE, 0, 0))
+			uvs.append(vplane_uvs2[i] + args.uv_offset)
+			verts.append(vplane_vertices2[i] + args.position + Vector3(VSIZE, 0, 0))
 	
-	mesh_arrays[Mesh.ARRAY_VERTEX] = verts
-	mesh_arrays[Mesh.ARRAY_TEX_UV] = uvs
-	mesh_arrays[Mesh.ARRAY_NORMAL] = normals
-	#mesh_arrays[Mesh.ARRAY_INDEX] = indices
+	args.mesh[Mesh.ARRAY_VERTEX] = verts
+	args.mesh[Mesh.ARRAY_TEX_UV] = uvs
+	args.mesh[Mesh.ARRAY_NORMAL] = normals
+	#args.mesh[Mesh.ARRAY_INDEX] = indices
 	
 	#Core.emit_signal("msg", "create_voxel() took " + str(OS.get_ticks_msec()-start) + "ms", Core.TRACE, args)
-	return mesh_arrays
 # ^ chunk.geometry.create_voxel ################################################

@@ -47,6 +47,7 @@ static func load_player_spawn_chunks(args := load_player_spawn_chunks_meta) -> v
 # chunk.helper._on_timer_timeout ###############################################
 const _on_timer_timeout_meta := {
 	func_name = "chunk.helper._on_timer_timeout",
+	type = "raw",
 	description = """
 		
 	""",
