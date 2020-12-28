@@ -55,7 +55,9 @@ func _chat_input(box: TextEdit, input: String):
 	Core.world.get_node("Input").data.history_line = 0
 	
 	var file = File.new()
-	file.open(Core.client.data.cmd_history_file, File.READ_WRITE)
+	var error = file.open(Core.client.data.cmd_history_file, File.READ_WRITE)
+	if error:
+		Core.emit_signal("msg", "Error when opening cmd history file" + str(error), Core.WARN, meta)
 	file.seek_end()
 	file.store_string(input)
 	file.close()

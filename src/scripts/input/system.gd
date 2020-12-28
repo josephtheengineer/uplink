@@ -149,38 +149,33 @@ func _input(event: InputEvent, args := _input_meta) -> void: ###################
 		Core.scripts.debug.panel.open_chat()
 	
 	if event.is_action_pressed("ui_up"):
-		data.history_line += 1
 		Core.emit_signal("msg", "History index: " + str(data.history_line), Core.DEBUG, args)
-		if data.history_line >= 0:
-			var file = File.new()
-			file.open(Core.client.data.cmd_history_file, File.READ_WRITE)
-			var history = file.get_as_text().split("\n", false)
+		var file = File.new()
+		file.open(Core.client.data.cmd_history_file, File.READ)
+		var history = file.get_as_text().split("\n", false)
+		if history:
 			history.invert()
 			if data.history_line < history.size():
-				var next_text = history[data.history_line-1]
-				Core.world.get_node(data.input_path).text = ""
-				Core.world.get_node(data.input_path).call_deferred("insert_text_at_cursor", next_text)
+				data.history_line += 1
 			else:
 				data.history_line = history.size()
+			
+			var next_text = history[data.history_line-1]
+			Core.world.get_node(data.input_path).text = ""
+			Core.world.get_node(data.input_path).call_deferred("insert_text_at_cursor", next_text)
 			file.close()
-		else:
-			data.history_line = 0
 	if event.is_action_pressed("ui_down"):
-		data.history_line -= 1
+		if data.history_line > 1:
+			data.history_line -= 1
 		Core.emit_signal("msg", "History index: " + str(data.history_line), Core.DEBUG, args)
-		if data.history_line >= 0:
-			var file = File.new()
-			file.open(Core.client.data.cmd_history_file, File.READ_WRITE)
-			var history = file.get_as_text().split("\n", false)
+		var file = File.new()
+		file.open(Core.client.data.cmd_history_file, File.READ)
+		var history = file.get_as_text().split("\n", false)
+		if history:
 			history.invert()
-			if data.history_line < history.size():
-				var next_text = history[data.history_line-1]
-				Core.world.get_node(data.input_path).text = next_text
-			else:
-				data.history_line = history.size()
+			var next_text = history[data.history_line-1]
+			Core.world.get_node(data.input_path).text = next_text
 			file.close()
-		else:
-			data.history_line = 0
 	if event.is_action_pressed("ui_focus_next"):
 		pass
 		#Core.world.get_node(data.input_path).text = data.last_text
