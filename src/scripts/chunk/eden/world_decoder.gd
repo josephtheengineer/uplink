@@ -84,14 +84,32 @@ static func load_world(args := load_world_meta) -> void: #######################
 # ^ chunk.eden.world_decoder.load_world ########################################
 
 
-static func read_int(position: int): ###########################################
+# chunk.eden.world_decoder.read_int ############################################
+const read_int_meta := {
+	func_name = "chunk.eden.world_decoder.read_int",
+	type = "raw",
+	description = """
+		
+	""",
+		}
+static func read_int(position: int, args := read_int_meta) -> int: #########
 	Core.Server.data.map.file.seek(position)
 	return Core.server.data.map.file.get_buffer(1)[0]
+# ^ chunk.eden.world_decoder.read_int ##########################################
 
 
-static func read_float(position: int): #########################################
+# chunk.eden.world_decoder.read_float ##########################################
+const read_float_meta := {
+	func_name = "chunk.eden.world_decoder.read_float",
+	type = "raw",
+	description = """
+		
+	""",
+		}
+static func read_float(position: int, args := read_float_meta) -> float: #######
 	Core.Server.data.map.file.seek(position)
 	return Core.server.data.map.file.get_float()
+# chunk.eden.world_decoder.read_float ##########################################
 
 
 # chunk.eden.world_decoder.get_metadata ########################################
