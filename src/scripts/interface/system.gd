@@ -109,13 +109,29 @@ func _on_msg(message, level, script_meta): #####################################
 				var split = file_text[i]
 				split = split.split(" ", false)
 				if split.size() > 0:
-					if split[3] == "Info" || split[3] == "Warn" || split[3] == "Error" || split[3] == "Fatal":
-						var sub_level_string = Core.scripts.core.debug.msg.level_string(Core.ALL)
+					if split[3] == "Debug" || split[3] == "Info" || split[3] == "Warn" || split[3] == "Error" || split[3] == "Fatal":
+						var sub_level_string = "  [color=blue]All"
+						match split[3]:
+							"Fatal":
+								sub_level_string = "[color=red]Fatal"
+							"Error":
+								sub_level_string = "[color=red]Error"
+							"Warn":
+								sub_level_string = " [color=yellow]Warn"
+							"Info":
+								sub_level_string = " [color=white]Info"
+							"Debug":
+								sub_level_string = "[color=teal]Debug"
+							"Trace":
+								sub_level_string = "[color=grey]Trace"
+							"All":
+								sub_level_string = "  [color=blue]All"
+						
 						var sub_script_name = split[5]
 						var sub_message = ""
 						for index in range(7, split.size()):
 							sub_message += split[index] + " "
-						label.add_text(sub_level_string + " [ " + sub_script_name + " ] " + sub_message + "\n")
+						label.append_bbcode(sub_level_string + " [ " + sub_script_name + " ] " + sub_message + "[/color]\n")
 			file.close()
 		#if level <= Core.INFO:
 		

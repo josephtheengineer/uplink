@@ -71,11 +71,11 @@ rect_min_size = Vector2( 0, 50 )
 [node name="VerticalCenterContent" type="HBoxContainer" parent="HorizontalMain/VerticalMain"]
 margin_top = 54.0
 margin_right = 1920.0
-margin_bottom = 549.0
+margin_bottom = 458.0
 
 [node name="LeftMargin" type="Control" parent="HorizontalMain/VerticalMain/VerticalCenterContent"]
 margin_right = 50.0
-margin_bottom = 495.0
+margin_bottom = 404.0
 rect_min_size = Vector2( 50, 0 )
 
 [node name="LeftPanel" type="VBoxContainer" parent="HorizontalMain/VerticalMain/VerticalCenterContent"]
@@ -150,12 +150,15 @@ __meta__ = {
 [node name="RichTextLabel" type="RichTextLabel" parent="HorizontalMain/VerticalMain/VerticalCenterContent/LeftPanel/TabContainer/Chat/Content/TabContainer/msg"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+margin_left = -1.0
+margin_right = -1.0
 focus_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/normal_font = SubResource( 2 )
 custom_colors/default_color = Color( 0.266667, 0.321569, 0.364706, 1 )
 bbcode_enabled = true
+text = "loading..."
 scroll_following = true
 selection_enabled = true
 __meta__ = {
@@ -326,16 +329,16 @@ margin_bottom = 672.0
 
 [node name="Spacer" type="Control" parent="HorizontalMain/VerticalMain/VerticalCenterContent"]
 margin_left = 558.0
-margin_right = 1599.0
-margin_bottom = 495.0
+margin_right = 1884.0
+margin_bottom = 404.0
 size_flags_horizontal = 3
 
 [node name="DebugStats" parent="HorizontalMain/VerticalMain/VerticalCenterContent" instance=ExtResource( 14 )]
-margin_left = 1603.0
-margin_bottom = 495.0
+margin_left = 1888.0
+margin_bottom = 404.0
 
 [node name="Control" type="Control" parent="HorizontalMain/VerticalMain"]
-margin_top = 553.0
+margin_top = 462.0
 margin_right = 1920.0
 margin_bottom = 1030.0
 size_flags_vertical = 3
