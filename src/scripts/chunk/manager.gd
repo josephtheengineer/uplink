@@ -68,7 +68,9 @@ static func create_chunk(position: Vector3, args := create_chunk_meta) -> bool:
 	chunk.position.world = position
 	chunk.mesh.blocks = chunk_data
 	
-	Core.client.data.subsystem.chunk.Link.create(chunk)
+	var create_m = Core.world.get_node("Chunk").create_meta
+	create_m.entity = chunk
+	Core.world.get_node("Chunk").create(create_m)
 	
 	if !chunk_data:
 		Core.emit_signal("msg", "Could not generate or find chunk data for " + str(position), Core.DEBUG, args)

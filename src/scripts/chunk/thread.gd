@@ -9,11 +9,14 @@ const meta := {
 const MULTITHREADING = true
 const BLOCK_LIMIT = 16*16*16
 
-# once per thread ##############################################################
-static func start_discover_thread(): ###########################################
-	#Core.emit_signal("msg", "Starting chunk thread...", Core.TRACE, meta)
-	# the chunk process requires player data and other settings
-	
+# chunk.thread.start_discover_thread ###########################################
+const start_discover_thread_meta := {
+	func_name = "chunk.thread.start_discover_thread",
+	description = """
+		once per thread
+	""",
+		}
+static func start_discover_thread(args := start_discover_thread_meta) -> void: ########
 	if not Core.client.data.subsystem.chunk.Link.data.discover.thread:
 		Core.client.data.subsystem.chunk.Link.data.discover.thread = Thread.new()
 	
@@ -24,17 +27,22 @@ static func start_discover_thread(): ###########################################
 		var error: int = chunk_system.data.discover.thread.start(chunk_system, "_discover_surrounding_chunks")
 		if error:
 			Core.emit_signal("msg", "Error starting chunk thread: " 
-					+ str(error), Core.WARN, meta)
+					+ str(error), Core.WARN, args)
 			chunk_system.data.discover.busy = false
 			return
 	else:
 		discover_surrounding_chunks()
+# ^ chunk.thread.start_discover_thread #########################################
 
-# once per thread ##############################################################
-static func start_process_thread(): ############################################
-	#Core.emit_signal("msg", "Starting chunk thread...", Core.TRACE, meta)
-	# the chunk process requires player data and other settings
-	
+
+# chunk.thread.start_process_thread ############################################
+const start_process_thread_meta := {
+	func_name = "chunk.thread.start_process_thread",
+	description = """
+		once per thread
+	""",
+		}
+static func start_process_thread(args := start_process_thread_meta) -> void: ###
 	if not Core.client.data.subsystem.chunk.Link.data.process.thread:
 		Core.client.data.subsystem.chunk.Link.data.process.thread = Thread.new()
 	
@@ -45,14 +53,22 @@ static func start_process_thread(): ############################################
 		var error: int = chunk_system.data.process.thread.start(chunk_system, "_process_chunks")
 		if error:
 			Core.emit_signal("msg", "Error starting chunk thread: " 
-					+ str(error), Core.WARN, meta)
+					+ str(error), Core.WARN, args)
 			chunk_system.data.process.busy = false
 			return
 	else:
 		process_chunks()
+# ^ chunk.thread.start_process_thread ##########################################
 
-# once per thread ##############################################################
-static func discover_surrounding_chunks(): #####################################
+
+# chunk.thread.discover_surrounding_chunks #####################################
+const discover_surrounding_chunks_meta := {
+	func_name = "chunk.thread.discover_surrounding_chunks",
+	description = """
+		once per thread
+	""",
+		}
+static func discover_surrounding_chunks(args := discover_surrounding_chunks_meta) -> bool: 
 	if !Core.world.has_node("Chunk"):
 		return false
 	
@@ -81,9 +97,18 @@ static func discover_surrounding_chunks(): #####################################
 		else:
 			pass
 			#Core.scripts.chunk.manager.draw_chunk_highlight(chunk, Color(0, 1, 0))
+	return true
+# ^ chunk.thread.discover_surrounding_chunks ###################################
 
-# once per chunk ###############################################################
-static func compile(node: Entity): #############################################
+
+# chunk.thread.compile #########################################################
+const compile_meta := {
+	func_name = "chunk.thread.compile",
+	description = """
+		once per chunk
+	""",
+		}
+static func compile(node: Entity, args := compile_meta) -> void: ###############
 	var mesh_instance: MeshInstance = node.get_node("Chunk/MeshInstance")
 	mesh_instance.mesh = null
 	
@@ -95,7 +120,7 @@ static func compile(node: Entity): #############################################
 	var full_mesh = PoolVector3Array()
 	for position in node.components.mesh.blocks.keys():
 		if node.components.mesh.blocks_loaded >= BLOCK_LIMIT:
-			Core.emit_signal("msg", "Chunk contained more then " + str(BLOCK_LIMIT) + " blocks!", Core.ERROR, meta)
+			Core.emit_signal("msg", "Chunk contained more then " + str(BLOCK_LIMIT) + " blocks!", Core.ERROR, args)
 			#break
 		if Core.scripts.chunk.geometry.block_can_be_seen(position, node.components.mesh.blocks.keys()).size() != 6:
 			Core.scripts.chunk.manager.draw_block_highlight(node, position, Color(255, 255, 255))
@@ -109,11 +134,19 @@ static func compile(node: Entity): #############################################
 	for point in full_mesh:
 		if point == Vector3(0, 0, 0):
 			empty_points+=1
-	Core.emit_signal("msg", "Verts: " + str(full_mesh.size()), Core.INFO, meta)
-	Core.emit_signal("msg", "Empty points: " + str(empty_points), Core.INFO, meta)
+	Core.emit_signal("msg", "Verts: " + str(full_mesh.size()), Core.INFO, args)
+	Core.emit_signal("msg", "Empty points: " + str(empty_points), Core.INFO, args)
+# ^ chunk.thread.compile #######################################################
 
 
-static func create_chunk_shape(node: Entity, full_mesh: PoolVector3Array) -> void:
+# chunk.thread.create_chunk_shape ##############################################
+const create_chunk_shape_meta := {
+	func_name = "chunk.thread.create_chunk_shape",
+	description = """
+		
+	""",
+		}
+static func create_chunk_shape(node: Entity, full_mesh: PoolVector3Array, args := create_chunk_shape_meta) -> void: 
 	Core.scripts.chunk.manager.draw_chunk_highlight(node, Color(0, 0, 255))
 	var shape := ConcavePolygonShape.new()
 	shape.set_faces(full_mesh)
@@ -121,9 +154,17 @@ static func create_chunk_shape(node: Entity, full_mesh: PoolVector3Array) -> voi
 		return
 	var shape_node: CollisionShape = node.get_node("Chunk/MeshInstance/StaticBody/Shape")
 	shape_node.shape = shape
+# ^ chunk.thread.create_chunk_shape ############################################
 
 
-static func create_cube_mesh(node: Entity, position: Vector3) -> Array:
+# chunk.thread.create_cube_mesh ################################################
+const create_cube_mesh_meta := {
+	func_name = "chunk.thread.create_cube_mesh",
+	description = """
+		
+	""",
+		}
+static func create_cube_mesh(node: Entity, position: Vector3, args := create_cube_mesh_meta) -> Array: 
 	var voxel_data = Dictionary()
 	#if node.components.mesh.blocks[position].has("voxels"):
 	#	voxel_data = node.components.mesh.blocks[position].voxels
@@ -140,9 +181,17 @@ static func create_cube_mesh(node: Entity, position: Vector3) -> Array:
 	)
 	
 	return mesh_arrays
+# ^ chunk.thread.create_cube_mesh ##############################################
 
 
-static func add_verts_to_chunk(node: Entity, mesh_arrays: Array, mat: SpatialMaterial) -> void:
+# chunk.thread.add_verts_to_chunk ##############################################
+const add_verts_to_chunk_meta := {
+	func_name = "chunk.thread.add_verts_to_chunk",
+	description = """
+		
+	""",
+		}
+static func add_verts_to_chunk(node: Entity, mesh_arrays: Array, mat: SpatialMaterial, args := add_verts_to_chunk_meta) -> void: 
 	var mesh = ArrayMesh.new()
 	if !node:
 		return
@@ -160,11 +209,18 @@ static func add_verts_to_chunk(node: Entity, mesh_arrays: Array, mat: SpatialMat
 		node.components.mesh.blocks_loaded += 1
 		Core.client.data.blocks_loaded += 1
 	else:
-		Core.emit_signal("msg", "Mesh arrays contained no verts!", Core.WARN, meta)
+		Core.emit_signal("msg", "Mesh arrays contained no verts!", Core.WARN, args)
+# ^ chunk.thread.add_verts_to_chunk ############################################
 
 
-static func create_atlas() -> SpatialMaterial:
-	# create atlas
+# chunk.thread.create_atlas ####################################################
+const create_atlas_meta := {
+	func_name = "chunk.thread.create_atlas",
+	description = """
+		
+	""",
+		}
+static func create_atlas(args := create_atlas_meta) -> SpatialMaterial: ########
 	var image_texture = ImageTexture.new()
 	var dynamic_image = Image.new()
 	
@@ -187,21 +243,37 @@ static func create_atlas() -> SpatialMaterial:
 	var mat = SpatialMaterial.new()
 	mat.albedo_texture = image_texture
 	return mat
+# ^ chunk.thread.create_atlas ##################################################
 
 
-# once per thread ##############################################################
-static func process_chunks(): ##################################################
-	#Core.emit_signal("msg", "Processing chunks...", Core.TRACE, meta)
+# chunk.thread.process_chunks ##################################################
+const process_chunks_meta := {
+	func_name = "chunk.thread.process_chunks",
+	description = """
+		once per thread
+	""",
+		}
+static func process_chunks(args := process_chunks_meta) -> bool: ###############
+	#Core.emit_signal("msg", "Processing chunks...", Core.TRACE, args)
 	if !Core.scripts.core.manager.get_entities_with("Chunk"):
-		Core.emit_signal("msg", "No chunks where found!", Core.TRACE, meta)
+		Core.emit_signal("msg", "No chunks where found!", Core.TRACE, args)
 		return false
 	for node in Core.scripts.core.manager.get_entities_with("Chunk"):
-		#Core.emit_signal("msg", "Checking rendered state..." + str(node.components.mesh), Core.TRACE, meta)
+		#Core.emit_signal("msg", "Checking rendered state..." + str(node.components.mesh), Core.TRACE, args)
 		if node and node.components.mesh.rendered == false: # and node.components.meta.in_range: # and node.components.mesh.detailed:
 			update_pending_blocks(node)
+	return true
+# ^ chunk.thread.process_chunks ################################################
 
-# once per chunk ###############################################################
-static func update_pending_blocks(node: Entity): ###############################
+
+# chunk.thread.update_pending_blocks ###########################################
+const update_pending_blocks_meta := {
+	func_name = "chunk.thread.update_pending_blocks",
+	description = """
+		once per chunk
+	""",
+		}
+static func update_pending_blocks(node: Entity, args := update_pending_blocks_meta) -> void: 
 	if !node:
 		return
 	# Returns blocks_loaded, mesh, vertex_data
@@ -211,11 +283,4 @@ static func update_pending_blocks(node: Entity): ###############################
 		return
 	node.components.mesh.rendered = true
 	Core.scripts.chunk.manager.draw_chunk_highlight(node, Color(0, 0, 0))
-
-
-#VoxelTerrain._precalculate_priority_positions()
-#VoxelTerrain._precalculate_neighboring()
-#VoxelTerrain._update_pending_blocks()
-
-
-# Creates one surrounding chunk per call
+# ^ chunk.thread.update_pending_blocks #########################################
