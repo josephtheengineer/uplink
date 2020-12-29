@@ -101,6 +101,9 @@ static func generate_chunk_components(node: Entity, args := generate_chunk_compo
 	var line = ImmediateGeometry.new()
 	line.name = "Highlight"
 	node.add_child(line)
+	var origin = ImmediateGeometry.new()
+	origin.name = "Origin"
+	node.add_child(origin)
 	draw_chunk_highlight(node, Color(255, 255, 255))
 	
 	var bline = ImmediateGeometry.new()
@@ -161,6 +164,28 @@ static func draw_chunk_highlight(node: Entity, color: Color, args := draw_chunk_
 		line.add_vertex(point*Core.scripts.chunk.geometry.CSIZE + (node.get_node("Chunk").translation))
 	line.add_vertex(node.get_node("Chunk").translation)
 	line.end()
+	
+	# Origin ###############################################################
+	m = SpatialMaterial.new()
+	#m.flags_use_point_size = true
+	#m.params_point_size = 1
+	m.vertex_color_use_as_albedo = true
+	m.flags_unshaded = true
+	m.albedo_color = color
+	
+	if !node or !node.has_node("Origin") or !node.has_node("Chunk"):
+		return
+	
+	line = node.get_node("Origin")
+	if !line:
+		return
+	line.clear()
+	line.set_material_override(m)
+	line.begin(Mesh.PRIMITIVE_LINES)
+	for point in Core.scripts.chunk.geometry.BOX_ORIGIN:
+		line.add_vertex(point*Core.scripts.chunk.geometry.CSIZE/2 + (node.get_node("Chunk").translation) + Vector3(8, 8, 8))
+	line.add_vertex(node.get_node("Chunk").translation)
+	line.end()
 # chunk.helper.draw_chunk_highlight ############################################
 
 
@@ -183,7 +208,14 @@ static func draw_block_highlight(node: Entity, position: Vector3, color: Color, 
 	line.set_material_override(m)
 	line.begin(Mesh.PRIMITIVE_LINES)
 	for point in Core.scripts.chunk.geometry.BOX_HIGHLIGHT:
-		line.add_vertex(point*Core.scripts.chunk.geometry.BSIZE + (node.get_node("Chunk").translation) + position + Vector3(7.5, 7.5, 7.5))
+		line.add_vertex(point*Core.scripts.chunk.geometry.BSIZE + (
+			node.get_node("Chunk").translation
+			) + position + Vector3(
+				7.5 - Core.scripts.chunk.geometry.VSIZE/2,
+				7.5 - Core.scripts.chunk.geometry.VSIZE/2,
+				7.5 - Core.scripts.chunk.geometry.VSIZE/2
+			)
+		)
 	line.end()
 # ^ chunk.helper.draw_block_highlight ##########################################
 
