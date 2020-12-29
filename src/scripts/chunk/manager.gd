@@ -159,6 +159,7 @@ static func draw_chunk_highlight(node: Entity, color: Color, args := draw_chunk_
 	line.begin(Mesh.PRIMITIVE_LINES)
 	for point in Core.scripts.chunk.geometry.BOX_HIGHLIGHT_NO_OVERLAP:
 		line.add_vertex(point*Core.scripts.chunk.geometry.CSIZE + (node.get_node("Chunk").translation))
+	line.add_vertex(node.get_node("Chunk").translation)
 	line.end()
 # chunk.helper.draw_chunk_highlight ############################################
 

@@ -18,16 +18,6 @@ const SURROUNDING_BLOCKS = [
 			Vector3(0, -1, 0), Vector3(-1, 0, 0)
 ]
 
-const SURROUNDING_BLOCKS_SQUARE = [
-			Vector3(0, 0, 1), Vector3(0, 1, 0), 
-			Vector3(1, 0, 0), Vector3(0, 0, -1), 
-			Vector3(0, -1, 0), Vector3(-1, 0, 0),
-			Vector3(-1, 1, 0), Vector3(-1, -1, 0),
-			Vector3(1, -1, 0), Vector3(1, 1, 0),
-			Vector3(0, -1, 1), Vector3(0, -1, -1),
-			Vector3(0, 1, -1), Vector3(0, 1, 1)
-]
-
 const BOX_HIGHLIGHT = [
 	Vector3(0, 0, 0), Vector3(1, 0, 0), # ______
 	
@@ -91,13 +81,16 @@ const can_be_seen_meta := {
 		surrounding_voxels = [],
 		square = false}
 static func can_be_seen(args := can_be_seen_meta) -> void: #####################
-	var positions = SURROUNDING_BLOCKS
 	if args.square:
-		positions = SURROUNDING_BLOCKS_SQUARE
-	
-	for surrounding_position in positions:
-		if args.voxel_data.has(args.position + surrounding_position):
-			args.surrounding_voxels.append(surrounding_position)
+		for x in range(-1, 2):
+			for y in range(-1, 2):
+				for z in range(-1, 2):
+					if args.voxel_data.has(args.position + Vector3(x, y, z)):
+						args.surrounding_voxels.append(Vector3(x, y, z))
+	else:
+		for surrounding_position in SURROUNDING_BLOCKS:
+			if args.voxel_data.has(args.position + surrounding_position):
+				args.surrounding_voxels.append(surrounding_position)
 # ^ chunk.geometry.can_be_seen #################################################
 
 
@@ -111,7 +104,7 @@ const create_cube_meta := {
 		voxel_data = {},
 		mesh = []}
 static func create_cube(args := create_cube_meta) -> void: #####################
-	#var variable_voxel_data = Core.run("chunk.optimize.optimize_voxels", {voxel_data=args.voxel_data}).variable_voxel_data
+	var variable_voxel_data = Core.run("chunk.optimize.optimize_voxels", {voxel_data=args.voxel_data}).variable_voxel_data
 	args.mesh.resize(Mesh.ARRAY_MAX)
 	
 	var verts = PoolVector3Array()
@@ -124,7 +117,7 @@ static func create_cube(args := create_cube_meta) -> void: #####################
 #	args.mesh[Mesh.ARRAY_TEX_UV].resize(vplane_uvs.size()*num_of_sides*voxel_data.size())
 #	args.mesh[Mesh.ARRAY_VERTEX].resize(vplane_vertices.size()*num_of_sides*voxel_data.size())
 	
-	for variable_voxel_position in args.voxel_data:
+	for variable_voxel_position in variable_voxel_data:
 		var uv_offset = Vector2(-0.5, -0.5)
 		if floor(rand_range(0, 3)) == 1:
 			uv_offset = Vector2(0, 0)
@@ -136,13 +129,13 @@ static func create_cube(args := create_cube_meta) -> void: #####################
 				}).surrounding_voxels
 		
 		var real_block_pos = args.position + Vector3(8, 8, 8)
-		var real_voxel_pos = real_block_pos + (variable_voxel_position / Vector3(15, 15, 15))
+		var real_voxel_pos = real_block_pos + (variable_voxel_position / Vector3(16, 16, 16))
 		var voxel_array = Core.run(
 			"chunk.geometry.create_voxel", {
 				position = real_voxel_pos,
 				uv_offset = uv_offset, 
 				sides_not_to_render = surrounding_voxels,
-				#size = variable_voxel_data[variable_voxel_position]
+				size = variable_voxel_data[variable_voxel_position]
 			}).mesh
 			
 		verts.append_array(voxel_array[Mesh.ARRAY_VERTEX])

@@ -33,20 +33,17 @@ static func optimize_voxels(args := optimize_voxels_meta) -> void: #############
 				}).surrounding_voxels
 			
 			if surrounding_voxels.size() != 6:
-				args.variable_voxel_data[pos] = Vector3(0, 0, 0)
+				args.variable_voxel_data[pos] = Vector3(1, 1, 1)
 				for side in surrounding_voxels_square:
 					if side.x >= 0 and side.y >= 0 and side.z >= 0:
-						args.variable_voxel_data[pos] += side
-						removed_voxels.append(pos+side)
+						pass
+						#args.variable_voxel_data[pos] = Vector3(1, 1, 1)#+= side
+						#removed_voxels.append(pos+side)
 			else:
 				removed_voxels.append(pos)
 	
-	for voxel in removed_voxels:
-		if args.variable_voxel_data.has(voxel):
-			Core.emit_signal("msg", "dead", Core.FATAL, args)
-	
 	Core.emit_signal("msg", str(args.variable_voxel_data), Core.DEBUG, args)
-	Core.emit_signal("msg", "Optimization returned " + str(args.variable_voxel_data.size()) + " voxel groups", Core.DEBUG, args)
+	Core.emit_signal("msg", "Optimization returned " + str(args.variable_voxel_data.size()) + " voxel groups", Core.INFO, args)
 # ^ chunk.optimize.optimize_voxels #############################################
 
 # chunk.optimize.optimize_mesh #################################################

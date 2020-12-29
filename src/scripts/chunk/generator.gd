@@ -133,9 +133,9 @@ static func generate_block(args := generate_block_meta) -> void: ###############
 #					voxel_data[Vector3(x*VSIZE, y*VSIZE, z*VSIZE)] = 1
 #				elif y == 15:
 #					voxel_data[Vector3(x*VSIZE, y*VSIZE, z*VSIZE)] = 1
-	for x in 1:
-		for y in 1:
-			for z in 1:
+	for x in range(-8, 8):
+		for y in range(-8, 8):
+			for z in range(-8, 8):
 				voxel_data[Vector3(x, y, z)] = 1
 	args.data = voxel_data
 # ^ chunk.generator.generate_block #############################################
