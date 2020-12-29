@@ -21,6 +21,7 @@ const scripts := {
 		helper = preload("res://src/scripts/chunk/helper.gd"),
 		manager = preload("res://src/scripts/chunk/manager.gd"),
 		modify = preload("res://src/scripts/chunk/modify.gd"),
+		optimize = preload("res://src/scripts/chunk/optimize.gd"),
 		system = preload("res://src/scripts/chunk/system.gd"),
 		thread = preload("res://src/scripts/chunk/thread.gd"),
 		tools = preload("res://src/scripts/chunk/tools.gd")

@@ -13,12 +13,12 @@ __meta__ = {
 
 [node name="ClientInfo" type="VBoxContainer" parent="."]
 margin_right = 1920.0
-margin_bottom = 249.0
+margin_bottom = 332.0
 
 [node name="Version" type="Label" parent="ClientInfo"]
-margin_left = 1859.0
+margin_left = 1839.0
 margin_right = 1920.0
-margin_bottom = 19.0
+margin_bottom = 24.0
 size_flags_horizontal = 8
 custom_fonts/font = ExtResource( 1 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
@@ -29,21 +29,32 @@ __meta__ = {
 }
 
 [node name="PlayerXYZ" type="Label" parent="ClientInfo"]
-margin_left = 1783.0
-margin_top = 23.0
+margin_left = 1736.0
+margin_top = 28.0
 margin_right = 1920.0
-margin_bottom = 42.0
+margin_bottom = 52.0
 size_flags_horizontal = 8
 custom_fonts/font = ExtResource( 1 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 text = "XYZ: 0 / 0 / 0"
 align = 2
 
-[node name="LookingAtVoxel" type="Label" parent="ClientInfo"]
-margin_left = 1611.0
-margin_top = 46.0
+[node name="LookingAt" type="Label" parent="ClientInfo"]
+margin_left = 1583.0
+margin_top = 56.0
 margin_right = 1920.0
-margin_bottom = 65.0
+margin_bottom = 80.0
+size_flags_horizontal = 8
+custom_fonts/font = ExtResource( 1 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+text = "Looking at: XYZ: 0 / 0 / 0"
+align = 2
+
+[node name="LookingAtVoxel" type="Label" parent="ClientInfo"]
+margin_left = 1499.0
+margin_top = 84.0
+margin_right = 1920.0
+margin_bottom = 108.0
 size_flags_horizontal = 8
 custom_fonts/font = ExtResource( 1 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
@@ -51,10 +62,10 @@ text = "Looking at voxel: XYZ: 0 / 0 / 0"
 align = 2
 
 [node name="LookingAtBlock" type="Label" parent="ClientInfo"]
-margin_left = 1612.0
-margin_top = 69.0
+margin_left = 1503.0
+margin_top = 112.0
 margin_right = 1920.0
-margin_bottom = 88.0
+margin_bottom = 136.0
 size_flags_horizontal = 8
 custom_fonts/font = ExtResource( 1 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
@@ -62,10 +73,10 @@ text = "Looking at block: XYZ: 0 / 0 / 0"
 align = 2
 
 [node name="LookingAtChunk" type="Label" parent="ClientInfo"]
-margin_left = 1603.0
-margin_top = 92.0
+margin_left = 1493.0
+margin_top = 140.0
 margin_right = 1920.0
-margin_bottom = 111.0
+margin_bottom = 164.0
 size_flags_horizontal = 8
 custom_fonts/font = ExtResource( 1 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
@@ -73,10 +84,10 @@ text = "Looking at chunk: XYZ: 0 / 0 / 0"
 align = 2
 
 [node name="Orentation" type="Label" parent="ClientInfo"]
-margin_left = 1752.0
-margin_top = 115.0
+margin_left = 1691.0
+margin_top = 168.0
 margin_right = 1920.0
-margin_bottom = 134.0
+margin_bottom = 192.0
 size_flags_horizontal = 8
 custom_fonts/font = ExtResource( 1 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
@@ -84,10 +95,10 @@ text = "Orentation: North"
 align = 2
 
 [node name="Mode" type="Label" parent="ClientInfo"]
-margin_left = 1785.0
-margin_top = 138.0
+margin_left = 1738.0
+margin_top = 196.0
 margin_right = 1920.0
-margin_bottom = 157.0
+margin_bottom = 220.0
 size_flags_horizontal = 8
 custom_fonts/font = ExtResource( 1 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
@@ -95,10 +106,10 @@ text = "Mode: nothing"
 align = 2
 
 [node name="Entities" type="Label" parent="ClientInfo"]
-margin_left = 1709.0
-margin_top = 161.0
+margin_left = 1635.0
+margin_top = 224.0
 margin_right = 1920.0
-margin_bottom = 180.0
+margin_bottom = 248.0
 size_flags_horizontal = 8
 custom_fonts/font = ExtResource( 1 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
@@ -106,10 +117,10 @@ text = "Entities: 0 | Players: 0"
 align = 2
 
 [node name="AllBlocksLoaded" type="Label" parent="ClientInfo"]
-margin_left = 1748.0
-margin_top = 184.0
+margin_left = 1686.0
+margin_top = 252.0
 margin_right = 1920.0
-margin_bottom = 203.0
+margin_bottom = 276.0
 size_flags_horizontal = 8
 custom_fonts/font = ExtResource( 1 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
@@ -117,10 +128,10 @@ text = "Blocks Loaded: 0"
 align = 2
 
 [node name="BlocksFound" type="Label" parent="ClientInfo"]
-margin_left = 1759.0
-margin_top = 207.0
+margin_left = 1704.0
+margin_top = 280.0
 margin_right = 1920.0
-margin_bottom = 226.0
+margin_bottom = 304.0
 size_flags_horizontal = 8
 custom_fonts/font = ExtResource( 1 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
@@ -128,10 +139,10 @@ text = "Blocks Found: 0"
 align = 2
 
 [node name="FPS" type="Label" parent="ClientInfo"]
-margin_left = 1854.0
-margin_top = 230.0
+margin_left = 1832.0
+margin_top = 308.0
 margin_right = 1920.0
-margin_bottom = 249.0
+margin_bottom = 332.0
 size_flags_horizontal = 8
 custom_fonts/font = ExtResource( 1 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
@@ -139,19 +150,19 @@ text = "FPS: 0"
 align = 2
 
 [node name="Separator1" type="HSeparator" parent="."]
-margin_top = 253.0
+margin_top = 336.0
 margin_right = 1920.0
-margin_bottom = 257.0
+margin_bottom = 340.0
 
 [node name="WorldStats" type="VBoxContainer" parent="."]
-margin_top = 261.0
+margin_top = 344.0
 margin_right = 1920.0
-margin_bottom = 395.0
+margin_bottom = 508.0
 
 [node name="WorldName" type="Label" parent="WorldStats"]
-margin_left = 1705.0
+margin_left = 1630.0
 margin_right = 1920.0
-margin_bottom = 19.0
+margin_bottom = 24.0
 size_flags_horizontal = 8
 custom_fonts/font = ExtResource( 1 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
@@ -159,10 +170,10 @@ text = "== Unknown World =="
 align = 2
 
 [node name="WorldPath" type="Label" parent="WorldStats"]
-margin_left = 1757.0
-margin_top = 23.0
+margin_left = 1702.0
+margin_top = 28.0
 margin_right = 1920.0
-margin_bottom = 42.0
+margin_bottom = 52.0
 size_flags_horizontal = 8
 custom_fonts/font = ExtResource( 1 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
@@ -170,10 +181,10 @@ text = "unknown.eden2"
 align = 2
 
 [node name="TotalChunks" type="Label" parent="WorldStats"]
-margin_left = 1764.0
-margin_top = 46.0
+margin_left = 1710.0
+margin_top = 56.0
 margin_right = 1920.0
-margin_bottom = 65.0
+margin_bottom = 80.0
 size_flags_horizontal = 8
 custom_fonts/font = ExtResource( 1 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
@@ -181,10 +192,10 @@ text = "Total Chunks: 0"
 align = 2
 
 [node name="ChunksCache" type="Label" parent="WorldStats"]
-margin_left = 1762.0
-margin_top = 69.0
+margin_left = 1708.0
+margin_top = 84.0
 margin_right = 1920.0
-margin_bottom = 88.0
+margin_bottom = 108.0
 size_flags_horizontal = 8
 custom_fonts/font = ExtResource( 1 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
@@ -192,10 +203,10 @@ text = "Chunk Cache: 0"
 align = 2
 
 [node name="ChunksLoaded" type="Label" parent="WorldStats"]
-margin_left = 1740.0
-margin_top = 92.0
+margin_left = 1677.0
+margin_top = 112.0
 margin_right = 1920.0
-margin_bottom = 111.0
+margin_bottom = 136.0
 size_flags_horizontal = 8
 custom_fonts/font = ExtResource( 1 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
@@ -203,10 +214,10 @@ text = "Chunks Loaded: 0"
 align = 2
 
 [node name="Seed" type="Label" parent="WorldStats"]
-margin_left = 1845.0
-margin_top = 115.0
+margin_left = 1818.0
+margin_top = 140.0
 margin_right = 1920.0
-margin_bottom = 134.0
+margin_bottom = 164.0
 size_flags_horizontal = 8
 custom_fonts/font = ExtResource( 1 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
@@ -214,19 +225,19 @@ text = "Seed: 0"
 align = 2
 
 [node name="Separator2" type="HSeparator" parent="."]
-margin_top = 399.0
+margin_top = 512.0
 margin_right = 1920.0
-margin_bottom = 403.0
+margin_bottom = 516.0
 
 [node name="ChunkInfo" type="VBoxContainer" parent="."]
-margin_top = 407.0
+margin_top = 520.0
 margin_right = 1920.0
-margin_bottom = 495.0
+margin_bottom = 628.0
 
 [node name="ChunkAddress" type="Label" parent="ChunkInfo"]
-margin_left = 1777.0
+margin_left = 1728.0
 margin_right = 1920.0
-margin_bottom = 19.0
+margin_bottom = 24.0
 size_flags_horizontal = 8
 custom_fonts/font = ExtResource( 1 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
@@ -234,10 +245,10 @@ text = "== Chunk: 0 =="
 align = 2
 
 [node name="ChunkXYZ" type="Label" parent="ChunkInfo"]
-margin_left = 1783.0
-margin_top = 23.0
+margin_left = 1736.0
+margin_top = 28.0
 margin_right = 1920.0
-margin_bottom = 42.0
+margin_bottom = 52.0
 size_flags_horizontal = 8
 custom_fonts/font = ExtResource( 1 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
@@ -245,10 +256,10 @@ text = "XYZ: 0 / 0 / 0"
 align = 2
 
 [node name="BlocksLoaded" type="Label" parent="ChunkInfo"]
-margin_left = 1748.0
-margin_top = 46.0
+margin_left = 1686.0
+margin_top = 56.0
 margin_right = 1920.0
-margin_bottom = 65.0
+margin_bottom = 80.0
 size_flags_horizontal = 8
 custom_fonts/font = ExtResource( 1 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
@@ -256,10 +267,10 @@ text = "Blocks Loaded: 0"
 align = 2
 
 [node name="Blocks" type="Label" parent="ChunkInfo"]
-margin_left = 1772.0
-margin_top = 69.0
+margin_left = 1719.0
+margin_top = 84.0
 margin_right = 1920.0
-margin_bottom = 88.0
+margin_bottom = 108.0
 size_flags_horizontal = 8
 custom_fonts/font = ExtResource( 1 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )

@@ -158,7 +158,7 @@ static func draw_chunk_highlight(node: Entity, color: Color, args := draw_chunk_
 	line.set_material_override(m)
 	line.begin(Mesh.PRIMITIVE_LINES)
 	for point in Core.scripts.chunk.geometry.BOX_HIGHLIGHT_NO_OVERLAP:
-		line.add_vertex(point*Core.scripts.chunk.geometry.CSIZE + (node.get_node("Chunk").translation) + Vector3(0, -1, 0))
+		line.add_vertex(point*Core.scripts.chunk.geometry.CSIZE + (node.get_node("Chunk").translation))
 	line.end()
 # chunk.helper.draw_chunk_highlight ############################################
 
@@ -182,7 +182,7 @@ static func draw_block_highlight(node: Entity, position: Vector3, color: Color, 
 	line.set_material_override(m)
 	line.begin(Mesh.PRIMITIVE_LINES)
 	for point in Core.scripts.chunk.geometry.BOX_HIGHLIGHT:
-		line.add_vertex(point*Core.scripts.chunk.geometry.BSIZE + (node.get_node("Chunk").translation) + position + Vector3(0, -1.0625, 0))
+		line.add_vertex(point*Core.scripts.chunk.geometry.BSIZE + (node.get_node("Chunk").translation) + position + Vector3(7.5, 7.5, 7.5))
 	line.end()
 # ^ chunk.helper.draw_block_highlight ##########################################
 

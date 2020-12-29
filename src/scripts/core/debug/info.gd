@@ -12,12 +12,14 @@ static func player_move_update(hud):
 		if Core.world.has_node("Input/" + player_id):
 			var player = Core.world.get_node("Input/" + str(player_id))
 			
-			var player_pos = player.get_node("Player").translation.floor()
+			var player_pos = player.get_node("Player").translation
 			set_text(hud, "ClientInfo/PlayerXYZ", "XYZ: " + str(player_pos))
 			
 			
 			#var normal = Core.scripts.client.player.interact.get_looking_at_normal(player, OS.get_window_size() / 2)
 			var block_location = Core.scripts.client.player.interact.get_looking_at(player, OS.get_window_size() / 2)# - normal
+			
+			set_text(hud, "ClientInfo/LookingAt", "Looking at: XYZ: " + str(block_location))
 			
 			set_text(hud, "ClientInfo/LookingAtVoxel", "Looking at voxel: XYZ: " + str((block_location-block_location.floor())*16))
 			

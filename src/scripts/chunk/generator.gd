@@ -59,8 +59,7 @@ static func generate_flat_terrain(args := generate_flat_terrain_meta) -> void: #
 		for y in 16:
 			for z in 16:
 				if y == 0 and x == 0:
-					chunk_data[Vector3(x, y, z)] = {}
-					chunk_data[Vector3(x, y, z)].id = 8
+					chunk_data[Vector3(x, y, z)] = 8
 				#elif y == 15:
 					#chunk_data[Vector3(x, y, z)] = 8
 				#elif y > 1:
@@ -134,9 +133,9 @@ static func generate_block(args := generate_block_meta) -> void: ###############
 #					voxel_data[Vector3(x*VSIZE, y*VSIZE, z*VSIZE)] = 1
 #				elif y == 15:
 #					voxel_data[Vector3(x*VSIZE, y*VSIZE, z*VSIZE)] = 1
-	for x in 16:
-		for y in 16:
-			for z in 16:
+	for x in 1:
+		for y in 1:
+			for z in 1:
 				voxel_data[Vector3(x, y, z)] = 1
 	args.data = voxel_data
 # ^ chunk.generator.generate_block #############################################
@@ -162,9 +161,9 @@ const single_voxel_meta := {
 	""",
 		data = Dictionary()}
 static func single_voxel(args := single_voxel_meta) -> void: ###################
-	args.data[Vector3(8, 8, 8)] = {}
-	args.data[Vector3(8, 8, 8)].id = 8
-	args.data[Vector3(8, 8, 8)].voxels = generate_box()
+	args.data[Vector3(0, 0, 0)] = {}
+	args.data[Vector3(0, 0, 0)].id = 8
+	args.data[Vector3(0, 0, 0)].voxels = generate_box()
 # ^ chunk.generator.single_voxel ###############################################
 
 

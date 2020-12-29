@@ -124,10 +124,10 @@ static func compile(node: Entity, args := compile_meta) -> void: ###############
 			#break
 		
 		var surrounding_blocks = Core.run(
-			"chunk.geometry.block_can_be_seen", {
+			"chunk.geometry.can_be_seen", {
 				position = position, 
-				block_data = node.components.mesh.blocks.keys()
-			}).surrounding_blocks
+				voxel_data = node.components.mesh.blocks.keys()
+			}).surrounding_voxels
 		
 		if surrounding_blocks.size() != 6:
 			Core.scripts.chunk.manager.draw_block_highlight(node, position, Color(255, 255, 255))
@@ -173,10 +173,12 @@ const create_cube_mesh_meta := {
 		}
 static func create_cube_mesh(node: Entity, position: Vector3, args := create_cube_mesh_meta) -> Array: 
 	var voxel_data = Dictionary()
+	#voxel_data = Core.run("chunk.generator.generate_box").data
+	#voxel_data = Core.run("chunk.generator.generate_random_terrain").data
 	voxel_data = Core.run("chunk.generator.generate_block").data
 	
 	var mesh_arrays = Core.run("chunk.geometry.create_cube", {
-		position = position+Vector3(0, -1, 0),
+		position = position,
 		voxel_data = voxel_data
 	}).mesh
 	

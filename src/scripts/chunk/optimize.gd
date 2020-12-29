@@ -6,6 +6,49 @@ const meta := {
 	"""
 }
 
+# chunk.optimize.optimize_voxels ###############################################
+const optimize_voxels_meta := {
+	func_name = "chunk.optimize.optimize_voxels",
+	description = """
+		global mesh smoothing
+	""",
+		voxel_data = {},
+		variable_voxel_data = {}}
+static func optimize_voxels(args := optimize_voxels_meta) -> void: #############
+	var removed_voxels = []
+	for pos in args.voxel_data:
+		#if int(pos.y) % 2 == 0 and int(pos.x) % 2 and int(pos.z) % 2:
+		if not pos in removed_voxels:
+			var surrounding_voxels_square = Core.run(
+				"chunk.geometry.can_be_seen", {
+					position = pos, 
+					voxel_data = args.voxel_data,
+					square = true
+				}).surrounding_voxels
+			
+			var surrounding_voxels = Core.run(
+				"chunk.geometry.can_be_seen", {
+					position = pos, 
+					voxel_data = args.voxel_data
+				}).surrounding_voxels
+			
+			if surrounding_voxels.size() != 6:
+				args.variable_voxel_data[pos] = Vector3(0, 0, 0)
+				for side in surrounding_voxels_square:
+					if side.x >= 0 and side.y >= 0 and side.z >= 0:
+						args.variable_voxel_data[pos] += side
+						removed_voxels.append(pos+side)
+			else:
+				removed_voxels.append(pos)
+	
+	for voxel in removed_voxels:
+		if args.variable_voxel_data.has(voxel):
+			Core.emit_signal("msg", "dead", Core.FATAL, args)
+	
+	Core.emit_signal("msg", str(args.variable_voxel_data), Core.DEBUG, args)
+	Core.emit_signal("msg", "Optimization returned " + str(args.variable_voxel_data.size()) + " voxel groups", Core.DEBUG, args)
+# ^ chunk.optimize.optimize_voxels #############################################
+
 # chunk.optimize.optimize_mesh #################################################
 const optimize_mesh_meta := {
 	func_name = "chunk.optimize.optimize_mesh",

@@ -87,7 +87,7 @@ static func wait_for_compile():
 	Core.emit_signal("msg", "Waiting for the chunk to compile...", Core.INFO, meta)
 	var timer = Timer.new()
 	timer.one_shot = true
-	timer.wait_time = 10
+	timer.wait_time = 30
 	Core.add_child(timer)
 	timer.start()
 	yield(timer,"timeout")
