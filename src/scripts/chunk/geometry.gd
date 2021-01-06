@@ -126,30 +126,31 @@ static func create_cube(args := create_cube_meta) -> void: #####################
 #	args.mesh[Mesh.ARRAY_TEX_UV].resize(vplane_uvs.size()*num_of_sides*voxel_data.size())
 #	args.mesh[Mesh.ARRAY_VERTEX].resize(vplane_vertices.size()*num_of_sides*voxel_data.size())
 	
-	for variable_voxel_position in variable_voxel_data:
+	for voxel_position in variable_voxel_data:
 		var uv_offset = Vector2(-0.5, -0.5)
 		if floor(rand_range(0, 3)) == 1:
 			uv_offset = Vector2(0, 0)
 		
 		var surrounding_voxels = Core.run(
 				"chunk.geometry.can_be_seen", {
-					position = variable_voxel_position, 
+					position = voxel_position, 
 					voxel_data = args.voxel_data
 				}).surrounding_voxels
 		
-		var real_block_pos = args.position + Vector3(8, 8, 8)
-		var real_voxel_pos = real_block_pos + variable_voxel_position/16 # * ((Vector3(1, 1, 1)/Vector3(8, 8, 8))/(variable_voxel_data[variable_voxel_position]))
-		var voxel_array = Core.run(
-			"chunk.geometry.create_voxel", {
-				position = real_voxel_pos,
-				uv_offset = uv_offset, 
-				sides_not_to_render = surrounding_voxels,
-				size = variable_voxel_data[variable_voxel_position]
-			}).mesh
-			
-		verts.append_array(voxel_array[Mesh.ARRAY_VERTEX])
-		uvs.append_array(voxel_array[Mesh.ARRAY_TEX_UV])
-		normals.append_array(voxel_array[Mesh.ARRAY_NORMAL])
+		if surrounding_voxels.size() != 6:
+			var real_block_pos = args.position + Vector3(8, 8, 8)
+			var real_voxel_pos = real_block_pos + voxel_position/16 # * ((Vector3(1, 1, 1)/Vector3(8, 8, 8))/(variable_voxel_data[variable_voxel_position]))
+			var voxel_array = Core.run(
+				"chunk.geometry.create_voxel", {
+					position = real_voxel_pos,
+					uv_offset = uv_offset, 
+					sides_not_to_render = surrounding_voxels,
+					size = variable_voxel_data[voxel_position]
+				}).mesh
+				
+			verts.append_array(voxel_array[Mesh.ARRAY_VERTEX])
+			uvs.append_array(voxel_array[Mesh.ARRAY_TEX_UV])
+			normals.append_array(voxel_array[Mesh.ARRAY_NORMAL])
 	
 	args.mesh[Mesh.ARRAY_VERTEX] = verts
 	args.mesh[Mesh.ARRAY_TEX_UV] = uvs
@@ -183,13 +184,13 @@ static func create_voxel(args := create_voxel_meta) -> void: ###################
 	]
 	
 	var xplane_vertices = [ 
-		Vector3(0,  vsize.y/2, -vsize.x/2), # top corner
-		Vector3(0,  vsize.y/2,  vsize.x/2), # right
-		Vector3(0, -vsize.y/2, -vsize.x/2), # down angle
+		Vector3(0,  vsize.y/2, -vsize.z/2), # top corner
+		Vector3(0,  vsize.y/2,  vsize.z/2), # right
+		Vector3(0, -vsize.y/2, -vsize.z/2), # down angle
 		
-		Vector3(0, -vsize.y/2,  vsize.x/2), # bottom corner
-		Vector3(0, -vsize.y/2, -vsize.x/2), # left
-		Vector3(0,  vsize.y/2,  vsize.x/2), # top angle
+		Vector3(0, -vsize.y/2,  vsize.z/2), # bottom corner
+		Vector3(0, -vsize.y/2, -vsize.z/2), # left
+		Vector3(0,  vsize.y/2,  vsize.z/2), # top angle
 	]
 	
 	# yplane data ##########################################################
@@ -248,7 +249,7 @@ static func create_voxel(args := create_voxel_meta) -> void: ###################
 		for i in range(yplane_vertices.size()):
 			normals.append(Vector3(0, 1, 0))
 			uvs.append(yplane_uvs[i] + args.uv_offset)
-			verts.append(yplane_vertices[i] + args.position - Vector3(0, VSIZE/2, 0))
+			verts.append(yplane_vertices[i] + args.position - Vector3(0, vsize.y/2, 0))
 
 	if not args.sides_not_to_render.has(Vector3(0, 1, 0)) or SHOW_UNSEEN_SIDES: # down
 		var i = yplane_vertices.size()
@@ -256,7 +257,7 @@ static func create_voxel(args := create_voxel_meta) -> void: ###################
 			i -= 1
 			normals.append(Vector3(0, -1, 0))
 			uvs.append(yplane_uvs[i] + args.uv_offset)
-			verts.append(yplane_vertices[i] + args.position + Vector3(0, VSIZE/2, 0))
+			verts.append(yplane_vertices[i] + args.position + Vector3(0, vsize.y/2, 0))
 	
 	
 	
@@ -264,7 +265,7 @@ static func create_voxel(args := create_voxel_meta) -> void: ###################
 		for i in range(zplane_vertices.size()):
 			normals.append(Vector3(0, 0, 1))
 			uvs.append(zplane_uvs[i] + args.uv_offset)
-			verts.append(zplane_vertices[i] + args.position + Vector3(0, 0, VSIZE/2))
+			verts.append(zplane_vertices[i] + args.position + Vector3(0, 0, vsize.z/2))
 			
 	
 	if not args.sides_not_to_render.has(Vector3(0, 0, -1)) or SHOW_UNSEEN_SIDES: # east
@@ -273,13 +274,13 @@ static func create_voxel(args := create_voxel_meta) -> void: ###################
 			i -= 1
 			normals.append(Vector3(0, 0, -1))
 			uvs.append(zplane_uvs[i] + args.uv_offset)
-			verts.append(zplane_vertices[i] + args.position - Vector3(0, 0, VSIZE/2))
+			verts.append(zplane_vertices[i] + args.position - Vector3(0, 0, vsize.z/2))
 	
 	if not args.sides_not_to_render.has(Vector3(-1, 0, 0)) or SHOW_UNSEEN_SIDES: # north
 		for i in range(xplane_vertices.size()):
 			normals.append(Vector3(-1, 0, 0))
 			uvs.append(xplane_uvs[i] + args.uv_offset)
-			verts.append(xplane_vertices[i] + args.position - Vector3(VSIZE/2, 0, 0))
+			verts.append(xplane_vertices[i] + args.position - Vector3(vsize.x/2, 0, 0))
 
 	if not args.sides_not_to_render.has(Vector3(1, 0, 0)) or SHOW_UNSEEN_SIDES: # south
 		var i = xplane_vertices.size()
@@ -287,7 +288,7 @@ static func create_voxel(args := create_voxel_meta) -> void: ###################
 			i -= 1
 			normals.append(Vector3(1, 0, 0))
 			uvs.append(xplane_uvs[i] + args.uv_offset)
-			verts.append(xplane_vertices[i] + args.position + Vector3(VSIZE/2, 0, 0))
+			verts.append(xplane_vertices[i] + args.position + Vector3(vsize.x/2, 0, 0))
 	
 	args.mesh[Mesh.ARRAY_VERTEX] = verts
 	args.mesh[Mesh.ARRAY_TEX_UV] = uvs
