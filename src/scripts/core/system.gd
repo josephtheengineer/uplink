@@ -58,7 +58,8 @@ const scripts := {
 		},
 		test = {
 			alias = preload("res://src/scripts/core/test/alias.gd"),
-			floor = preload("res://src/scripts/core/test/floor.gd"),
+			all = preload("res://src/scripts/core/test/all.gd"),
+			block_floor = preload("res://src/scripts/core/test/block_floor.gd"),
 			single_block = preload("res://src/scripts/core/test/single_block.gd")
 		},
 		files = preload("res://src/scripts/core/files.gd"),
@@ -195,36 +196,9 @@ const ALL = 6
 #warning-ignore:unused_signal
 signal system_ready(system, obj)
 #warning-ignore:unused_signal
-signal entity_loaded(entity)
-#warning-ignore:unused_signal
-signal request_entity_unload(entity)
-#warning-ignore:unused_signal
 signal app_ready()
 #warning-ignore:unused_signal
-signal request_scene_load(scene)
-#warning-ignore:unused_signal
-signal scene_loaded(scene)
-#warning-ignore:unused_signal
-signal entity_moved(entity, dir)
-#warning-ignore:unused_signal
-signal entity_used(entity, amount)
-#warning-ignore:unused_signal
 signal msg(message, level, obj)
-#warning-ignore:unused_signal
-signal damage_dealt(target, shooter, weapon_data)
-#warning-ignore:unused_signal
-signal damage_taken(target, shooter)
-#warning-ignore:unused_signal
-signal entity_picked_up(picker, entity)
-#warning-ignore:unused_signal
-signal break_block(block)
-#warning-ignore:unused_signal
-signal place_block(block)
-
-#warning-ignore:unused_signal
-signal gui_loaded(name, entity)
-#warning-ignore:unused_signal
-signal gui_pushed(name, init_param)
 #warning-ignore:unused_signal
 signal system_process_start(script_name)
 #warning-ignore:unused_signal
@@ -241,11 +215,13 @@ onready var client = world.get_node("Client")
 #warning-ignore:unused_class_variable
 onready var server = world.get_node("Server")
 
-var signals = [ "system_ready", "entity_loaded", "request_entity_unload", 
-		"app_ready", "request_scene_load", "scene_loaded", 
-		"entity_moved", "entity_used", "damage_dealt", 
-		"entity_picked_up", "break_block", "place_block", "gui_loaded", 
-		"gui_pushed", "system_process_start", "system_process", "reset"]
+var signals = [ 
+	"system_ready", 
+	"app_ready", 
+	"system_process_start", 
+	"system_process", 
+	"reset"
+]
 
 ################################################################################
 
@@ -291,20 +267,6 @@ func _on_system_ready(system, obj, args := _on_system_ready_meta) -> void: #####
 # ^ core.system._on_system_ready ###############################################
 
 
-# core.system._on_request_entity_unload ########################################
-const _on_request_entity_unload_meta := {
-	
-	func_name = "core.system._on_request_entity_unload",
-	description = """
-		
-	""",
-		}
-func _on_request_entity_unload(entity, args := _on_request_entity_unload_meta) -> void:
-	emit_signal("msg", "Event request_entity_unload called. entity: " 
-		+ str(entity), TRACE, args)
-# ^ core.system._on_request_entity_unload ########################################
-
-
 # core.system._on_app_ready ####################################################
 const _on_app_ready_meta := {
 	func_name = "core.system._on_app_ready",
@@ -315,150 +277,6 @@ const _on_app_ready_meta := {
 func _on_app_ready(args := _on_app_ready_meta) -> void: ########################
 	emit_signal("msg", "Event app_ready called", TRACE, args)
 # ^ core.system._on_app_ready ##################################################
-
-
-# core.system._on_request_scene_load ###########################################
-const _on_request_scene_load_meta := {
-	func_name = "core.system._on_request_scene_load",
-	description = """
-		
-	""",
-		}
-func _on_request_scene_load(scene, args := _on_request_scene_load_meta) -> void: 
-	emit_signal("msg", "Event request_scene_load called. scene: " 
-		+ str(scene), TRACE, args)
-# ^ core.system._on_request_scene_load #########################################
-
-
-# core.system._on_scene_loaded #################################################
-const _on_scene_loaded_meta := {
-	func_name = "core.system._on_scene_loaded",
-	description = """
-		
-	""",
-		}
-func _on_scene_loaded(scene, args := _on_scene_loaded_meta) -> void: ###########
-	emit_signal("msg", "Event scene_loaded called. scene: " + str(scene), 
-		TRACE, args)
-# ^ core.system._on_scene_loaded ###############################################
-
-
-# core.system._on_entity_moved #################################################
-const _on_entity_moved_meta := {
-	func_name = "core.system._on_entity_moved",
-	description = """
-		
-	""",
-		}
-func _on_entity_moved(entity, dir, args := _on_entity_moved_meta) -> void: #####
-	emit_signal("msg", "Event entity_moved called. entity: " + str(entity) 
-		+ ", dir: " + str(dir), TRACE, args)
-# ^ core.system._on_entity_moved ###############################################
-
-
-# core.system._on_entity_used ##################################################
-const _on_entity_used_meta := {
-	func_name = "core.system._on_entity_used",
-	description = """
-		
-	""",
-		}
-func _on_entity_used(entity, amount, args := _on_entity_used_meta) -> void: ####
-	emit_signal("msg", "Event entity_used called. entity: " + str(entity) 
-		+ ", amount: " + str(amount), TRACE, args)
-# ^ core.system._on_entity_used ################################################
-
-
-# core.system._on_damage_dealt #################################################
-const _on_damage_dealt_meta := {
-	func_name = "core.system._on_damage_dealt",
-	description = """
-		
-	""",
-		}
-func _on_damage_dealt(target, shooter, weapon_data, args := _on_damage_dealt_meta) -> void:
-	emit_signal("msg", "Event damage_dealt called. target: " + str(target) 
-		+ ", shooter: " + str(shooter) + ", weapon_data: " 
-		+ str(weapon_data), TRACE, args)
-# ^ core.system._on_damage_dealt ###############################################
-
-
-# core.system._on_damage_taken #################################################
-const _on_damage_taken_meta := {
-	func_name = "core.system._on_damage_taken",
-	description = """
-		
-	""",
-		}
-func _on_damage_taken(target, shooter, args := _on_damage_taken_meta) -> void: #
-	emit_signal("msg", "Event damage_taken called. target: " + str(target) 
-		+ ", shooter: " + str(shooter), TRACE, args)
-# ^ core.system._on_damage_taken ###############################################
-
-
-# core.system._on_entity_picked_up #############################################
-const _on_entity_picked_up_meta := {
-	func_name = "core.system._on_entity_picked_up",
-	description = """
-		
-	""",
-		}
-func _on_entity_picked_up(picker, entity, args := _on_entity_picked_up_meta) -> void: 
-	emit_signal("msg", "Event entity_picked_up called. picker: " 
-		+ str(picker) + ", entity: " + str(entity), TRACE, args)
-# ^ core.system._on_entity_picked_up ###########################################
-
-
-# core.system._on_break_block ##################################################
-const _on_break_block_meta := {
-	func_name = "core.system._on_break_block",
-	description = """
-		
-	""",
-		}
-func _on_break_block(block, args := _on_break_block_meta) -> void: #############
-	emit_signal("msg", "Event break_block called. block: " 
-		+ str(block), TRACE, args)
-# ^ core.system._on_break_block ################################################
-
-
-# core.system._on_place_block ##################################################
-const _on_place_block_meta := {
-	func_name = "core.system._on_place_block",
-	description = """
-		
-	""",
-		}
-func _on_place_block(block, args := _on_place_block_meta) -> void: #############
-	emit_signal("msg", "Event place_block called. block: " + str(block), 
-		TRACE, args)
-# ^ core.system._on_place_block ################################################
-
-
-# core.system._on_gui_loaded ###################################################
-const _on_gui_loaded_meta := {
-	func_name = "core.system._on_gui_loaded",
-	description = """
-		
-	""",
-		}
-func _on_gui_loaded(name, entity, args := _on_gui_loaded_meta) -> void: ########
-	emit_signal("msg", "Event gui_loaded called. name: " + str(name) 
-		+ ", entity: " + str(entity), TRACE, args)
-# ^ core.system._on_gui_loaded #################################################
-
-
-# core.system._on_gui_pushed ###################################################
-const _on_gui_pushed_meta := {
-	func_name = "core.system._on_gui_pushed",
-	description = """
-		
-	""",
-		}
-func _on_gui_pushed(name, init_param, args := _on_gui_pushed_meta) -> void: ####
-	emit_signal("msg", "Event gui_pushed called. name: " + str(name) 
-		+ ", init_param: " + str(init_param), TRACE, args)
-# ^ core.system._on_gui_pushed #################################################
 
 
 # core.system._on_system_process_start #########################################

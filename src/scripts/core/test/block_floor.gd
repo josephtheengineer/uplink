@@ -1,6 +1,6 @@
 #warning-ignore:unused_class_variable
 const meta := {
-	script_name = "core.test.floor",
+	script_name = "core.test.block_floor",
 	type = "process",
 	steps = [
 		"setup_environment",
@@ -22,16 +22,16 @@ const meta := {
 }
 
 
-# core.test.floor.start ########################################################
+# core.test.block_floor.start ########################################################
 const start_meta := {
-	func_name = "core.test.floor.start",
+	func_name = "core.test.block_floor.start",
 	description = """
 		
 	"""
 		}
 static func start(_args := start_meta) -> void: ################################
-	Core.emit_signal("system_process_start", "core.test.floor")
-# ^ core.test.floor.start ######################################################
+	Core.emit_signal("system_process_start", "core.test.block_floor")
+# ^ core.test.block_floor.start ######################################################
 
 
 static func setup_environment():

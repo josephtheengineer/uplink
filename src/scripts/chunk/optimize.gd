@@ -6,6 +6,8 @@ const meta := {
 	"""
 }
 
+const OPTIMIZE = false
+
 # chunk.optimize.optimize_voxels ###############################################
 const optimize_voxels_meta := {
 	func_name = "chunk.optimize.optimize_voxels",
@@ -19,27 +21,30 @@ static func optimize_voxels(args := optimize_voxels_meta) -> void: #############
 	for pos in args.voxel_data:
 		#if int(pos.y) % 2 == 0 and int(pos.x) % 2 and int(pos.z) % 2:
 		if not pos in removed_voxels:
-			var surrounding_voxels_square = Core.run(
-				"chunk.geometry.can_be_seen", {
-					position = pos, 
-					voxel_data = args.voxel_data,
-					square = true
-				}).surrounding_voxels
-			
-			var surrounding_voxels = Core.run(
-				"chunk.geometry.can_be_seen", {
-					position = pos, 
-					voxel_data = args.voxel_data
-				}).surrounding_voxels
-			
-			if surrounding_voxels.size() != 6:
+			if !OPTIMIZE:
 				args.variable_voxel_data[pos] = Vector3(1, 1, 1)
-				for side in surrounding_voxels_square:
-					if side.x >= 0 and side.y >= 0 and side.z >= 0:
-						args.variable_voxel_data[pos] += side
-						removed_voxels.append(pos+side)
 			else:
-				removed_voxels.append(pos)
+				var surrounding_voxels_square = Core.run(
+					"chunk.geometry.can_be_seen", {
+						position = pos, 
+						voxel_data = args.voxel_data,
+						square = true
+					}).surrounding_voxels
+				
+				var surrounding_voxels = Core.run(
+					"chunk.geometry.can_be_seen", {
+						position = pos, 
+						voxel_data = args.voxel_data
+					}).surrounding_voxels
+				
+				if surrounding_voxels.size() != 6:
+					args.variable_voxel_data[pos] = Vector3(1, 1, 1)
+					for side in surrounding_voxels_square:
+						if side.x >= 0 and side.y >= 0 and side.z >= 0:
+							args.variable_voxel_data[pos] += side
+							removed_voxels.append(pos+side)
+				else:
+					removed_voxels.append(pos)
 	
 	for voxel in removed_voxels:
 		if args.variable_voxel_data.has(voxel):
