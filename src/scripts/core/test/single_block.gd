@@ -87,7 +87,7 @@ static func wait_for_compile():
 	Core.emit_signal("msg", "Waiting for the chunk to compile...", Core.INFO, meta)
 	var timer = Timer.new()
 	timer.one_shot = true
-	timer.wait_time = 5
+	timer.wait_time = 10
 	Core.add_child(timer)
 	timer.start()
 	yield(timer,"timeout")
@@ -98,7 +98,9 @@ static func mesh_rendered():
 	Core.emit_signal("system_process", meta, "mesh_rendered", "start")
 	
 	var chunk = Core.world.get_node("Chunk/(0, 0, 0)")
-	if chunk.components.mesh.rendered == true:
+	if !chunk:
+		Core.emit_signal("system_process", meta, "mesh_rendered", "chunk node does not exist")
+	elif chunk.components.mesh.rendered == true:
 		Core.emit_signal("system_process", meta, "mesh_rendered", "success")
 	else:
 		Core.emit_signal("system_process", meta, "mesh_rendered", "chunk mesh is not rendered")
@@ -107,7 +109,9 @@ static func blocks_loaded_count():
 	Core.emit_signal("system_process", meta, "blocks_loaded_count", "start")
 	
 	var chunk = Core.world.get_node("Chunk/(0, 0, 0)")
-	if chunk.components.mesh.blocks_loaded == 1:
+	if !chunk:
+		Core.emit_signal("system_process", meta, "blocks_loaded_count", "chunk node does not exist")
+	elif chunk.components.mesh.blocks_loaded == 1:
 		Core.emit_signal("system_process", meta, "blocks_loaded_count", "success")
 	else:
 		Core.emit_signal("system_process", meta, "blocks_loaded_count", "incorrect number of blocks loaded")
@@ -116,7 +120,9 @@ static func block_data_size():
 	Core.emit_signal("system_process", meta, "block_data_size", "start")
 	
 	var chunk = Core.world.get_node("Chunk/(0, 0, 0)")
-	if chunk.components.mesh.blocks:
+	if !chunk:
+		Core.emit_signal("system_process", meta, "block_data_size", "chunk node does not exist")
+	elif chunk.components.mesh.blocks:
 		if chunk.components.mesh.blocks.size() == 1:
 			Core.emit_signal("system_process", meta, "block_data_size", "success")
 		else:
@@ -128,15 +134,17 @@ static func vertices_size():
 	Core.emit_signal("system_process", meta, "vertices_size", "start")
 	
 	var chunk = Core.world.get_node("Chunk/(0, 0, 0)")
-	
-	var mesh = chunk.get_node("Chunk/MeshInstance").mesh
-	
-	Core.emit_signal("msg", "Verts in block/chunk: " + str(mesh.surface_get_array_len(0)), Core.INFO, meta)
-	
-	if mesh.surface_get_array_len(0) == 36:
-		Core.emit_signal("system_process", meta, "vertices_size", "success")
+	if !chunk:
+		Core.emit_signal("system_process", meta, "spatial_node", "chunk node does not exist")
 	else:
-		Core.emit_signal("system_process", meta, "vertices_size", str(mesh.surface_get_array_len(0)) + " vertices saved when 36 was expected")
+		var mesh = chunk.get_node("Chunk/MeshInstance").mesh
+		
+		Core.emit_signal("msg", "Verts in block/chunk: " + str(mesh.surface_get_array_len(0)), Core.INFO, meta)
+		
+		if mesh.surface_get_array_len(0) == 36:
+			Core.emit_signal("system_process", meta, "vertices_size", "success")
+		else:
+			Core.emit_signal("system_process", meta, "vertices_size", str(mesh.surface_get_array_len(0)) + " vertices saved when 36 was expected")
 
 static func spatial_node():
 	Core.emit_signal("system_process", meta, "spatial_node", "start")
@@ -151,7 +159,9 @@ static func mesh_instance():
 	Core.emit_signal("system_process", meta, "mesh_instance", "start")
 	
 	var chunk = Core.world.get_node("Chunk/(0, 0, 0)")
-	if chunk.has_node("Chunk"):
+	if !chunk:
+		Core.emit_signal("system_process", meta, "mesh_instance", "chunk node does not exist")
+	elif chunk.has_node("Chunk"):
 		if chunk.get_node("Chunk").has_node("MeshInstance"):
 			Core.emit_signal("system_process", meta, "mesh_instance", "success")
 		else:
@@ -163,7 +173,9 @@ static func static_body():
 	Core.emit_signal("system_process", meta, "static_body", "start")
 	
 	var chunk = Core.world.get_node("Chunk/(0, 0, 0)")
-	if chunk.has_node("Chunk"):
+	if !chunk:
+		Core.emit_signal("system_process", meta, "static_body", "chunk node does not exist")
+	elif chunk.has_node("Chunk"):
 		if chunk.get_node("Chunk").has_node("MeshInstance"):
 			if chunk.get_node("Chunk").get_node("MeshInstance").has_node("StaticBody"):
 				Core.emit_signal("system_process", meta, "static_body", "success")
@@ -178,7 +190,9 @@ static func shape():
 	Core.emit_signal("system_process", meta, "shape", "start")
 	
 	var chunk = Core.world.get_node("Chunk/(0, 0, 0)")
-	if chunk.has_node("Chunk"):
+	if !chunk:
+		Core.emit_signal("system_process", meta, "shape", "chunk node does not exist")
+	elif chunk.has_node("Chunk"):
 		if chunk.get_node("Chunk").has_node("MeshInstance"):
 			if chunk.get_node("Chunk/MeshInstance").has_node("StaticBody"):
 				if chunk.get_node("Chunk").get_node("MeshInstance").get_node("StaticBody").has_node("Shape"):

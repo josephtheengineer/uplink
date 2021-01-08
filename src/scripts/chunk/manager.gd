@@ -255,3 +255,15 @@ static func generate_terrain(position: Vector3, args := generate_terrain_meta) -
 	#elif Core.server.data.map.generator.terrain_type == Core.server.GEN_NATURAL:
 	return Core.run("chunk.generator.generate_flat_terrain", {noise=new_noise}).data
 # ^ chunk.helper.generate_terrain ##############################################
+
+
+# chunk.helper.get_node ########################################################
+const get_node_meta := {
+	func_name = "chunk.manager.get_node",
+	description = """
+		
+	""",
+		position = null}
+static func get_node(args := get_node_meta) -> void:
+	Core.world.get_node("Chunk/" + str(args.position))
+# ^ chunk.helper.get_node ##############################################

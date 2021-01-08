@@ -197,6 +197,10 @@ func spawn_player(location: Vector3, username: String, args := spawn_player_meta
 	player.meta.id = username
 	player.position.world = Vector3(location.x, 100, location.z)
 	
+	if Core.world.get_node("Input").has_node(username):
+		Core.emit_signal("msg", "Overwriting existing player " + username, Core.WARN, args)
+		Core.world.get_node("Input/" + username).free()
+	
 	Core.world.get_node("Input").create(player)
 	Core.scripts.client.player.main.attach(Core.world.get_node("Input/" + username))
 # ^ server.system.spawn_player #################################################

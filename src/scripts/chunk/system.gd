@@ -92,7 +92,8 @@ const _reset_meta := {
 		}
 func _reset(args := _reset_meta) -> void: ######################################
 	Core.emit_signal("msg", "Reseting chunk system database...", Core.DEBUG, args)
-	data = DEFAULT_DATA.duplicate()
+	data = DEFAULT_DATA.duplicate(true)
+	#Core.world.get_node("Chunk").data.process.disabled = true
 # ^ chunk.system._reset ########################################################
 
 

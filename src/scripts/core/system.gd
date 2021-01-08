@@ -118,6 +118,7 @@ const scripts := {
 		build_window = preload("res://src/scripts/interface/build_window.gd"),
 		hud = preload("res://src/scripts/interface/hud.gd"),
 		joystick = preload("res://src/scripts/interface/joystick.gd"),
+		status = preload("res://src/scripts/interface/status.gd"),
 		system = preload("res://src/scripts/interface/system.gd"),
 		tile_map = preload("res://src/scripts/interface/tile_map.gd"),
 		toolbox = preload("res://src/scripts/interface/toolbox.gd")
@@ -340,6 +341,8 @@ func _on_system_process(meta_script, step, code, args := _on_system_process_meta
 					emit_signal("msg", "Welcome to Uplink! To start a demo sequence type /demo, or for a list of commands type /help", INFO, args)
 			
 			data.status[meta_script.script_name][step] = code
+			if world.has_node("Interface/Hud/Hud/HorizontalMain/VerticalMain/VerticalCenterContent/LeftPanel/TabContainer/Status"):
+				world.get_node("Interface/Hud/Hud/HorizontalMain/VerticalMain/VerticalCenterContent/LeftPanel/TabContainer/Status").update()
 		_:
 			emit_signal("msg", "\t" + step + " finished with error " + str(code), WARN, args)
 			if num < meta_script.steps.size():
@@ -348,6 +351,8 @@ func _on_system_process(meta_script, step, code, args := _on_system_process_meta
 				emit_signal("msg", "==== " + meta_script.script_name + " Finished ====", INFO, args)
 			
 			data.status[meta_script.script_name][step] = code
+			if world.has_node("Interface/Hud/Hud/HorizontalMain/VerticalMain/VerticalCenterContent/LeftPanel/TabContainer/Status"):
+				world.get_node("Interface/Hud/Hud/HorizontalMain/VerticalMain/VerticalCenterContent/LeftPanel/TabContainer/Status").update()
 # ^ core.system._on_system_process #############################################
 
 

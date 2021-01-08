@@ -45,9 +45,7 @@ func update():
 	status_display.bbcode_text = status
 	scroll_bar.max_value = new_data.split('\n').size() - 15
 	scroll_bar.page = 1
-
-func _on_button_pressed():
-	update()
+	scroll_bar.value = new_data.split('\n').size() - 15
 
 
 func _on_scroll_bar_scrolling():

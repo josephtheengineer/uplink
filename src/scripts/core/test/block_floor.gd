@@ -87,7 +87,7 @@ static func wait_for_compile():
 	Core.emit_signal("msg", "Waiting for the chunk to compile...", Core.INFO, meta)
 	var timer = Timer.new()
 	timer.one_shot = true
-	timer.wait_time = 10
+	timer.wait_time = 15
 	Core.add_child(timer)
 	timer.start()
 	yield(timer,"timeout")
@@ -98,6 +98,8 @@ static func mesh_rendered():
 	Core.emit_signal("system_process", meta, "mesh_rendered", "start")
 	
 	var chunk = Core.world.get_node("Chunk/(0, 0, 0)")
+	if !chunk:
+		Core.emit_signal("system_process", meta, "mesh_rendered", "chunk node does not exist")
 	if chunk.components.mesh.rendered == true:
 		Core.emit_signal("system_process", meta, "mesh_rendered", "success")
 	else:
@@ -125,10 +127,14 @@ static func vertices_size():
 	Core.emit_signal("system_process", meta, "vertices_size", "start")
 	
 	var chunk = Core.world.get_node("Chunk/(0, 0, 0)")
-	if chunk.components.mesh.vertices.size() >= 1:
+	var mesh = chunk.get_node("Chunk/MeshInstance").mesh
+	
+	Core.emit_signal("msg", "Verts in chunk: " + str(mesh.surface_get_array_len(0)), Core.INFO, meta)
+	
+	if mesh.surface_get_array_len(0) == 3060:
 		Core.emit_signal("system_process", meta, "vertices_size", "success")
 	else:
-		Core.emit_signal("system_process", meta, "vertices_size", "no vertices were saved")
+		Core.emit_signal("system_process", meta, "vertices_size", str(mesh.surface_get_array_len(0)) + " vertices saved when 3060 was expected")
 
 static func spatial_node():
 	Core.emit_signal("system_process", meta, "spatial_node", "start")
