@@ -26,14 +26,20 @@ func update():
 			if data[process][step] == 'success':
 				status += '[color=lime]' + data[process][step] + '[/color]\n'
 			else:
-				status += '[color=red]' + data[process][step] + '[/color]\n'
+				var new_step = ""
 				var i = 0
 				while true:
-					i+=12
-					if i < data[process][step].length():
+					for a in 13:
+						if i+a < data[process][step].length():
+							new_step += data[process][step][i+a]
+					if i+13 < data[process][step].length():
 						new_data += '\n'
+						new_step += '-\n'
 					else:
 						break
+					i+=13
+				
+				status += '[color=red]' + new_step + '[/color]\n'
 	
 	display.bbcode_text = new_data
 	status_display.bbcode_text = status
