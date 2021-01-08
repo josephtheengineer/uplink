@@ -50,6 +50,7 @@ const _reset_meta := {
 func _reset(args := _reset_meta) -> void: ######################################
 	Core.emit_signal("msg", "Reseting input system database...", Core.DEBUG, args)
 	data = DEFAULT_DATA.duplicate(true)
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 # input.system._reset ##########################################################
 
 
@@ -217,6 +218,7 @@ const detach_mouse_meta := {
 	""",
 		}
 func detach_mouse(Player: Entity, args := detach_mouse_meta) -> void: ##########
+	Core.emit_signal("msg", "Showing cursor...", Core.DEBUG, args)
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	Player.components.mouse_attached = false
 # ^ input.system.detach_mouse ##################################################
@@ -230,6 +232,7 @@ const attach_mouse_meta := {
 	""",
 		}
 func attach_mouse(Player: Entity, args := attach_mouse_meta) -> void: ##########
+	Core.emit_signal("msg", "Hiding cursor...", Core.DEBUG, args)
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	Player.components.mouse_attached = true
 # ^ input.system.attach_mouse ##################################################
