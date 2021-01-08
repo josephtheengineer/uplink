@@ -110,47 +110,59 @@ const create_cube_meta := {
 		Runs once per block!
 	""",
 		position = null,
-		voxel_data = {},
+		data = {},
 		mesh = []}
 static func create_cube(args := create_cube_meta) -> void: #####################
-	var variable_voxel_data = Core.run("chunk.optimize.optimize_voxels", {voxel_data=args.voxel_data}).variable_voxel_data
 	args.mesh.resize(Mesh.ARRAY_MAX)
-	
+		
 	var verts = PoolVector3Array()
 	var uvs = PoolVector2Array()
 	var normals = PoolVector3Array()
-	#var indices = PoolIntArray()
 	
-#	var num_of_sides = 6
-#	args.mesh[Mesh.ARRAY_NORMAL].resize(num_of_sides*voxel_data.size())
-#	args.mesh[Mesh.ARRAY_TEX_UV].resize(vplane_uvs.size()*num_of_sides*voxel_data.size())
-#	args.mesh[Mesh.ARRAY_VERTEX].resize(vplane_vertices.size()*num_of_sides*voxel_data.size())
-	
-	for voxel_position in variable_voxel_data:
+	if typeof(args.data) == TYPE_INT:
 		var uv_offset = Vector2(-0.5, -0.5)
 		if floor(rand_range(0, 3)) == 1:
 			uv_offset = Vector2(0, 0)
 		
-		var surrounding_voxels = Core.run(
-				"chunk.geometry.can_be_seen", {
-					position = voxel_position, 
-					voxel_data = args.voxel_data
-				}).surrounding_voxels
+		var voxel_array = Core.run(
+			"chunk.geometry.create_voxel", {
+				position = args.position + Vector3(8, 8, 8),
+				uv_offset = uv_offset, 
+				sides_not_to_render = Array(),
+				size = Vector3(15, 15, 15)
+			}).mesh
 		
-		if surrounding_voxels.size() != 6:
-			var real_block_pos = args.position + Vector3(8, 8, 8)
-			var real_voxel_pos = real_block_pos + voxel_position/16 # * ((Vector3(1, 1, 1)/Vector3(8, 8, 8))/(variable_voxel_data[variable_voxel_position]))
-			var voxel_array = Core.run(
-				"chunk.geometry.create_voxel", {
-					position = real_voxel_pos,
-					uv_offset = uv_offset, 
-					sides_not_to_render = surrounding_voxels,
-					size = variable_voxel_data[voxel_position]
-				}).mesh
-				
-			verts.append_array(voxel_array[Mesh.ARRAY_VERTEX])
-			uvs.append_array(voxel_array[Mesh.ARRAY_TEX_UV])
-			normals.append_array(voxel_array[Mesh.ARRAY_NORMAL])
+		verts.append_array(voxel_array[Mesh.ARRAY_VERTEX])
+		uvs.append_array(voxel_array[Mesh.ARRAY_TEX_UV])
+		normals.append_array(voxel_array[Mesh.ARRAY_NORMAL])
+	else:
+		var variable_voxel_data = Core.run("chunk.optimize.optimize_voxels", {voxel_data=args.data}).variable_voxel_data
+		
+		for voxel_position in variable_voxel_data:
+			var uv_offset = Vector2(-0.5, -0.5)
+			if floor(rand_range(0, 3)) == 1:
+				uv_offset = Vector2(0, 0)
+			
+			var surrounding_voxels = Core.run(
+					"chunk.geometry.can_be_seen", {
+						position = voxel_position, 
+						voxel_data = args.data
+					}).surrounding_voxels
+			
+			if surrounding_voxels.size() != 6:
+				var real_block_pos = args.position + Vector3(8, 8, 8)
+				var real_voxel_pos = real_block_pos + voxel_position/16 # * ((Vector3(1, 1, 1)/Vector3(8, 8, 8))/(variable_voxel_data[variable_voxel_position]))
+				var voxel_array = Core.run(
+					"chunk.geometry.create_voxel", {
+						position = real_voxel_pos,
+						uv_offset = uv_offset, 
+						sides_not_to_render = surrounding_voxels,
+						size = variable_voxel_data[voxel_position]
+					}).mesh
+					
+				verts.append_array(voxel_array[Mesh.ARRAY_VERTEX])
+				uvs.append_array(voxel_array[Mesh.ARRAY_TEX_UV])
+				normals.append_array(voxel_array[Mesh.ARRAY_NORMAL])
 	
 	args.mesh[Mesh.ARRAY_VERTEX] = verts
 	args.mesh[Mesh.ARRAY_TEX_UV] = uvs

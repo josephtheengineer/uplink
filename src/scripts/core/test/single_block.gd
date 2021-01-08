@@ -138,13 +138,15 @@ static func vertices_size():
 		Core.emit_signal("system_process", meta, "spatial_node", "chunk node does not exist")
 	else:
 		var mesh = chunk.get_node("Chunk/MeshInstance").mesh
-		
-		Core.emit_signal("msg", "Verts in block/chunk: " + str(mesh.surface_get_array_len(0)), Core.INFO, meta)
-		
-		if mesh.surface_get_array_len(0) == 36:
-			Core.emit_signal("system_process", meta, "vertices_size", "success")
+		if !mesh:
+			Core.emit_signal("system_process", meta, "vertices_size", "mesh node does not exist")
 		else:
-			Core.emit_signal("system_process", meta, "vertices_size", str(mesh.surface_get_array_len(0)) + " vertices saved when 36 was expected")
+			Core.emit_signal("msg", "Verts in block/chunk: " + str(mesh.surface_get_array_len(0)), Core.INFO, meta)
+			
+			if mesh.surface_get_array_len(0) == 36:
+				Core.emit_signal("system_process", meta, "vertices_size", "success")
+			else:
+				Core.emit_signal("system_process", meta, "vertices_size", str(mesh.surface_get_array_len(0)) + " vertices saved when 36 was expected")
 
 static func spatial_node():
 	Core.emit_signal("system_process", meta, "spatial_node", "start")

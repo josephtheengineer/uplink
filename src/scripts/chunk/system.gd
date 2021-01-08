@@ -14,6 +14,14 @@ const DEFAULT_DATA := {
 		chunk_addresses = Dictionary(),
 		chunk_metadata = Array()
 	},
+	generator = {
+		chunk = {
+			cmd = "chunk.generator.natural_terrain"
+		},
+		block = {
+			cmd = "chunk.generator.block"
+		}
+	},
 	discover = {
 		busy = false,
 		thread = null

@@ -175,11 +175,11 @@ static func create_cube_mesh(node: Entity, position: Vector3, args := create_cub
 	var voxel_data = Dictionary()
 	#voxel_data = Core.run("chunk.generator.generate_box").data
 	#voxel_data = Core.run("chunk.generator.generate_random_terrain").data
-	voxel_data = Core.run("chunk.generator.generate_block").data
+	voxel_data = node.components.mesh.blocks[position]
 	
 	var mesh_arrays = Core.run("chunk.geometry.create_cube", {
 		position = position,
-		voxel_data = voxel_data
+		data = voxel_data
 	}).mesh
 	
 	return mesh_arrays

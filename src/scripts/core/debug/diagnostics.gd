@@ -62,83 +62,83 @@ static func _update_terminal(args := _update_terminal_meta) -> void: ###########
 	#timer.wait_time = rand_range(0, 1)
 	match Core.client.data.diagnostics.progress:
 		0:
-			Core.emit_signal("msg", "Welcome to " + Core.client.data.version, Core.DEBUG, args)
+			Core.emit_signal("msg", "Welcome to " + Core.client.data.version, Core.TRACE, args)
 		1:
-			Core.emit_signal("msg", "Please submit bug reports to joseph@theengineer.life or #dev at discord.me/EdenUniverseBuilder", Core.DEBUG, args)
+			Core.emit_signal("msg", "Please submit bug reports to joseph@theengineer.life or #dev at discord.me/EdenUniverseBuilder", Core.TRACE, args)
 		2:
-			Core.emit_signal("msg", "Starting diagnostics...", Core.DEBUG, args)
+			Core.emit_signal("msg", "Starting diagnostics...", Core.TRACE, args)
 		3:
-			Core.emit_signal("msg", "Window Size: " + str(OS.window_size), Core.DEBUG, args)
+			Core.emit_signal("msg", "Window Size: " + str(OS.window_size), Core.TRACE, args)
 		4:
-			Core.emit_signal("msg", "Threads Enabled: " + str(OS.can_use_threads()), Core.DEBUG, args)
+			Core.emit_signal("msg", "Threads Enabled: " + str(OS.can_use_threads()), Core.TRACE, args)
 		5:
-			Core.emit_signal("msg", "Video Driver: " + str(OS.get_current_video_driver()), Core.DEBUG, args)
+			Core.emit_signal("msg", "Video Driver: " + str(OS.get_current_video_driver()), Core.TRACE, args)
 		6:
-			Core.emit_signal("msg", "Datetime: " + str(OS.get_datetime(true)), Core.DEBUG, args)
+			Core.emit_signal("msg", "Datetime: " + str(OS.get_datetime(true)), Core.TRACE, args)
 		7:
-			Core.emit_signal("msg", "Dynamic Memory Usage: " + str(OS.get_dynamic_memory_usage()), Core.DEBUG, args)
+			Core.emit_signal("msg", "Dynamic Memory Usage: " + str(OS.get_dynamic_memory_usage()), Core.TRACE, args)
 		8:
-			Core.emit_signal("msg", "Executable Path: " + str(OS.get_executable_path()), Core.DEBUG, args)
+			Core.emit_signal("msg", "Executable Path: " + str(OS.get_executable_path()), Core.TRACE, args)
 		9:
-			Core.emit_signal("msg", "Locale: " + str(OS.get_locale()), Core.DEBUG, args)
+			Core.emit_signal("msg", "Locale: " + str(OS.get_locale()), Core.TRACE, args)
 		10:
-			Core.emit_signal("msg", "Device Model: " + str(OS.get_model_name()), Core.DEBUG, args)
+			Core.emit_signal("msg", "Device Model: " + str(OS.get_model_name()), Core.TRACE, args)
 		11:
-			Core.emit_signal("msg", "OS Name: " + str(OS.get_name()), Core.DEBUG, args)
+			Core.emit_signal("msg", "OS Name: " + str(OS.get_name()), Core.TRACE, args)
 		12:
-			Core.emit_signal("msg", "Power State: " + str(OS.get_power_state()), Core.DEBUG, args)
+			Core.emit_signal("msg", "Power State: " + str(OS.get_power_state()), Core.TRACE, args)
 		13:
-			Core.emit_signal("msg", "Power Percent Left: " + str(OS.get_power_percent_left()), Core.DEBUG, args)
+			Core.emit_signal("msg", "Power Percent Left: " + str(OS.get_power_percent_left()), Core.TRACE, args)
 		14:
-			Core.emit_signal("msg", "Power Seconds Left: " + str(OS.get_power_seconds_left()), Core.DEBUG, args)
+			Core.emit_signal("msg", "Power Seconds Left: " + str(OS.get_power_seconds_left()), Core.TRACE, args)
 		15:
-			Core.emit_signal("msg", "Process ID: " + str(OS.get_process_id()), Core.DEBUG, args)
+			Core.emit_signal("msg", "Process ID: " + str(OS.get_process_id()), Core.TRACE, args)
 		16:
-			Core.emit_signal("msg", "Processor Count: " + str(OS.get_processor_count()), Core.DEBUG, args)
+			Core.emit_signal("msg", "Processor Count: " + str(OS.get_processor_count()), Core.TRACE, args)
 		17:
-			Core.emit_signal("msg", "Screen Count: " + str(OS.get_screen_count()), Core.DEBUG, args)
+			Core.emit_signal("msg", "Screen Count: " + str(OS.get_screen_count()), Core.TRACE, args)
 		18:
-			Core.emit_signal("msg", "Screen DPI: " + str(OS.get_screen_dpi()), Core.DEBUG, args)
+			Core.emit_signal("msg", "Screen DPI: " + str(OS.get_screen_dpi()), Core.TRACE, args)
 		19:
-			Core.emit_signal("msg", "Screen Position: " + str(OS.get_screen_position()), Core.DEBUG, args)
+			Core.emit_signal("msg", "Screen Position: " + str(OS.get_screen_position()), Core.TRACE, args)
 		20:
-			Core.emit_signal("msg", "Screen Size: " + str(OS.get_screen_size()), Core.DEBUG, args)
+			Core.emit_signal("msg", "Screen Size: " + str(OS.get_screen_size()), Core.TRACE, args)
 		21:
-			Core.emit_signal("msg", "Static Memory Peak Usage: " + str(OS.get_static_memory_peak_usage()), Core.DEBUG, args)
+			Core.emit_signal("msg", "Static Memory Peak Usage: " + str(OS.get_static_memory_peak_usage()), Core.TRACE, args)
 		22:
-			Core.emit_signal("msg", "Static Memory Usage: " + str(OS.get_static_memory_usage()), Core.DEBUG, args)
+			Core.emit_signal("msg", "Static Memory Usage: " + str(OS.get_static_memory_usage()), Core.TRACE, args)
 		23:
-			Core.emit_signal("msg", "System Time: " + str(OS.get_system_time_secs()), Core.DEBUG, args)
+			Core.emit_signal("msg", "System Time: " + str(OS.get_system_time_secs()), Core.TRACE, args)
 		24:
-			Core.emit_signal("msg", "Ticks (msec): " + str(OS.get_ticks_msec()), Core.DEBUG, args)
+			Core.emit_signal("msg", "Ticks (msec): " + str(OS.get_ticks_msec()), Core.TRACE, args)
 		25:
-			Core.emit_signal("msg", "OS Time: " + str(OS.get_time()), Core.DEBUG, args)
+			Core.emit_signal("msg", "OS Time: " + str(OS.get_time()), Core.TRACE, args)
 		26:
-			Core.emit_signal("msg", "Time Zone: " + str(OS.get_time_zone_info()), Core.DEBUG, args)
+			Core.emit_signal("msg", "Time Zone: " + str(OS.get_time_zone_info()), Core.TRACE, args)
 		27:
-			Core.emit_signal("msg", "Unique ID: " + str(OS.get_unique_id()), Core.DEBUG, args)
+			Core.emit_signal("msg", "Unique ID: " + str(OS.get_unique_id()), Core.TRACE, args)
 		28:
-			Core.emit_signal("msg", "User Data Directory: " + str(OS.get_user_data_dir()), Core.DEBUG, args)
+			Core.emit_signal("msg", "User Data Directory: " + str(OS.get_user_data_dir()), Core.TRACE, args)
 		29:
-			Core.emit_signal("msg", "Video Driver: " + str(OS.get_video_driver_name(OS.get_video_driver_count())), Core.DEBUG, args)
+			Core.emit_signal("msg", "Video Driver: " + str(OS.get_video_driver_name(OS.get_video_driver_count())), Core.TRACE, args)
 		30:
-			Core.emit_signal("msg", "Virtual Keyboard Height: " + str(OS.get_virtual_keyboard_height()), Core.DEBUG, args)
+			Core.emit_signal("msg", "Virtual Keyboard Height: " + str(OS.get_virtual_keyboard_height()), Core.TRACE, args)
 		31:
-			Core.emit_signal("msg", "Window Safe Area: " + str(OS.get_window_safe_area()), Core.DEBUG, args)
+			Core.emit_signal("msg", "Window Safe Area: " + str(OS.get_window_safe_area()), Core.TRACE, args)
 		32:
-			Core.emit_signal("msg", "Is Debug Feature: " + str(OS.has_feature("debug")), Core.DEBUG, args)
+			Core.emit_signal("msg", "Is Debug Feature: " + str(OS.has_feature("debug")), Core.TRACE, args)
 		33:
-			Core.emit_signal("msg", "Has Touchscreen: " + str(OS.has_touchscreen_ui_hint()), Core.DEBUG, args)
+			Core.emit_signal("msg", "Has Touchscreen: " + str(OS.has_touchscreen_ui_hint()), Core.TRACE, args)
 		34:
-			Core.emit_signal("msg", "Has Virtual Keyboard: " + str(OS.has_virtual_keyboard()), Core.DEBUG, args)
+			Core.emit_signal("msg", "Has Virtual Keyboard: " + str(OS.has_virtual_keyboard()), Core.TRACE, args)
 		35:
-			Core.emit_signal("msg", "Is Debug Build: " + str(OS.is_debug_build()), Core.DEBUG, args)
+			Core.emit_signal("msg", "Is Debug Build: " + str(OS.is_debug_build()), Core.TRACE, args)
 		36:
-			Core.emit_signal("msg", "Is Ok Left and Cancel Right: " + str(OS.is_ok_left_and_cancel_right()), Core.DEBUG, args)
+			Core.emit_signal("msg", "Is Ok Left and Cancel Right: " + str(OS.is_ok_left_and_cancel_right()), Core.TRACE, args)
 		37:
-			Core.emit_signal("msg", "Is Userfs Persistent: " + str(OS.is_userfs_persistent()), Core.DEBUG, args)
+			Core.emit_signal("msg", "Is Userfs Persistent: " + str(OS.is_userfs_persistent()), Core.TRACE, args)
 		38:
-			Core.emit_signal("msg", "Is Window Always on Top: " + str(OS.is_window_always_on_top()), Core.DEBUG, args)
+			Core.emit_signal("msg", "Is Window Always on Top: " + str(OS.is_window_always_on_top()), Core.TRACE, args)
 		39:
 			Core.emit_signal(args.signal_link, args.meta_data, args.name, "success")
 			#show_text(id, components, "Type '" + keyword +"' to continue: ")

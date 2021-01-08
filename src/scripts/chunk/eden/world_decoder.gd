@@ -203,7 +203,7 @@ static func get_chunk_data(args := get_chunk_data_meta) -> void: ###############
 		args.error = "Invaild world data!"
 		return
 	if !map.chunk_metadata.has(args.location):
-		Core.emit_signal("msg", "Chunk data does not exist! " + str(args.location), Core.TRACE, args);
+		#Core.emit_signal("msg", "Chunk data does not exist! " + str(args.location), Core.TRACE, args);
 		args.error = "Chunk data does not exist!"
 		return
 	

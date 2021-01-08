@@ -59,10 +59,10 @@ static func send(args := send_meta) -> void: ###################################
 		
 		# Prevent stack overflow
 		if args.meta.script_name != "core.debug.msg":
-			Core.emit_signal("msg", "Message sent without a function name", Core.WARN, args)
+			Core.emit_signal("msg", "Message sent without a function name", Core.TRACE, args)
 		func_path = args.meta.script_name + ".n/a"
 	else:
-		Core.emit_signal("msg", "Message sent without a script path", Core.ERROR, args)
+		Core.emit_signal("msg", "Message sent without a script path", Core.TRACE, args)
 		func_path = "n/a"
 	
 	if args.level < Core.ALL:

@@ -73,7 +73,7 @@ static func create_chunk(position: Vector3, args := create_chunk_meta) -> bool:
 	Core.world.get_node("Chunk").create(create_m)
 	
 	if !chunk_data:
-		Core.emit_signal("msg", "Could not generate or find chunk data for " + str(position), Core.DEBUG, args)
+		#Core.emit_signal("msg", "Could not generate or find chunk data for " + str(position), Core.DEBUG, args)
 		return false
 	
 	return true
@@ -242,7 +242,7 @@ const generate_terrain_meta := {
 	""",
 		}
 static func generate_terrain(position: Vector3, args := generate_terrain_meta) -> Dictionary:
-	var new_noise = Core.run("chunk.generator.generate_noise").noise
+	var new_noise = Core.run("chunk.generator.noise").noise
 	
 	if Core.server.data.map.generator.single_voxel:
 		if position.x == 0 and position.y == 0 and position.z == 0:
@@ -251,9 +251,9 @@ static func generate_terrain(position: Vector3, args := generate_terrain_meta) -
 			return Dictionary()
 	
 	if Core.server.data.map.generator.terrain_type == Core.server.GEN_FLAT:
-		return Core.run("chunk.generator.generate_flat_terrain").data
+		return Core.run("chunk.generator.flat_terrain").data
 	#elif Core.server.data.map.generator.terrain_type == Core.server.GEN_NATURAL:
-	return Core.run("chunk.generator.generate_flat_terrain", {noise=new_noise}).data
+	return Core.run("chunk.generator.flat_terrain", {noise=new_noise}).data
 # ^ chunk.helper.generate_terrain ##############################################
 
 

@@ -29,15 +29,15 @@ func update():
 				var new_step = ""
 				var i = 0
 				while true:
-					for a in 13:
+					for a in 9:
 						if i+a < data[process][step].length():
 							new_step += data[process][step][i+a]
-					if i+13 < data[process][step].length():
+					if i+9 < data[process][step].length():
 						new_data += '\n'
 						new_step += '-\n'
 					else:
 						break
-					i+=13
+					i+=9
 				
 				status += '[color=red]' + new_step + '[/color]\n'
 	
