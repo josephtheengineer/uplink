@@ -1,14 +1,25 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://aux/assets/fonts/body.tres" type="DynamicFont" id=1]
+[ext_resource path="res://src/scripts/interface/status.gd" type="Script" id=2]
+[ext_resource path="res://aux/assets/fonts/header.tres" type="DynamicFont" id=3]
 
 [node name="Status" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+margin_left = 18.0
+margin_top = 38.0
+margin_right = -16.0
+margin_bottom = -14.0
+mouse_filter = 1
 size_flags_horizontal = 3
 size_flags_vertical = 3
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBox" type="VBoxContainer" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
 size_flags_horizontal = 3
@@ -17,20 +28,63 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Item" type="HBoxContainer" parent="VBoxContainer"]
-margin_right = 1920.0
-margin_bottom = 100.0
-rect_min_size = Vector2( 0, 100 )
+[node name="Item" type="HBoxContainer" parent="VBox"]
+margin_right = 1886.0
+margin_bottom = 50.0
+rect_min_size = Vector2( 0, 20 )
 size_flags_horizontal = 3
 
-[node name="Label" type="Label" parent="VBoxContainer/Item"]
-margin_top = 40.0
-margin_right = 1920.0
-margin_bottom = 59.0
+[node name="Label" type="Label" parent="VBox/Item"]
+margin_top = 17.0
+margin_right = 1682.0
+margin_bottom = 33.0
 size_flags_horizontal = 3
 size_flags_vertical = 6
-custom_fonts/font = ExtResource( 1 )
-text = "Test"
+custom_fonts/font = ExtResource( 3 )
+text = "Core Process Status "
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Button" type="Button" parent="VBox/Item"]
+margin_left = 1686.0
+margin_right = 1886.0
+margin_bottom = 50.0
+rect_min_size = Vector2( 200, 50 )
+text = "Update"
+
+[node name="HBox" type="HBoxContainer" parent="VBox"]
+margin_top = 54.0
+margin_right = 1886.0
+margin_bottom = 1028.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Display" type="RichTextLabel" parent="VBox/HBox"]
+margin_right = 1716.0
+margin_bottom = 974.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/normal_font = ExtResource( 1 )
+bbcode_enabled = true
+tab_size = 8
+scroll_active = false
+
+[node name="Status" type="RichTextLabel" parent="VBox/HBox"]
+margin_left = 1720.0
+margin_right = 1870.0
+margin_bottom = 974.0
+rect_min_size = Vector2( 150, 0 )
+size_flags_vertical = 3
+custom_fonts/normal_font = ExtResource( 1 )
+bbcode_enabled = true
+tab_size = 8
+scroll_active = false
+
+[node name="VScrollBar" type="VScrollBar" parent="VBox/HBox"]
+margin_left = 1874.0
+margin_right = 1886.0
+margin_bottom = 974.0
+max_value = 0.0
+[connection signal="pressed" from="VBox/Item/Button" to="." method="_on_button_pressed"]
+[connection signal="scrolling" from="VBox/HBox/VScrollBar" to="." method="_on_scroll_bar_scrolling"]

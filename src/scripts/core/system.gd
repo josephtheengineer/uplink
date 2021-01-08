@@ -180,7 +180,9 @@ const scenes = {
 #}
 #warning-ignore:unused_class_variable
 var data := {
-	
+	status = {
+		#process_path = code
+	}
 }
 
 const FATAL = 0
@@ -327,17 +329,25 @@ func _on_system_process(meta_script, step, code, args := _on_system_process_meta
 	match code:
 		"start":
 			emit_signal("msg", "\t" + meta_script.steps[num-1] + ": ", INFO, args)
+			data.status[meta_script.script_name] = {}
 		"success":
 			if num < meta_script.steps.size():
 				script.call(meta_script.steps[num])
 			else:
 				emit_signal("msg", "==== " + meta_script.script_name + " Finished ====", INFO, args)
+				
 				if meta_script.script_name == "client.bootup":
 					emit_signal("msg", "Welcome to Uplink! To start a demo sequence type /demo, or for a list of commands type /help", INFO, args)
+			
+			data.status[meta_script.script_name][step] = code
 		_:
 			emit_signal("msg", "\t" + step + " finished with error " + str(code), WARN, args)
 			if num < meta_script.steps.size():
 				script.call(meta_script.steps[num])
+			else:
+				emit_signal("msg", "==== " + meta_script.script_name + " Finished ====", INFO, args)
+			
+			data.status[meta_script.script_name][step] = code
 # ^ core.system._on_system_process #############################################
 
 
