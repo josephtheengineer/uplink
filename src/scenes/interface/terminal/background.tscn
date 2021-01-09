@@ -16,6 +16,7 @@ font_data = ExtResource( 1 )
 [node name="Background" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+mouse_filter = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 __meta__ = {
@@ -23,8 +24,10 @@ __meta__ = {
 }
 
 [node name="ColorRect" type="ColorRect" parent="."]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
+mouse_filter = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 color = Color( 0.054902, 0.0941176, 0.129412, 1 )
@@ -37,6 +40,7 @@ anchor_left = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = -787.0
+mouse_filter = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 __meta__ = {
@@ -46,6 +50,7 @@ __meta__ = {
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
 margin_right = 787.0
 margin_bottom = 230.0
+mouse_filter = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 __meta__ = {
@@ -55,6 +60,7 @@ __meta__ = {
 [node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
 margin_right = 203.0
 margin_bottom = 200.0
+mouse_filter = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0
 __meta__ = {
@@ -62,6 +68,7 @@ __meta__ = {
 }
 
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer/VBoxContainer"]
+modulate = Color( 1, 1, 1, 0.478431 )
 margin_right = 203.0
 margin_bottom = 200.0
 size_flags_horizontal = 3
@@ -75,6 +82,7 @@ __meta__ = {
 }
 
 [node name="Label2" type="Label" parent="VBoxContainer/HBoxContainer"]
+modulate = Color( 1, 1, 1, 0.478431 )
 margin_left = 207.0
 margin_right = 763.0
 margin_bottom = 230.0
@@ -93,11 +101,13 @@ margin_left = 767.0
 margin_right = 787.0
 margin_bottom = 230.0
 rect_min_size = Vector2( 20, 0 )
+mouse_filter = 2
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
 margin_top = 234.0
 margin_right = 787.0
 margin_bottom = 464.0
+mouse_filter = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 __meta__ = {
@@ -107,6 +117,7 @@ __meta__ = {
 [node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer2"]
 margin_right = 203.0
 margin_bottom = 200.0
+mouse_filter = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0
 __meta__ = {
@@ -114,6 +125,7 @@ __meta__ = {
 }
 
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer2/VBoxContainer"]
+modulate = Color( 1, 1, 1, 0.478431 )
 margin_right = 203.0
 margin_bottom = 200.0
 size_flags_horizontal = 3
@@ -127,6 +139,7 @@ __meta__ = {
 }
 
 [node name="Label2" type="Label" parent="VBoxContainer/HBoxContainer2"]
+modulate = Color( 1, 1, 1, 0.478431 )
 margin_left = 207.0
 margin_right = 763.0
 margin_bottom = 230.0
@@ -145,11 +158,13 @@ margin_left = 767.0
 margin_right = 787.0
 margin_bottom = 230.0
 rect_min_size = Vector2( 20, 0 )
+mouse_filter = 2
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer"]
 margin_top = 468.0
 margin_right = 787.0
 margin_bottom = 698.0
+mouse_filter = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 __meta__ = {
@@ -159,6 +174,7 @@ __meta__ = {
 [node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer3"]
 margin_right = 203.0
 margin_bottom = 200.0
+mouse_filter = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0
 __meta__ = {
@@ -166,6 +182,7 @@ __meta__ = {
 }
 
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer3/VBoxContainer"]
+modulate = Color( 1, 1, 1, 0.478431 )
 margin_right = 203.0
 margin_bottom = 200.0
 size_flags_horizontal = 3
@@ -178,6 +195,7 @@ __meta__ = {
 }
 
 [node name="Label2" type="Label" parent="VBoxContainer/HBoxContainer3"]
+modulate = Color( 1, 1, 1, 0.478431 )
 margin_left = 207.0
 margin_right = 763.0
 margin_bottom = 230.0
@@ -196,11 +214,13 @@ margin_left = 767.0
 margin_right = 787.0
 margin_bottom = 230.0
 rect_min_size = Vector2( 20, 0 )
+mouse_filter = 2
 
 [node name="HBoxContainer4" type="HBoxContainer" parent="VBoxContainer"]
 margin_top = 702.0
 margin_right = 787.0
 margin_bottom = 932.0
+mouse_filter = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 __meta__ = {
@@ -210,6 +230,7 @@ __meta__ = {
 [node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer4"]
 margin_right = 203.0
 margin_bottom = 200.0
+mouse_filter = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0
 __meta__ = {
@@ -217,6 +238,7 @@ __meta__ = {
 }
 
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer4/VBoxContainer"]
+modulate = Color( 1, 1, 1, 0.478431 )
 margin_right = 203.0
 margin_bottom = 200.0
 size_flags_horizontal = 3
@@ -230,6 +252,7 @@ __meta__ = {
 }
 
 [node name="Label2" type="Label" parent="VBoxContainer/HBoxContainer4"]
+modulate = Color( 1, 1, 1, 0.478431 )
 margin_left = 207.0
 margin_right = 763.0
 margin_bottom = 230.0
@@ -248,11 +271,13 @@ margin_left = 767.0
 margin_right = 787.0
 margin_bottom = 230.0
 rect_min_size = Vector2( 20, 0 )
+mouse_filter = 2
 
 [node name="HBoxContainer5" type="HBoxContainer" parent="VBoxContainer"]
 margin_top = 936.0
 margin_right = 787.0
 margin_bottom = 1166.0
+mouse_filter = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 __meta__ = {
@@ -262,6 +287,7 @@ __meta__ = {
 [node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer5"]
 margin_right = 203.0
 margin_bottom = 200.0
+mouse_filter = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0
 __meta__ = {
@@ -269,6 +295,7 @@ __meta__ = {
 }
 
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5/VBoxContainer"]
+modulate = Color( 1, 1, 1, 0.478431 )
 margin_right = 203.0
 margin_bottom = 200.0
 size_flags_horizontal = 3
@@ -282,6 +309,7 @@ __meta__ = {
 }
 
 [node name="Label2" type="Label" parent="VBoxContainer/HBoxContainer5"]
+modulate = Color( 1, 1, 1, 0.478431 )
 margin_left = 207.0
 margin_right = 763.0
 margin_bottom = 230.0
@@ -300,3 +328,4 @@ margin_left = 767.0
 margin_right = 787.0
 margin_bottom = 230.0
 rect_min_size = Vector2( 20, 0 )
+mouse_filter = 2

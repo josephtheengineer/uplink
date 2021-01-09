@@ -118,6 +118,10 @@ const scripts := {
 		build_window = preload("res://src/scripts/interface/build_window.gd"),
 		hud = preload("res://src/scripts/interface/hud.gd"),
 		joystick = preload("res://src/scripts/interface/joystick.gd"),
+		eden1 = {
+			background = preload("res://src/scripts/interface/eden1/background.gd"),
+			foreground = preload("res://src/scripts/interface/eden1/foreground.gd")
+		},
 		status = preload("res://src/scripts/interface/status.gd"),
 		system = preload("res://src/scripts/interface/system.gd"),
 		tile_map = preload("res://src/scripts/interface/tile_map.gd"),
@@ -155,7 +159,7 @@ const scenes = {
 		},
 		main_menu = {
 			dot = preload("res://src/scenes/interface/main_menu/dot.tscn"),
-			main_menu = preload("res://src/scenes/interface/main_menu/main_menu.tscn"),
+			uplink = preload("res://src/scenes/interface/main_menu/uplink.tscn"),
 			new_world_panel = preload("res://src/scenes/interface/main_menu/new_world_panel.tscn")
 		},
 		terminal = {
