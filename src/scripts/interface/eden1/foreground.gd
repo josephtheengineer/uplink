@@ -27,3 +27,53 @@ func _on_create_button_down():
 func _on_create_button_up():
 	var button: TextureButton = get_node("HBoxTop/Center2/Create")
 	button.rect_min_size = button.rect_min_size + Vector2(20, 20)
+
+
+func _on_upload_button_down():
+	var button: TextureButton = get_node("HBoxBottom/Center/Upload")
+	button.rect_min_size = button.rect_min_size - Vector2(20, 20)
+
+
+func _on_upload_button_up():
+	var button: TextureButton = get_node("HBoxBottom/Center/Upload")
+	button.rect_min_size = button.rect_min_size + Vector2(20, 20)
+
+
+func _on_option_button_down():
+	var button: TextureButton = get_node("HBoxBottom/Center2/Option")
+	button.rect_min_size = button.rect_min_size - Vector2(20, 20)
+
+
+func _on_option_button_up():
+	var button: TextureButton = get_node("HBoxBottom/Center2/Option")
+	button.rect_min_size = button.rect_min_size + Vector2(20, 20)
+
+
+func _on_download_button_down():
+	var button: TextureButton = get_node("HBoxBottom/Center3/Download")
+	button.rect_min_size = button.rect_min_size - Vector2(20, 20)
+
+
+func _on_download_button_up():
+	var button: TextureButton = get_node("HBoxBottom/Center3/Download")
+	button.rect_min_size = button.rect_min_size + Vector2(20, 20)
+
+
+func _on_left_button_down():
+	var button: TextureButton = get_node("HBoxMiddle/Center/Left")
+	button.rect_min_size = button.rect_min_size - Vector2(20, 20)
+
+
+func _on_left_button_up():
+	var button: TextureButton = get_node("HBoxMiddle/Center/Left")
+	button.rect_min_size = button.rect_min_size + Vector2(20, 20)
+
+
+func _on_right_button_down():
+	var button: TextureButton = get_node("HBoxMiddle/Center2/Right")
+	button.rect_min_size = button.rect_min_size - Vector2(20, 20)
+
+
+func _on_right_button_up():
+	var button: TextureButton = get_node("HBoxMiddle/Center2/Right")
+	button.rect_min_size = button.rect_min_size + Vector2(20, 20)
