@@ -62,6 +62,10 @@ func _on_download_button_up():
 func _on_left_button_down():
 	var button: TextureButton = get_node("HBoxMiddle/Center/Left")
 	button.rect_min_size = button.rect_min_size - Vector2(20, 20)
+	var script = Core.scripts.chunk.generator
+	for function in script.get_script_method_list():
+		if script.get(function.name + "_meta") != null:
+			print(function.name)
 
 
 func _on_left_button_up():
@@ -77,3 +81,5 @@ func _on_right_button_down():
 func _on_right_button_up():
 	var button: TextureButton = get_node("HBoxMiddle/Center2/Right")
 	button.rect_min_size = button.rect_min_size + Vector2(20, 20)
+
+

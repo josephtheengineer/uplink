@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=2]
+[gd_scene load_steps=22 format=2]
 
 [ext_resource path="res://aux/assets/textures/ui/eden2/iphone/cusor.png" type="Texture" id=1]
 [ext_resource path="res://src/scenes/interface/hud/pause_window.tscn" type="PackedScene" id=2]
@@ -18,6 +18,7 @@
 [ext_resource path="res://src/scenes/interface/hud/status.tscn" type="PackedScene" id=16]
 [ext_resource path="res://aux/assets/fonts/orbitron/Orbitron Medium.otf" type="DynamicFontData" id=17]
 [ext_resource path="res://src/scenes/interface/main_menu/eden1.tscn" type="PackedScene" id=18]
+[ext_resource path="res://src/scenes/interface/main_menu/eden2.tscn" type="PackedScene" id=19]
 
 [sub_resource type="DynamicFont" id=1]
 size = 14
@@ -50,11 +51,15 @@ __meta__ = {
 "_editor_description_": ""
 }
 
+[node name="Eden2" parent="." instance=ExtResource( 19 )]
+
 [node name="Eden1" parent="." instance=ExtResource( 18 )]
+visible = false
 size_flags_horizontal = 7
 size_flags_vertical = 7
 
 [node name="Background" parent="." instance=ExtResource( 5 )]
+visible = false
 size_flags_horizontal = 7
 size_flags_vertical = 7
 
