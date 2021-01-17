@@ -120,7 +120,8 @@ const scripts := {
 		joystick = preload("res://src/scripts/interface/joystick.gd"),
 		eden1 = {
 			background = preload("res://src/scripts/interface/eden1/background.gd"),
-			foreground = preload("res://src/scripts/interface/eden1/foreground.gd")
+			foreground = preload("res://src/scripts/interface/eden1/foreground.gd"),
+			shared_worlds = preload("res://src/scripts/interface/eden1/shared_worlds.gd")
 		},
 		status = preload("res://src/scripts/interface/status.gd"),
 		system = preload("res://src/scripts/interface/system.gd"),

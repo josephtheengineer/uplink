@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=2]
+[gd_scene load_steps=29 format=2]
 
 [ext_resource path="res://aux/assets/textures/ui/eden2/ipad/main_menu/background/ipad~cloud_MD.png" type="Texture" id=1]
 [ext_resource path="res://aux/assets/textures/ui/eden2/ipad/main_menu/background/ipad~cloud_SM.png" type="Texture" id=2]
@@ -19,6 +19,12 @@
 [ext_resource path="res://aux/assets/textures/ui/eden2/ipad/main_menu/ipad~create_world.png" type="Texture" id=17]
 [ext_resource path="res://aux/assets/textures/ui/eden2/ipad/arrows/right.png" type="Texture" id=18]
 [ext_resource path="res://aux/assets/fonts/orbitron/Orbitron Medium.otf" type="DynamicFontData" id=19]
+[ext_resource path="res://src/scripts/interface/eden1/shared_worlds.gd" type="Script" id=20]
+[ext_resource path="res://aux/assets/fonts/body.tres" type="DynamicFont" id=21]
+[ext_resource path="res://aux/assets/textures/ui/eden2/ui_text/ipad~menu_shared_worlds.png" type="Texture" id=22]
+[ext_resource path="res://aux/assets/textures/ui/eden2/ipad/arrows/back.png" type="Texture" id=23]
+[ext_resource path="res://aux/assets/textures/ui/eden2/ipad/arrows/up.png" type="Texture" id=24]
+[ext_resource path="res://aux/assets/textures/ui/eden2/ipad/arrows/down.png" type="Texture" id=25]
 
 [sub_resource type="Animation" id=1]
 resource_name = "PinWheel"
@@ -213,14 +219,14 @@ hue_variation_random = 0.32
 [node name="Mountians" type="CPUParticles2D" parent="Background/Ground"]
 position = Vector2( 0, -140 )
 scale = Vector2( 1.5, 1.5 )
-amount = 7
-lifetime = 300.0
-preprocess = 500.0
+amount = 2
+lifetime = 600.0
+preprocess = 600.0
 texture = ExtResource( 6 )
 direction = Vector2( 10, 0 )
 spread = 0.0
 gravity = Vector2( 0, 0 )
-initial_velocity = 5.0
+initial_velocity = 10.0
 hue_variation = 0.08
 hue_variation_random = 0.32
 __meta__ = {
@@ -231,7 +237,7 @@ __meta__ = {
 position = Vector2( 0, -20 )
 amount = 7
 lifetime = 300.0
-preprocess = 500.0
+preprocess = 600.0
 texture = ExtResource( 7 )
 direction = Vector2( 10, 0 )
 spread = 0.0
@@ -247,6 +253,7 @@ __meta__ = {
 anims/PinWheel = SubResource( 1 )
 
 [node name="VBox" type="VBoxContainer" parent="."]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 size_flags_horizontal = 3
@@ -480,34 +487,174 @@ texture_normal = ExtResource( 10 )
 expand = true
 stretch_mode = 5
 
-[node name="Control" type="Control" parent="."]
-visible = false
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -380.0
-margin_top = -269.0
-margin_right = 381.0
-margin_bottom = 294.0
+[node name="SharedWorlds" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource( 20 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Control"]
-margin_right = 40.0
-margin_bottom = 40.0
-
-[node name="ColorRect" type="ColorRect" parent="Control"]
+[node name="VBox" type="VBoxContainer" parent="SharedWorlds"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = -61.1057
-margin_top = 17.0731
-margin_right = -61.1057
-margin_bottom = 17.0731
+mouse_filter = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-color = Color( 0.8, 0.8, 0.8, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Header" type="Control" parent="SharedWorlds/VBox"]
+margin_right = 1920.0
+margin_bottom = 150.0
+rect_min_size = Vector2( 0, 150 )
+mouse_filter = 2
+size_flags_horizontal = 3
+
+[node name="Center" type="CenterContainer" parent="SharedWorlds/VBox/Header"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBox" type="VBoxContainer" parent="SharedWorlds/VBox/Header/Center"]
+margin_left = 708.0
+margin_top = 24.0
+margin_right = 1212.0
+margin_bottom = 125.0
+mouse_filter = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Title" type="TextureRect" parent="SharedWorlds/VBox/Header/Center/VBox"]
+margin_right = 504.0
+margin_bottom = 47.0
+rect_min_size = Vector2( 504, 47 )
+texture = ExtResource( 22 )
+expand = true
+stretch_mode = 6
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBox" type="HBoxContainer" parent="SharedWorlds/VBox/Header/Center/VBox"]
+margin_top = 51.0
+margin_right = 504.0
+margin_bottom = 101.0
+mouse_filter = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Left" type="TextureButton" parent="SharedWorlds/VBox/Header/Center/VBox/HBox"]
+margin_right = 50.0
+margin_bottom = 50.0
+rect_min_size = Vector2( 50, 50 )
+texture_normal = ExtResource( 14 )
+expand = true
+stretch_mode = 5
+
+[node name="Label" type="RichTextLabel" parent="SharedWorlds/VBox/Header/Center/VBox/HBox"]
+margin_left = 54.0
+margin_top = -1.0
+margin_right = 450.0
+margin_bottom = 49.0
+rect_min_size = Vector2( 0, 50 )
+size_flags_horizontal = 3
+size_flags_vertical = 6
+custom_fonts/normal_font = ExtResource( 21 )
+
+[node name="Right" type="TextureButton" parent="SharedWorlds/VBox/Header/Center/VBox/HBox"]
+margin_left = 454.0
+margin_right = 504.0
+margin_bottom = 50.0
+rect_min_size = Vector2( 50, 50 )
+texture_normal = ExtResource( 18 )
+expand = true
+stretch_mode = 5
+
+[node name="HBox" type="HBoxContainer" parent="SharedWorlds/VBox/Header"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Control" type="Control" parent="SharedWorlds/VBox/Header/HBox"]
+margin_right = 20.0
+margin_bottom = 150.0
+rect_min_size = Vector2( 20, 0 )
+mouse_filter = 1
+
+[node name="Back" type="TextureButton" parent="SharedWorlds/VBox/Header/HBox"]
+margin_left = 24.0
+margin_right = 132.0
+margin_bottom = 150.0
+rect_min_size = Vector2( 108, 102 )
+texture_normal = ExtResource( 23 )
+expand = true
+stretch_mode = 5
+
+[node name="UpArrow" type="HBoxContainer" parent="SharedWorlds/VBox"]
+margin_top = 154.0
+margin_right = 1920.0
+margin_bottom = 254.0
+rect_min_size = Vector2( 0, 100 )
+
+[node name="Spacer" type="Control" parent="SharedWorlds/VBox/UpArrow"]
+margin_right = 1819.0
+margin_bottom = 100.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Up" type="TextureButton" parent="SharedWorlds/VBox/UpArrow"]
+margin_left = 1823.0
+margin_right = 1920.0
+margin_bottom = 100.0
+texture_normal = ExtResource( 24 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Worlds" type="HBoxContainer" parent="SharedWorlds/VBox"]
+margin_top = 258.0
+margin_right = 1920.0
+margin_bottom = 976.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="DownArrow" type="HBoxContainer" parent="SharedWorlds/VBox"]
+margin_top = 980.0
+margin_right = 1920.0
+margin_bottom = 1080.0
+rect_min_size = Vector2( 0, 100 )
+
+[node name="Spacer" type="Control" parent="SharedWorlds/VBox/DownArrow"]
+margin_right = 1819.0
+margin_bottom = 100.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Down" type="TextureButton" parent="SharedWorlds/VBox/DownArrow"]
+margin_left = 1823.0
+margin_right = 1920.0
+margin_bottom = 100.0
+texture_normal = ExtResource( 25 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -526,3 +673,9 @@ __meta__ = {
 [connection signal="button_up" from="VBox/HBoxBottom/Center2/Option" to="VBox" method="_on_option_button_up"]
 [connection signal="button_down" from="VBox/HBoxBottom/Center3/Download" to="VBox" method="_on_download_button_down"]
 [connection signal="button_up" from="VBox/HBoxBottom/Center3/Download" to="VBox" method="_on_download_button_up"]
+[connection signal="button_down" from="SharedWorlds/VBox/Header/Center/VBox/HBox/Left" to="SharedWorlds" method="_on_left_button_down"]
+[connection signal="button_up" from="SharedWorlds/VBox/Header/Center/VBox/HBox/Left" to="SharedWorlds" method="_on_left_button_up"]
+[connection signal="button_down" from="SharedWorlds/VBox/Header/Center/VBox/HBox/Right" to="SharedWorlds" method="_on_right_button_down"]
+[connection signal="button_up" from="SharedWorlds/VBox/Header/Center/VBox/HBox/Right" to="SharedWorlds" method="_on_right_button_up"]
+[connection signal="button_down" from="SharedWorlds/VBox/Header/HBox/Back" to="SharedWorlds" method="_on_back_button_down"]
+[connection signal="button_up" from="SharedWorlds/VBox/Header/HBox/Back" to="SharedWorlds" method="_on_back_button_up"]

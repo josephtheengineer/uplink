@@ -9,6 +9,8 @@ const meta := {
 }
 
 func _ready():
+	self.visible = true
+	get_parent().get_node("SharedWorlds").visible = false
 	update_worlds_list()
 
 func _on_delete_button_down():
@@ -59,6 +61,7 @@ func _on_download_button_down():
 func _on_download_button_up():
 	var button: TextureButton = get_node("HBoxBottom/Center3/Download")
 	button.rect_min_size = button.rect_min_size + Vector2(20, 20)
+	open_shared_worlds()
 
 
 func _on_left_button_down():
@@ -134,3 +137,7 @@ func list_functions(script):
 	for function in script.get_script_method_list():
 		if script.get(function.name + "_meta") != null:
 			print(function.name)
+
+func open_shared_worlds():
+	self.visible = false
+	get_parent().get_node("SharedWorlds").visible = true
