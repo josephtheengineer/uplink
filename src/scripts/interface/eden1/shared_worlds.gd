@@ -8,15 +8,17 @@ const meta := {
 	"""
 }
 
+var index = 0
+
 func _ready():
 	var worlds = {
 		test1 = "",
 		test2 = "",
 		test3 = ""
 	}
-	display_worlds(worlds, get_node("VBox/Worlds"))
+	update_worlds(worlds, get_node("VBox/Worlds"))
 
-func display_worlds(worlds: Dictionary, parent: Node):
+func update_worlds(worlds: Dictionary, parent: Node):
 	var unselected_texture := load("res://aux/assets/textures/ui/eden2/ipad/main_menu/ipad~world_unselected.png")
 	var selected_texture := load("res://aux/assets/textures/ui/eden2/ipad/main_menu/ipad~world_selected.png")
 	
@@ -30,6 +32,11 @@ func display_worlds(worlds: Dictionary, parent: Node):
 		var center := CenterContainer.new()
 		center.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		center.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		
+		if i == index:
+			button.texture_normal = selected_texture
+		else:
+			button.texture_normal = unselected_texture
 		
 		button.rect_min_size = Vector2(50, 50)
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL

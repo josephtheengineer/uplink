@@ -16,4 +16,4 @@ func _ready():
 	animation.play("PinWheel")
 
 func _process(delta):
-	ground.position = Vector2(-get_viewport().get_visible_rect().size.x, get_viewport().get_visible_rect().size.y)
+	ground.position = Vector2(-get_viewport().get_visible_rect().size.x+700, get_viewport().get_visible_rect().size.y)
