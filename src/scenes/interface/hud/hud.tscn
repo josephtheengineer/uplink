@@ -67,7 +67,6 @@ __meta__ = {
 }
 
 [node name="HorizontalMain" type="HBoxContainer" parent="."]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_bottom = 4.0
@@ -91,11 +90,11 @@ rect_min_size = Vector2( 0, 50 )
 [node name="VerticalCenterContent" type="HBoxContainer" parent="HorizontalMain/VerticalMain"]
 margin_top = 54.0
 margin_right = 1920.0
-margin_bottom = 572.0
+margin_bottom = 495.0
 
 [node name="LeftMargin" type="Control" parent="HorizontalMain/VerticalMain/VerticalCenterContent"]
 margin_right = 50.0
-margin_bottom = 518.0
+margin_bottom = 441.0
 rect_min_size = Vector2( 50, 0 )
 
 [node name="LeftPanel" type="VBoxContainer" parent="HorizontalMain/VerticalMain/VerticalCenterContent"]
@@ -107,9 +106,8 @@ size_flags_horizontal = 0
 size_flags_vertical = 0
 
 [node name="TabContainer" type="TabContainer" parent="HorizontalMain/VerticalMain/VerticalCenterContent/LeftPanel"]
-margin_top = -1.0
 margin_right = 600.0
-margin_bottom = 436.0
+margin_bottom = 437.0
 rect_min_size = Vector2( 600, 0 )
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -361,16 +359,16 @@ margin_bottom = 672.0
 
 [node name="Spacer" type="Control" parent="HorizontalMain/VerticalMain/VerticalCenterContent"]
 margin_left = 658.0
-margin_right = 1599.0
-margin_bottom = 518.0
+margin_right = 1884.0
+margin_bottom = 441.0
 size_flags_horizontal = 3
 
 [node name="DebugStats" parent="HorizontalMain/VerticalMain/VerticalCenterContent" instance=ExtResource( 14 )]
-margin_left = 1603.0
-margin_bottom = 518.0
+margin_left = 1888.0
+margin_bottom = 441.0
 
 [node name="Control" type="Control" parent="HorizontalMain/VerticalMain"]
-margin_top = 576.0
+margin_top = 499.0
 margin_right = 1920.0
 margin_bottom = 1030.0
 size_flags_vertical = 3

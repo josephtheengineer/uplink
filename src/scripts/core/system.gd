@@ -364,11 +364,7 @@ func _on_system_process(meta_script, step, code, args := _on_system_process_meta
 ################################################################################
 
 func _on_msg(message: String, level: int, meta: Dictionary):
-	var args = scripts.core.debug.msg.send_meta.duplicate(true)
-	args.message = message
-	args.level = level
-	args.meta = meta
-	scripts.core.debug.msg.send(args)
+	run("core.debug.msg.send", {message=message, level=level, meta=meta})
 
 func _on_system_ready_fancy(system: int, obj: Object): ########################
 	scripts.core.system_manager.ready_fancy(system, obj)

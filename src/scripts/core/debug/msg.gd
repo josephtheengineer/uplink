@@ -65,7 +65,7 @@ static func send(args := send_meta) -> void: ###################################
 		Core.emit_signal("msg", "Message sent without a script path", Core.TRACE, args)
 		func_path = "n/a"
 	
-	if args.level < Core.ALL:
+	if args.level < Core.DEBUG:
 		print(str(elapsed) + " " + level_string + " [ " + func_path + " ] " + args.message)
 		
 	var file = File.new()
