@@ -17,7 +17,7 @@
 [ext_resource path="res://src/scenes/interface/hud/navbox.tscn" type="PackedScene" id=15]
 [ext_resource path="res://src/scenes/interface/hud/status.tscn" type="PackedScene" id=16]
 [ext_resource path="res://aux/assets/fonts/orbitron/Orbitron Medium.otf" type="DynamicFontData" id=17]
-[ext_resource path="res://src/scenes/interface/main_menu/eden2.tscn" type="PackedScene" id=19]
+[ext_resource path="res://aux/assets/textures/cloud.png" type="Texture" id=18]
 
 [sub_resource type="DynamicFont" id=1]
 size = 14
@@ -38,7 +38,6 @@ __meta__ = {
 }
 
 [node name="ColorRect" type="ColorRect" parent="."]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
@@ -50,10 +49,21 @@ __meta__ = {
 "_editor_description_": ""
 }
 
-[node name="Eden2" parent="." instance=ExtResource( 19 )]
+[node name="CPUParticles2D" type="CPUParticles2D" parent="."]
+position = Vector2( -74.1624, -40.2596 )
+amount = 50
+lifetime = 10.0
+explosiveness = 0.8
+randomness = 1.0
+texture = ExtResource( 18 )
+spread = 180.0
+gravity = Vector2( 0, 1 )
+initial_velocity = 100.0
+initial_velocity_random = 1.0
+linear_accel = 36.56
+scale_amount = 0.1
 
 [node name="Background" parent="." instance=ExtResource( 5 )]
-visible = false
 size_flags_horizontal = 7
 size_flags_vertical = 7
 
@@ -90,11 +100,11 @@ rect_min_size = Vector2( 0, 50 )
 [node name="VerticalCenterContent" type="HBoxContainer" parent="HorizontalMain/VerticalMain"]
 margin_top = 54.0
 margin_right = 1920.0
-margin_bottom = 495.0
+margin_bottom = 682.0
 
 [node name="LeftMargin" type="Control" parent="HorizontalMain/VerticalMain/VerticalCenterContent"]
 margin_right = 50.0
-margin_bottom = 441.0
+margin_bottom = 628.0
 rect_min_size = Vector2( 50, 0 )
 
 [node name="LeftPanel" type="VBoxContainer" parent="HorizontalMain/VerticalMain/VerticalCenterContent"]
@@ -359,16 +369,16 @@ margin_bottom = 672.0
 
 [node name="Spacer" type="Control" parent="HorizontalMain/VerticalMain/VerticalCenterContent"]
 margin_left = 658.0
-margin_right = 1884.0
-margin_bottom = 441.0
+margin_right = 1489.0
+margin_bottom = 628.0
 size_flags_horizontal = 3
 
 [node name="DebugStats" parent="HorizontalMain/VerticalMain/VerticalCenterContent" instance=ExtResource( 14 )]
-margin_left = 1888.0
-margin_bottom = 441.0
+margin_left = 1493.0
+margin_bottom = 628.0
 
 [node name="Control" type="Control" parent="HorizontalMain/VerticalMain"]
-margin_top = 499.0
+margin_top = 686.0
 margin_right = 1920.0
 margin_bottom = 1030.0
 size_flags_vertical = 3
